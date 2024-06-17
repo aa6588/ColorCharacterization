@@ -97,7 +97,7 @@ classdef CS2000 < handle
             %   Output: CS2000 object
             
             if nargin < 1
-                if ispc, port = 'COM3';
+                if ispc, port = 'COM5';
                 elseif ismac || isunix, port = '/dev/tty.usbmodem1421';
                 end
             end

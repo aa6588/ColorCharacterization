@@ -4,11 +4,11 @@ clear
 %% Calibration new data setup Unreal
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-load('Calibration_UnrealUnlit_HTCVive_14_03_2023.mat');
-save_filename = 'Calibration_UnrealUnlit_HTCVive_14_03_2023_dE.mat';
+load('Calibration_UnrealStandard_Vive_6_11_2024.mat');
+save_filename = 'Calibration_UnrealStandard_Vive_06_11_2024_dE.mat';
 
 %% Comment or uncomment accordingly (HTC 5:255)
-x = (0:5:255)./255;
+x = (0:17:255)./255;
 
 primaries(1, :) = [Red];
 primaries(2, :) = [Green];
@@ -103,14 +103,14 @@ for ch=1:3
     monXYZ(ch,:) = [Xs(end, ch) Ys(end, ch) Zs(end, ch)];
 end
 
-x = (0:5:255)./255;
+x = (0:17:255)./255;
 N = length(x);
 
 radiometric = [Xs(:, 4) Ys(:, 4) Zs(:, 4)]* inv(monXYZ);
 
 %% Perform the validation using the calibration matrix and gamma values
 % LOOK AT TEST COLORS
-load PredefinedRGB.mat
+%load PredefinedRGB.mat
 
 RGBStest = [PredefinedRGB./255]; 
 aux  = [Validation_rand]; 
