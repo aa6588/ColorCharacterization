@@ -7,7 +7,7 @@ addpath(genpath('C:\Users\orange\Documents\GitHub\ColorCharacterization\utils\')
 %% D:\VR_Projects\CalibrationHMD unreal
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-save_filename = 'Calibration_UnrealStandard_Vive_6_11_2024.mat';
+save_filename = 'Calibration_UnrealStandard_Quest_6_18_2024.mat';
 
 HTC=0;
 Pimax=1;
@@ -22,7 +22,7 @@ end
 pause(2);
 cs2000 = CS2000('COM5');
 % Synchronization
-sync = CS2000_Sync('Internal', 90);
+sync = CS2000_Sync('Internal', 72);
 cs2000.setSync(sync);
 
 % %% Create the connection
@@ -33,7 +33,7 @@ xCompare=1000;
 yCompare=-1;
 zCompare=1000;
 
-range = (0:17:255)./255;
+range = (0:5:255)./255;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
 %% Measure Red channel
@@ -57,9 +57,9 @@ while i <= length(range) && saturate==0
     end
     
     disp("Value:" + range(i) + "," + 0 + "," + 0)
-    pause(2)
+    pause(3)
     Red(i) = cs2000.measure;
-    xyzObtain(i,:)=Red(i).color.XYZ';
+    xyzObtain_red(i,:)=Red(i).color.XYZ';
     %Pimax: add ||xyzObtain(2)>20
     % while(cont<3&&xyzObtain(2)-yCompare<threshold)
     %     fwrite(t, "Value:" + 1 + "," + 1 + "," + 1);
@@ -124,7 +124,7 @@ while i<=length(range)&& saturate==0
     disp("Value:" + 0 + "," + range(i) +  "," + 0)
     pause(3)
     Green(i) = cs2000.measure;
-    xyzObtain(i,:)=Green(i).color.XYZ';
+    xyzObtain_green(i,:)=Green(i).color.XYZ';
     %%Pimax: add ||xyzObtain(2)>20
     % while(cont<3&&xyzObtain(2)-yCompare<threshold)
     %     fwrite(t, "Value:" + 1 + "," + 1 + "," + 1);
@@ -149,7 +149,7 @@ while i<=length(range)&& saturate==0
     %     end
     % end
     
-    yCompare=xyzObtain(2);
+    %yCompare=xyzObtain(2);
     
     
     disp(Green(i).color.xyY')
@@ -186,7 +186,7 @@ while i<=length(range)&& saturate==0
     disp("Value:" + 0 + "," + 0 + "," + range(i))
     pause(3)
     Blue(i) = cs2000.measure;
-    xyzObtain=Blue(i).color.XYZ';
+    xyzObtain_blue(i,:)=Blue(i).color.XYZ';
     %Pimax: add ||xyzObtain(2)>20
     % while(cont<3&&xyzObtain(2)-yCompare<threshold/2)
     %     fwrite(t, "Value:" + 1 + "," + 1 + "," + 1);
@@ -211,8 +211,8 @@ while i<=length(range)&& saturate==0
     %     end
     % end
     
-    yCompare=xyzObtain(2);
-    
+    % yCompare=xyzObtain(2);
+    % 
     disp(Blue(i).color.xyY')
 
     
@@ -245,9 +245,9 @@ while i<=length(range)&& saturate==0
     end
     
     disp("Value:" + range(i) + "," + range(i) + "," + range(i))
-    pause(3)
+    pause(4)
     Gray(i) = cs2000.measure;
-    xyzObtain=Gray(i).color.XYZ';
+    xyzObtain_gray(i,:)=Gray(i).color.XYZ';
     
     % while(cont<3&&xyzObtain(2)-yCompare<threshold)
     %     fwrite(t, "Value:" + 1 + "," + 1 + "," + 1);
@@ -273,7 +273,7 @@ while i<=length(range)&& saturate==0
     %     end
     % end
     
-    yCompare=xyzObtain(2);
+    % yCompare=xyzObtain(2);
     White = Gray(i);
    
     disp(Gray(i).color.xyY')
@@ -314,7 +314,7 @@ range = double(PredefinedRGB)./255;
 %     pause(3)
 %     Validation_rand(i) = cs2000.measure;
 %     xyzObtain=Validation_rand(i).color.XYZ';
-for i = 94:size(PredefinedRGB, 1)
+for i = 1:size(PredefinedRGB, 1)
 
     tic
 
@@ -331,7 +331,7 @@ for i = 94:size(PredefinedRGB, 1)
     disp("Value:" + range(i, 1) + "," + range(i, 2) + "," + range(i, 3))
     pause(3)
     Validation_rand(i) = cs2000.measure;
-    xyzObtain=Validation_rand(i).color.XYZ';
+    xyzObtain_valid(i,:)=Validation_rand(i).color.XYZ';
 
     % while(cont<3&&(abs(xyzObtain(1)-xCompare)<=0.8)&&...
     %         (abs(xyzObtain(2)-yCompare)<=0.8)&&...

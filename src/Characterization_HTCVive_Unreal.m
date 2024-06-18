@@ -4,11 +4,11 @@ clear
 %% Calibration new data setup Unreal
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-load('Calibration_UnrealStandard_Vive_6_11_2024.mat');
-save_filename = 'Calibration_UnrealStandard_Vive_06_11_2024_dE.mat';
-
+load('Calibration_UnrealStandard_Quest_6_18_2024.mat');
+save_filename = 'dE_Calibration_UnrealStandard_Quest_06_18_2024.mat';
+addpath(genpath('C:\Users\orange\Documents\GitHub\ColorCharacterization\src\color_transformations\'))
 %% Comment or uncomment accordingly (HTC 5:255)
-x = (0:17:255)./255;
+x = (0:5:255)./255;
 
 primaries(1, :) = [Red];
 primaries(2, :) = [Green];
@@ -103,7 +103,7 @@ for ch=1:3
     monXYZ(ch,:) = [Xs(end, ch) Ys(end, ch) Zs(end, ch)];
 end
 
-x = (0:17:255)./255;
+x = (0:5:255)./255;
 N = length(x);
 
 radiometric = [Xs(:, 4) Ys(:, 4) Zs(:, 4)]* inv(monXYZ);
