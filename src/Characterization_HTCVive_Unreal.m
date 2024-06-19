@@ -4,11 +4,11 @@ clear
 %% Calibration new data setup Unreal
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-load('Calibration_UnrealStandard_Quest_6_18_2024.mat');
+load('Calibration_UnrealStandard_Vive_6_11_2024.mat');
 save_filename = 'dE_Calibration_UnrealStandard_Quest_06_18_2024.mat';
-addpath(genpath('C:\Users\orange\Documents\GitHub\ColorCharacterization\src\color_transformations\'))
+%addpath(genpath('C:\Users\orange\Documents\GitHub\ColorCharacterization\src\color_transformations\'))
 %% Comment or uncomment accordingly (HTC 5:255)
-x = (0:5:255)./255;
+x = (0:17:255)./255;
 
 primaries(1, :) = [Red];
 primaries(2, :) = [Green];
@@ -18,14 +18,15 @@ primaries(4, :) = [Gray];
 white = [White]; 
 
 
-figure
-plotChromaticity();hold on
+%figure
+plotChrom();hold on
 cols = {'r', 'g', 'b', 'k'};
 for i=1:size(primaries, 1)
     
     for j=1:size(primaries, 2)
         aux0 = [primaries(i, j).color.xyY];
         aux1 = [primaries(i, j).color.XYZ];
+        rgb(j,:,i) = XYZ2RGB(aux1);
         Ys(j, i) = aux0(3) ;
         xs(j, i) = aux0(1) ;
         ys(j, i) = aux0(2) ;
@@ -34,19 +35,43 @@ for i=1:size(primaries, 1)
         SPECTRA((i-1)*size(primaries, 2) + j,:) = ...
             primaries(i, j).radiance.value;
     end
-    plot(xs(:, i), ys(:, i), [cols{i}, 'o'], 'MarkerSize', 12, ...
-        'MarkerEdgeColor', 'k', 'MarkerFaceColor', cols{i}, ...
-        'LineWidth', .3);
+    scatter(xs(:, i), ys(:, i), 30, rgb(:,:,i),'filled');
 end
+
+primary = [0.64, .33; .3, .6; .15, .06; .64, .33];
+k1 = plot(primary(:,1),primary(:,2),'--k'); %gamut
+legend(k1,'sRGB Gamut')
+title('Primary Ramp Chromaticity')
 
 yticks([0 0.2 0.4 0.6 0.8])
 xticks([0 0.2 0.4 0.6 0.8])
 
-set(gca,  'FontSize', 20, 'fontname','Times New Roman', 'Color', 'none');
-grid on
-set(gcf,'renderer','Painters');
+set(gca,  'FontSize', 12, 'fontname','Times New Roman', 'Color', 'none');
 
+figure;
+scatter(x,Ys(:,1),40,"red",'filled')
+xlabel('Reflectance RGBs')
+ylabel('Luminance (cd/m^2)')
+title('Red Ramp')
 
+figure;
+scatter(x,Ys(:,2),40,"green",'filled')
+xlabel('Reflectance RGBs')
+ylabel('Luminance (cd/m^2)')
+title('Green Ramp')
+
+figure;
+scatter(x,Ys(:,3),40,"blue",'filled')
+xlabel('Reflectance RGBs')
+ylabel('Luminance (cd/m^2)')
+title('Blue Ramp')
+
+figure;
+scatter(x,Ys(:,4),40,cols{4},'filled')
+xlabel('Reflectance RGBs')
+ylabel('Luminance (cd/m^2)')
+title('Gray Ramp')
+%% spectra
 figure
 for i=1:size(primaries, 1)
     subplot(1, 4, i)
@@ -61,17 +86,34 @@ for i=1:size(primaries, 1)
     set(gcf,'renderer','Painters');
 end
 
+figure
+plot(380:780,primaries(1, end).radiance.value, [cols{1}, '-.'],...
+    'LineWidth',2); hold on
+plot(380:780,primaries(2, end).radiance.value , [cols{2}, '-'],...
+    'LineWidth',2); 
+plot(380:780,primaries(3, end).radiance.value, [cols{3}, '--'],...
+    'LineWidth',2); 
+set(gca,  'FontSize', 15, 'fontname','Times New Roman');
+set(gcf,'renderer','Painters');
+legend('Red primary','Green primary','Blue primary', ...
+    'Interpreter','latex','Location','northeast','FontSize',12);
+legend('boxoff')
+xlabel('Wavelength (nm)', 'Interpreter','latex');
+ylabel('Radiance (W/m^2-sr)');
+xlim([380 780])
+xticks([400 500 600 700])
+
 
 figure
 plot(380:780,primaries(1, end).radiance.value ./ ...
     max(primaries(1, end).radiance.value), [cols{1}, '-.'],...
     'LineWidth',2); hold on
-plot(380:780,primaries(2, end).radiance.value ./ ...
-    max(primaries(2, end).radiance.value), [cols{2}, '-'],...
-    'LineWidth',2); hold on
+plot(380:780,primaries(2, end).radiance.value./ ...
+    max(primaries(2, end).radiance.value) , [cols{2}, '-'],...
+    'LineWidth',2); 
 plot(380:780,primaries(3, end).radiance.value ./ ...
     max(primaries(3, end).radiance.value), [cols{3}, '--'],...
-    'LineWidth',2); hold on
+    'LineWidth',2); 
 set(gca,  'FontSize', 15, 'fontname','Times New Roman');
 set(gcf,'renderer','Painters');
 legend('Red primary','Green primary','Blue primary', ...
@@ -100,13 +142,17 @@ disp(['Additiviy (only white)', num2str(additiviy_difff)])
 
 %% Estimated gamma curves for each channel
 for ch=1:3
-    monXYZ(ch,:) = [Xs(end, ch) Ys(end, ch) Zs(end, ch)];
+    PM(ch,:) = [Xs(end, ch) Ys(end, ch) Zs(end, ch)];
 end
 
-x = (0:5:255)./255;
+%x = (0:5:255)./255;
 N = length(x);
 
-radiometric = [Xs(:, 4) Ys(:, 4) Zs(:, 4)]* inv(monXYZ);
+radiometric = [Xs(:, 4) Ys(:, 4) Zs(:, 4)]* inv(PM);
+
+figure;
+scatter(x,radiometric(:,2),40,'k',"filled");
+xlabel('Unreal RGB Reflectance');ylabel('RGB radiometric scalar');title('EOTF');
 
 %% Perform the validation using the calibration matrix and gamma values
 % LOOK AT TEST COLORS
@@ -123,9 +169,9 @@ for ch = 1:3
     
 end
 
-XYZ = RGBStestLinear * monXYZ;
-xyY = XYZToxyY(XYZ');
-XYZwhite = RGBSwhite * monXYZ;
+XYZ = RGBStestLinear * PM;
+xyY = XYZToxyY(XYZ')';
+XYZwhite = RGBSwhite * PM;
 
 for i=1:length(aux)
     XYZmeas(i, :) = aux(i).color.XYZ;
@@ -134,13 +180,14 @@ end
 xyYmeas = XYZToxyY(XYZmeas')';
 
 %% Plot the results
-figure;plotChromaticity();hold on
-plot(xyY(1, :),xyY(2, :),'bo','MarkerSize',10,'LineWidth',2);
+plotChrom();hold on
+plot(xyY(:, 1),xyY(:, 2),'bo','MarkerSize',10,'LineWidth',2);
 plot(xyYmeas(:,1),xyYmeas(:,2),'kx','markersize',12,'linewidth',2)
 set(gca,'FontSize',15,'LineWidth',2)
 box off
 xlabel('x','FontSize',15)
 ylabel('y','FontSize',15)
+title('Chromaticity Error')
 
 
 %% Compute deltae2000
@@ -161,7 +208,7 @@ for i=1:length(dE)
 end
 plot(1:length(dE), ones(1, length(dE)), 'k--');
 
-ylim([0 5])
+%ylim([0 5])
 set(gca, 'FontSize', 22)
 xlabel('Colours','FontSize',40)
 ylabel('DeltaE00','FontSize',40)
@@ -213,7 +260,7 @@ axis([min([lab_est(:, 3); lab_meas(:, 3)]) max([lab_est(:, 3);...
 
 %% Save characterization values and deltae errors
 if ~isempty(save_filename)
-    save(save_filename, 'monXYZ', 'radiometric', ...
+    save(save_filename, 'PM', 'radiometric', ...
         'dE', 'lab_meas', 'lab_est', 'dE_nocalib');
 end
 
