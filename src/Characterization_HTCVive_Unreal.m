@@ -142,14 +142,16 @@ additiviy_difff= 100*((Xs(end, 4) - ...
 disp(['Additiviy (only white)', num2str(additiviy_difff)])
 
 %% Estimated gamma curves for each channel
+
+%changed PM so it actually makes sense now
 for ch=1:3
-    PM(ch,:) = [Xs(end, ch) Ys(end, ch) Zs(end, ch)];
+    PM(:,ch) = [Xs(end, ch) Ys(end, ch) Zs(end, ch)];
 end
 
 %x = (0:5:255)./255;
 N = length(x);
 
-radiometric = [Xs(:, 4) Ys(:, 4) Zs(:, 4)]* inv(PM);
+radiometric = (PM \ [Xs(:, 4) Ys(:, 4) Zs(:, 4)]')';
 
 figure;
 scatter(x,radiometric(:,2),40,'k',"filled");
