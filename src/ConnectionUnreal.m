@@ -7,7 +7,7 @@ addpath(genpath('C:\Users\orange\Documents\GitHub\ColorCharacterization\utils\')
 %% D:\VR_Projects\CalibrationHMD unreal
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-save_filename = 'Calibration_UnrealStandard_Quest_6_18_2024.mat';
+save_filename = 'Calibration_UnrealStandard_02int_16step_Vive_6_20_2024.mat';
 
 HTC=0;
 Pimax=1;
@@ -22,7 +22,7 @@ end
 pause(2);
 cs2000 = CS2000('COM5');
 % Synchronization
-sync = CS2000_Sync('Internal', 72);
+sync = CS2000_Sync('Internal', 90);
 cs2000.setSync(sync);
 
 % %% Create the connection
@@ -33,7 +33,7 @@ xCompare=1000;
 yCompare=-1;
 zCompare=1000;
 
-range = (0:5:255)./255;
+range = (0:17:255)./255;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
 %% Measure Red channel
@@ -106,8 +106,8 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 cont=0;
 saturate=0;
-i=2;
-Green(1)=Red(1);
+i=1;
+%Green(1)=Red(1);
 yCompare=-1;
 while i<=length(range)&& saturate==0
     
@@ -314,7 +314,8 @@ range = double(PredefinedRGB)./255;
 %     pause(3)
 %     Validation_rand(i) = cs2000.measure;
 %     xyzObtain=Validation_rand(i).color.XYZ';
-for i = 1:size(PredefinedRGB, 1)
+%for i = 1:size(PredefinedRGB, 1)
+for i = 92
 
     tic
 
@@ -329,7 +330,7 @@ for i = 1:size(PredefinedRGB, 1)
     end
 
     disp("Value:" + range(i, 1) + "," + range(i, 2) + "," + range(i, 3))
-    pause(3)
+    pause(4)
     Validation_rand(i) = cs2000.measure;
     xyzObtain_valid(i,:)=Validation_rand(i).color.XYZ';
 

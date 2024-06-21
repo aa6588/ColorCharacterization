@@ -21,6 +21,7 @@ white = [White];
 %figure
 plotChrom();hold on
 cols = {'r', 'g', 'b', 'k'};
+rgb = zeros(16,3,4);
 for i=1:size(primaries, 1)
     
     for j=1:size(primaries, 2)
@@ -35,7 +36,7 @@ for i=1:size(primaries, 1)
         SPECTRA((i-1)*size(primaries, 2) + j,:) = ...
             primaries(i, j).radiance.value;
     end
-    scatter(xs(:, i), ys(:, i), 30, rgb(:,:,i),'filled');
+    scatter(xs(:, i), ys(:, i), 60, rgb(:,:,i),'filled','MarkerEdgeColor','k');
 end
 
 primary = [0.64, .33; .3, .6; .15, .06; .64, .33];
