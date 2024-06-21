@@ -172,9 +172,9 @@ for ch = 1:3
     
 end
 
-XYZ = RGBStestLinear * PM;
+XYZ = (PM * RGBStestLinear')';
 xyY = XYZToxyY(XYZ')';
-XYZwhite = RGBSwhite * PM;
+XYZwhite = (PM * RGBSwhite')';
 
 for i=1:length(aux)
     XYZmeas(i, :) = aux(i).color.XYZ;
