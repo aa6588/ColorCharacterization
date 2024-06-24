@@ -261,15 +261,59 @@ axis([min([lab_est(:, 3); lab_meas(:, 3)]) max([lab_est(:, 3);...
     lab_meas(:, 3)]) min([lab_est(:, 1); lab_meas(:, 1)]) ...
     max([lab_meas(:, 1);lab_est(:, 1)])])
 
+%% optional optimization
+options = optimset('Display','iter');
+PM = double(PM);
+
+[PM_optim, fval] = fminsearch(@Day,PM,options,XYZmeas,RGBStest,x,Xs,Ys,Zs);
+
+%rerun deltaE
+radiometric = (PM_optim \ [Xs(:, 4) Ys(:, 4) Zs(:, 4)]')';
+for ch = 1:3
+
+    RGBStestLinear(:, ch) = interp1(x, radiometric(:, ch), ...
+        RGBStest(:, ch));
+    RGBSwhite(:, ch) = interp1(x, radiometric(:, ch), 1);
+end
+
+XYZ = (PM_optim * RGBStestLinear')';
+xyY = XYZToxyY(XYZ')';
+XYZwhite = (PM_optim * RGBSwhite')';
+
+lab_meas = xyz2lab(XYZmeas, 'whitepoint', white.color.XYZ');
+lab_est  = xyz2lab(XYZ,     'whitepoint', XYZwhite);
+dE_optim = deltaE00(lab_meas', lab_est');
+
+%chromaticity optim
+plotChrom();hold on
+plot(xyY(:, 1),xyY(:, 2),'bo','MarkerSize',10,'LineWidth',2);
+plot(xyYmeas(:,1),xyYmeas(:,2),'kx','markersize',12,'linewidth',2)
+set(gca,'FontSize',15,'LineWidth',2)
+box off
+xlabel('x','FontSize',15)
+ylabel('y','FontSize',15)
+title('Chromaticity Error Optimized')
+
+%deltaE
+figure;
+msize = 20;
+for i=1:length(dE_optim)
+    plot(i, dE_optim(i), 'o', 'color', RGBStest(i, :), ...
+        'markerfacecolor', RGBStest(i, :), 'markersize', msize);hold on
+end
+plot(1:length(dE_optim), ones(1, length(dE_optim)), 'k--');
+
 %% Save characterization values and deltae errors
 if ~isempty(save_filename)
     save(save_filename, 'PM', 'radiometric', ...
-        'dE', 'lab_meas', 'lab_est', 'dE_nocalib');
+        'dE_optim', 'lab_meas', 'lab_est', 'dE_nocalib');
 end
 
 %% Display errors and estimated parameters
 disp 'deltaE00 -> mean, median, std, min and max'
 disp(num2str([mean(dE) median(dE) std(dE) min(dE) max(dE)]))
+disp 'Optim deltaE00 -> mean, median, std, min and max'
+disp(num2str([mean(dE_optim) median(dE_optim) std(dE_optim) min(dE_optim) max(dE_optim)]))
 
 disp 'deltaE00 no calibration -> mean, median, std, min and max'
 disp(num2str([mean(dE_nocalib) median(dE_nocalib) ...
