@@ -7,19 +7,18 @@ addpath(genpath('C:\Users\orange\Documents\GitHub\ColorCharacterization\utils\')
 %% D:\VR_Projects\CalibrationHMD unreal
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-save_filename = 'Calibration_UnrealStandard_02int_16step_Vive_6_20_2024.mat';
+save_filename = 'Calibration_UnrealStandard_02int_0.5wall_16step_Vive_6_24_2024.mat';
 
-HTC=0;
-Pimax=1;
-Varjo=0;
+% HTC=0;
+% Pimax=1;
+% Varjo=0;
+% 
+% if(HTC==1)
+%     threshold=0.2;
+% else
+%     threshold=0.1;
+% end
 
-if(HTC==1)
-    threshold=0.2;
-else
-    threshold=0.1;
-end
-
-pause(2);
 cs2000 = CS2000('COM5');
 % Synchronization
 sync = CS2000_Sync('Internal', 90);
@@ -29,9 +28,9 @@ cs2000.setSync(sync);
 t = tcpip('127.0.0.1', 8890);
 fopen(t);
 
-xCompare=1000;
-yCompare=-1;
-zCompare=1000;
+% xCompare=1000;
+% yCompare=-1;
+% zCompare=1000;
 
 range = (0:17:255)./255;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -40,8 +39,8 @@ range = (0:17:255)./255;
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-cont=0;
-saturate=0;
+% cont=0;
+% saturate=0;
 i=1;
 while i <= length(range) && saturate==0
     
@@ -57,7 +56,7 @@ while i <= length(range) && saturate==0
     end
     
     disp("Value:" + range(i) + "," + 0 + "," + 0)
-    pause(3)
+    pause(4)
     Red(i) = cs2000.measure;
     xyzObtain_red(i,:)=Red(i).color.XYZ';
     %Pimax: add ||xyzObtain(2)>20
@@ -122,7 +121,7 @@ while i<=length(range)&& saturate==0
     end
     
     disp("Value:" + 0 + "," + range(i) +  "," + 0)
-    pause(3)
+    pause(4)
     Green(i) = cs2000.measure;
     xyzObtain_green(i,:)=Green(i).color.XYZ';
     %%Pimax: add ||xyzObtain(2)>20
@@ -184,7 +183,7 @@ while i<=length(range)&& saturate==0
     end
     
     disp("Value:" + 0 + "," + 0 + "," + range(i))
-    pause(3)
+    pause(5)
     Blue(i) = cs2000.measure;
     xyzObtain_blue(i,:)=Blue(i).color.XYZ';
     %Pimax: add ||xyzObtain(2)>20
@@ -314,8 +313,7 @@ range = double(PredefinedRGB)./255;
 %     pause(3)
 %     Validation_rand(i) = cs2000.measure;
 %     xyzObtain=Validation_rand(i).color.XYZ';
-%for i = 1:size(PredefinedRGB, 1)
-for i = 74
+for i = 1:size(PredefinedRGB, 1)
 
     tic
 
@@ -373,7 +371,7 @@ end
 % save(save_filename, 'Red', 'Blue', 'Green', 'Gray', 'White','-v7.3');
 
 save(save_filename, 'Red', 'Blue', 'Green', 'Gray', 'White', ...
-                     'Validation_rand', 'PredefinedRGB', '-v7.3');
+                     'Validation_rand', 'PredefinedRGB');
 
                 
 fwrite(t,"DONE:0");
