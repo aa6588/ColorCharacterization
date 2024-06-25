@@ -7,7 +7,7 @@ addpath(genpath('C:\Users\orange\Documents\GitHub\ColorCharacterization\utils\')
 %% D:\VR_Projects\CalibrationHMD unreal
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-save_filename = 'Calibration_UnrealStandard_02int_0.5wall_16step_Vive_6_24_2024.mat';
+save_filename = 'Calibration_Standard_BLUE03int_frontlight_1.0wall_16step_Vive_6_25_2024.mat';
 
 % HTC=0;
 % Pimax=1;
@@ -42,7 +42,7 @@ range = (0:17:255)./255;
 % cont=0;
 % saturate=0;
 i=1;
-while i <= length(range) && saturate==0
+while i <= length(range) 
     
     tic
     
@@ -56,7 +56,7 @@ while i <= length(range) && saturate==0
     end
     
     disp("Value:" + range(i) + "," + 0 + "," + 0)
-    pause(4)
+    pause(2)
     Red(i) = cs2000.measure;
     xyzObtain_red(i,:)=Red(i).color.XYZ';
     %Pimax: add ||xyzObtain(2)>20
@@ -94,6 +94,7 @@ while i <= length(range) && saturate==0
     
     t_time = toc;
     disp(['It took ', num2str(t_time), ' s']);
+    disp(['Trial #: ', num2str(i)])
     disp '-------------------------------------------'
     i=i+1;
 end
@@ -103,12 +104,12 @@ end
 %% Measure Green channel
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-cont=0;
-saturate=0;
+% cont=0;
+% saturate=0;
 i=1;
 %Green(1)=Red(1);
-yCompare=-1;
-while i<=length(range)&& saturate==0
+% yCompare=-1;
+while i<=length(range)
     
     tic
     
@@ -121,7 +122,7 @@ while i<=length(range)&& saturate==0
     end
     
     disp("Value:" + 0 + "," + range(i) +  "," + 0)
-    pause(4)
+    pause(2)
     Green(i) = cs2000.measure;
     xyzObtain_green(i,:)=Green(i).color.XYZ';
     %%Pimax: add ||xyzObtain(2)>20
@@ -156,6 +157,7 @@ while i<=length(range)&& saturate==0
     
     t_time = toc;
     disp(['It took ', num2str(t_time), ' s']);
+    disp(['Trial #: ', num2str(i)])
     disp '-------------------------------------------'
     i=i+1;
 end
@@ -166,11 +168,11 @@ end
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %Blue(1)=Red(1);
-yCompare=-1;
-cont=0;
-saturate=0;
+% yCompare=-1;
+% cont=0;
+% saturate=0;
 i=1;
-while i<=length(range)&& saturate==0
+while i<=length(range)
     
     tic
     
@@ -183,7 +185,7 @@ while i<=length(range)&& saturate==0
     end
     
     disp("Value:" + 0 + "," + 0 + "," + range(i))
-    pause(5)
+    pause(2)
     Blue(i) = cs2000.measure;
     xyzObtain_blue(i,:)=Blue(i).color.XYZ';
     %Pimax: add ||xyzObtain(2)>20
@@ -217,6 +219,7 @@ while i<=length(range)&& saturate==0
     
     t_time = toc;
     disp(['It took ', num2str(t_time), ' s']);
+    disp(['Trial #: ', num2str(i)])
     disp '-------------------------------------------'
     i=i+1;
 end
@@ -227,11 +230,11 @@ end
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %Gray(1)=Red(1);
-yCompare=-1;
-cont=0;
-saturate=0;
+% yCompare=-1;
+% cont=0;
+% saturate=0;
 i=1;
-while i<=length(range)&& saturate==0
+while i<=length(range)
     
     tic
     
@@ -244,7 +247,7 @@ while i<=length(range)&& saturate==0
     end
     
     disp("Value:" + range(i) + "," + range(i) + "," + range(i))
-    pause(4)
+    pause(2)
     Gray(i) = cs2000.measure;
     xyzObtain_gray(i,:)=Gray(i).color.XYZ';
     
@@ -280,6 +283,7 @@ while i<=length(range)&& saturate==0
     
     t_time = toc;
     disp(['It took ', num2str(t_time), ' s']);
+    disp(['Trial #: ', num2str(i)])
     disp '-------------------------------------------'
     i=i+1;
 end
@@ -313,7 +317,8 @@ range = double(PredefinedRGB)./255;
 %     pause(3)
 %     Validation_rand(i) = cs2000.measure;
 %     xyzObtain=Validation_rand(i).color.XYZ';
-for i = 1:size(PredefinedRGB, 1)
+%for i = 1:size(PredefinedRGB, 1)
+for i = 33
 
     tic
 
@@ -328,7 +333,7 @@ for i = 1:size(PredefinedRGB, 1)
     end
 
     disp("Value:" + range(i, 1) + "," + range(i, 2) + "," + range(i, 3))
-    pause(4)
+    pause(3)
     Validation_rand(i) = cs2000.measure;
     xyzObtain_valid(i,:)=Validation_rand(i).color.XYZ';
 
@@ -363,6 +368,7 @@ for i = 1:size(PredefinedRGB, 1)
 
     t_time = toc;
     disp(['It took ', num2str(t_time), ' s']);
+    disp(['Trial #: ', num2str(i),' out of ',num2str(size(PredefinedRGB, 1))])
     disp '-------------------------------------------'
 
 end
