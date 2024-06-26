@@ -6,7 +6,9 @@ clear
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % load('Calibration_UnrealStandard_Vive_6_11_2024.mat');
 % save_filename = 'dE_Calibration_UnrealStandard_Quest_06_18_2024.mat';
-%addpath(genpath('C:\Users\orange\Documents\GitHub\ColorCharacterization\src\color_transformations\'))
+addpath(genpath('C:\Users\orange\Documents\GitHub\ColorCharacterization\src\color_transformations\'))
+addpath(genpath('C:\Users\orange\Documents\GitHub\MCSL-Tools\'))
+
 %% Comment or uncomment accordingly (HTC 5:255)
 x = (0:17:255)./255;
 

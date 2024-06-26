@@ -1,13 +1,15 @@
 clc
 clear
 addpath(genpath('C:\Users\orange\Documents\GitHub\ColorCharacterization\utils\'))
+addpath(genpath('C:\Users\orange\Documents\GitHub\ColorCharacterization\src\color_transformations\'))
+addpath(genpath('C:\Users\orange\Documents\GitHub\MCSL-Tools\'))
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
 %% Main function for Matlab/Unreal connection measure primaries
 %% D:\VR_Projects\CalibrationHMD unreal
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-save_filename = 'Calibration_Standard_BLUE03int_frontlight_1.0wall_16step_Vive_6_25_2024.mat';
+save_filename = 'Calibration_Standard_GREEN03int_frontlight_1.0wall_16step_Vive_6_25_2024.mat';
 
 % HTC=0;
 % Pimax=1;
@@ -59,6 +61,24 @@ while i <= length(range)
     pause(2)
     Red(i) = cs2000.measure;
     xyzObtain_red(i,:)=Red(i).color.XYZ';
+
+    if i > 1
+        while abs(xyzObtain_red(i,1) - xyzObtain_red(i-1,1)) < .3 
+            fwrite(t, "Value:" + range(i) + "," + 0 + "," + 0);
+            a = fscanf(t, '%s\n');
+
+        while ~strcmp(a, "SHOT")
+            a = fscanf(t, '%s\n');
+            fwrite(t, "Value:" + range(i) + "," + 0 + "," + 0);
+        end
+    disp('Measurement is the same as previous, taking a new measurement...')
+    disp("Retake Value:" + range(i) + "," + 0 + "," + 0)
+    pause(2)
+    Red(i) = cs2000.measure;
+    xyzObtain_red(i,:)=Red(i).color.XYZ';
+        end
+
+    end
     %Pimax: add ||xyzObtain(2)>20
     % while(cont<3&&xyzObtain(2)-yCompare<threshold)
     %     fwrite(t, "Value:" + 1 + "," + 1 + "," + 1);
@@ -125,6 +145,24 @@ while i<=length(range)
     pause(2)
     Green(i) = cs2000.measure;
     xyzObtain_green(i,:)=Green(i).color.XYZ';
+
+   if i > 1
+        while abs(xyzObtain_green(i,2) - xyzObtain_green(i-1,2)) < .3 
+            fwrite(t, "Value:" + 0 + "," + range(i) +  "," + 0);
+            a = fscanf(t, '%s\n');
+
+        while ~strcmp(a, "SHOT")
+            a = fscanf(t, '%s\n');
+            fwrite(t, "Value:" + 0 + "," + range(i) +  "," + 0);
+        end
+    disp('Measurement is the same as previous, taking a new measurement...')
+    disp("Retake Value:" + 0 + "," + range(i) + "," + 0)
+    pause(3)
+    Green(i) = cs2000.measure;
+    xyzObtain_green(i,:)=Green(i).color.XYZ';
+        end
+
+    end
     %%Pimax: add ||xyzObtain(2)>20
     % while(cont<3&&xyzObtain(2)-yCompare<threshold)
     %     fwrite(t, "Value:" + 1 + "," + 1 + "," + 1);
@@ -188,6 +226,24 @@ while i<=length(range)
     pause(2)
     Blue(i) = cs2000.measure;
     xyzObtain_blue(i,:)=Blue(i).color.XYZ';
+
+    if i > 1
+        while abs(xyzObtain_blue(i,3) - xyzObtain_blue(i-1,3)) < .3 
+            fwrite(t, "Value:" + 0 + "," + 0 + "," + range(i));
+            a = fscanf(t, '%s\n');
+
+        while ~strcmp(a, "SHOT")
+            a = fscanf(t, '%s\n');
+            fwrite(t, "Value:" + 0 + "," + 0 + "," + range(i));
+        end
+    disp('Measurement is the same as previous, taking a new measurement...')
+    disp("Retake Value:" + 0 + "," + 0 + "," + range(i))
+    pause(3)
+    Blue(i) = cs2000.measure;
+    xyzObtain_blue(i,:)=Blue(i).color.XYZ';
+        end
+
+    end
     %Pimax: add ||xyzObtain(2)>20
     % while(cont<3&&xyzObtain(2)-yCompare<threshold/2)
     %     fwrite(t, "Value:" + 1 + "," + 1 + "," + 1);
@@ -251,6 +307,24 @@ while i<=length(range)
     Gray(i) = cs2000.measure;
     xyzObtain_gray(i,:)=Gray(i).color.XYZ';
     
+
+    if i > 1
+        while abs(xyzObtain_gray(i,2) - xyzObtain_gray(i-1,2)) < .3 
+            fwrite(t, "Value:" + range(i) + "," + range(i) + "," + range(i));
+            a = fscanf(t, '%s\n');
+
+        while ~strcmp(a, "SHOT")
+            a = fscanf(t, '%s\n');
+            fwrite(t, "Value:" + range(i) + "," + range(i) + "," + range(i));
+        end
+    disp('Measurement is the same as previous, taking a new measurement...')
+    disp("Retake Value:" + range(i) + "," + range(i) + "," + range(i))
+    pause(3)
+    Gray(i) = cs2000.measure;
+    xyzObtain_gray(i,:)=Gray(i).color.XYZ';
+        end
+
+    end
     % while(cont<3&&xyzObtain(2)-yCompare<threshold)
     %     fwrite(t, "Value:" + 1 + "," + 1 + "," + 1);
     %     a = fscanf(t, '%s\n');
@@ -294,7 +368,7 @@ end
 %%  Validation predefined values
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-yCompare=-1;
+%yCompare=-1;
 load PredefinedRGB.mat
 cont=0;
 clear range
@@ -317,9 +391,7 @@ range = double(PredefinedRGB)./255;
 %     pause(3)
 %     Validation_rand(i) = cs2000.measure;
 %     xyzObtain=Validation_rand(i).color.XYZ';
-%for i = 1:size(PredefinedRGB, 1)
-for i = 33
-
+for i = 1:size(PredefinedRGB, 1)
     tic
 
     fwrite(t, "Value:" + range(i, 1) + "," + range(i, 2) + "," ...
@@ -336,6 +408,26 @@ for i = 33
     pause(3)
     Validation_rand(i) = cs2000.measure;
     xyzObtain_valid(i,:)=Validation_rand(i).color.XYZ';
+
+    if i > 1
+        while max(abs(xyzObtain_valid(i,:) - xyzObtain_valid(i-1,:))) < .4 
+            fwrite(t, "Value:" + range(i, 1) + "," + range(i, 2) + "," ...
+            + range(i, 3));
+            a = fscanf(t, '%s\n');
+
+        while ~strcmp(a, "SHOT")
+            a = fscanf(t, '%s\n');
+            fwrite(t, "Value:" + range(i, 1) + "," + range(i, 2) + ...
+            "," + range(i, 3));
+        end
+    disp('Measurement is the same as previous, taking a new measurement...')
+    disp("Retake Value:" + range(i, 1) + "," + range(i, 2) + "," + range(i, 3))
+    pause(3)
+    Validation_rand(i) = cs2000.measure;
+    xyzObtain_valid(i,:)=Validation_rand(i).color.XYZ';
+        end
+
+    end
 
     % while(cont<3&&(abs(xyzObtain(1)-xCompare)<=0.8)&&...
     %         (abs(xyzObtain(2)-yCompare)<=0.8)&&...
@@ -380,4 +472,4 @@ save(save_filename, 'Red', 'Blue', 'Green', 'Gray', 'White', ...
                      'Validation_rand', 'PredefinedRGB');
 
                 
-fwrite(t,"DONE:0");
+%fwrite(t,"DONE:0");
