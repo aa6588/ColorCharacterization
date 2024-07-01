@@ -156,7 +156,7 @@ N = length(x);
 radiometric = (PM \ [Xs(:, 4) Ys(:, 4) Zs(:, 4)]')';
 
 figure;
-scatter(x,radiometric(:,2),40,'k',"filled");
+scatter(x,radiometric,40,"filled");
 xlabel('Unreal RGB Reflectance');ylabel('RGB radiometric scalar');title('EOTF');
 
 %% Perform the validation using the calibration matrix and gamma values
