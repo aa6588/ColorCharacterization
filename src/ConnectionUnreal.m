@@ -9,7 +9,7 @@ addpath(genpath('C:\Users\orange\Documents\GitHub\MCSL-Tools\'))
 %% D:\VR_Projects\CalibrationHMD unreal
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-save_filename = 'Calibration_FinalScene_WHITE03int_frontlight_1.0wall_16step_Vive_7_1_2024.mat';
+save_filename = 'Calibration_FinalScene_WHITE03int_frontlight_1.0wall_16step_Vive_7_2_2024.mat';
 
 % HTC=0;
 % Pimax=1;
@@ -23,7 +23,7 @@ save_filename = 'Calibration_FinalScene_WHITE03int_frontlight_1.0wall_16step_Viv
 
 cs2000 = CS2000('COM5');
 % Synchronization
-pause(3)
+pause(1)
 sync = CS2000_Sync('Internal', 90);
 cs2000.setSync(sync);
 
