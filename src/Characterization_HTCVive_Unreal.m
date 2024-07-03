@@ -160,11 +160,11 @@ scatter(x,radiometric,40,"filled");
 xlabel('Unreal RGB Reflectance');ylabel('RGB radiometric scalar');title('EOTF');
 
 %% Perform the validation using the calibration matrix and gamma values
-% LOOK AT TEST COLORS
-%load PredefinedRGB.mat
+% LOOK AT TEST COLORS RGB
+load PredefinedRGB.mat
 
-RGBStest = [PredefinedRGB./255]; 
-aux  = [Validation_rand]; 
+RGBStest = rgb; 
+aux  = Validation_rand(1:125); 
 
 for ch = 1:3
 
@@ -263,6 +263,104 @@ axis([min([lab_est(:, 3); lab_meas(:, 3)]) max([lab_est(:, 3);...
     lab_meas(:, 3)]) min([lab_est(:, 1); lab_meas(:, 1)]) ...
     max([lab_meas(:, 1);lab_est(:, 1)])])
 
+%% Perform the validation using the calibration matrix and gamma values
+% LOOK AT TEST COLORS Labs
+
+RGBStest = RGB_forLabs; 
+aux  = Validation_rand(126:end); 
+
+for ch = 1:3
+
+    RGBStestLinear(:, ch) = interp1(x, radiometric(:, ch), ...
+        RGBStest(:, ch));
+    RGBSwhite(:, ch) = interp1(x, radiometric(:, ch), 1);
+    
+end
+
+XYZ = (PM * RGBStestLinear')';
+xyY = XYZToxyY(XYZ')';
+XYZwhite = (PM * RGBSwhite')';
+
+for i=1:length(aux)
+    XYZmeas(i, :) = aux(i).color.XYZ;
+end
+
+xyYmeas = XYZToxyY(XYZmeas')';
+
+%% Plot the results
+plotChrom();hold on
+plot(xyY(:, 1),xyY(:, 2),'bo','MarkerSize',10,'LineWidth',2);
+plot(xyYmeas(:,1),xyYmeas(:,2),'kx','markersize',12,'linewidth',2)
+set(gca,'FontSize',15,'LineWidth',2)
+box off
+xlabel('x','FontSize',15)
+ylabel('y','FontSize',15)
+title('Chromaticity Error Labs')
+
+
+%% Compute deltae2000
+lab_meas = xyz2lab(XYZmeas, 'whitepoint', white.color.XYZ');
+lab_est  = xyz2lab(XYZ,     'whitepoint', XYZwhite);
+
+dE = deltaE00(lab_meas', lab_est');
+
+figure;
+msize = 20;
+for i=1:length(dE)
+    plot(i, dE(i), 'o', 'color', RGBStest(i, :), ...
+        'markerfacecolor', RGBStest(i, :), 'markersize', msize);hold on
+end
+plot(1:length(dE), ones(1, length(dE)), 'k--');
+
+%ylim([0 5])
+set(gca, 'FontSize', 22)
+xlabel('Colours','FontSize',40)
+ylabel('DeltaE00','FontSize',40)
+
+
+msize=15;
+figure;
+subplot 131;
+for i = 2:size(lab_est, 1)
+    plot(lab_est(i, 2), lab_est(i, 3), 'o', 'color', RGBStest(i, :), ...
+        'markerfacecolor', RGBStest(i, :), 'markersize', msize);hold on
+    
+    plot(lab_meas(i, 2), lab_meas(i, 3), 'kx', 'markersize', msize);hold on
+    xlabel('a*','FontSize',15)
+    ylabel('b*','FontSize',15)
+end
+axis equal
+axis([min([lab_est(:, 2); lab_meas(:, 2)]) max([lab_est(:, 2);...
+    lab_meas(:, 2)]) min([lab_est(:, 3); lab_meas(:, 3)]) ...
+    max([lab_meas(:, 3);lab_est(:, 3)])])
+
+subplot 132;
+for i = 2:size(lab_est, 1)
+    plot(lab_est(i, 2), lab_est(i, 1), 'o', 'color', RGBStest(i, :), ...
+        'markerfacecolor', RGBStest(i, :), 'markersize', msize);hold on
+    
+    plot(lab_meas(i, 2), lab_meas(i, 1), 'kx', 'markersize', msize);hold on
+    xlabel('a*','FontSize',15)
+    ylabel('L*','FontSize',15)
+end
+axis equal
+axis([min([lab_est(:, 2); lab_meas(:, 2)]) max([lab_est(:, 2);...
+    lab_meas(:, 2)]) min([lab_est(:, 1); lab_meas(:, 1)]) ...
+    max([lab_meas(:, 1);lab_est(:, 1)])])
+
+subplot 133;
+for i = 2:size(lab_est, 1)
+    plot(lab_est(i, 3), lab_est(i, 1), 'o', 'color', RGBStest(i, :), ...
+        'markerfacecolor', RGBStest(i, :), 'markersize', msize);hold on
+    
+    plot(lab_meas(i, 3), lab_meas(i, 1), 'kx', 'markersize', msize);hold on
+    xlabel('b*','FontSize',15)
+    ylabel('L*','FontSize',15)
+end
+axis equal
+axis([min([lab_est(:, 3); lab_meas(:, 3)]) max([lab_est(:, 3);...
+    lab_meas(:, 3)]) min([lab_est(:, 1); lab_meas(:, 1)]) ...
+    max([lab_meas(:, 1);lab_est(:, 1)])])
 %% optional optimization
 options = optimset('Display','iter');
 PM = double(PM);

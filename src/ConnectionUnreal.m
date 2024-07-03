@@ -369,29 +369,13 @@ end
 %%  Validation predefined values
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%yCompare=-1;
-load PredefinedRGB.mat
+
+load PredefinedRGB.mat %1-125 is cube rgb values. 126-x is lab values
 cont=0;
 clear range
-PredefinedRGB = rgb.*255;
-range = double(PredefinedRGB)./255;
+PredefinedRGB = round([rgb;RGB_forLabs].*255); %1-125 is RGB cube, 126-end is labs
+range = double([rgb;RGB_forLabs]);
 
-% while i<=length(range)
-% 
-%     tic
-% 
-%     fwrite(t, "Value:" + range(i) + "," + range(i) + "," + range(i));
-%     a = fscanf(t, '%s\n');
-% 
-%     while ~strcmp(a, "SHOT")
-%         a = fscanf(t, '%s\n');
-%         fwrite(t, "Value:" + range(i) + "," + range(i) + "," + range(i));
-%     end
-% 
-%     disp("Value:" + range(i) + "," + range(i) + "," + range(i))
-%     pause(3)
-%     Validation_rand(i) = cs2000.measure;
-%     xyzObtain=Validation_rand(i).color.XYZ';
 for i = 1:size(PredefinedRGB, 1)
     tic
 
@@ -429,35 +413,6 @@ for i = 1:size(PredefinedRGB, 1)
         end
 
     end
-
-    % while(cont<3&&(abs(xyzObtain(1)-xCompare)<=0.8)&&...
-    %         (abs(xyzObtain(2)-yCompare)<=0.8)&&...
-    %         (abs(xyzObtain(3)-zCompare)<=0.8))
-    %     fwrite(t, "Value:" + 1 + "," + 1 + "," + 1);
-    %     a = fscanf(t, '%s\n');
-    %     while ~strcmp(a, "SHOT")
-    %         a = fscanf(t, '%s\n');
-    %         fwrite(t, "Value:" + 1 + "," + 1 + "," + 1);
-    %     end
-    %     desperdiciar=cs2000.measure;
-    %     fwrite(t, "Value:" + range(i, 1) + "," + range(i, 2) + ...
-    %         "," + range(i, 3));
-    %     a = fscanf(t, '%s\n');
-    %     while ~strcmp(a, "SHOT")
-    %         a = fscanf(t, '%s\n');
-    %         fwrite(t, "Value:" + range(i, 1) + "," + range(i, 2) + ...
-    %             "," + range(i, 3));
-    %     end
-    %     Validation_rand(i) = cs2000.measure;
-    %     xyzObtain=Validation_rand(i).color.XYZ';
-    %     cont=cont+1;
-    % end
-
-    % xCompare=xyzObtain(1);
-    % yCompare=xyzObtain(2);
-    % zCompare=xyzObtain(3);
-    % disp(Validation_rand(i).color.xyY')
-    % cont=0;
 
     t_time = toc;
     disp(['It took ', num2str(t_time), ' s']);
