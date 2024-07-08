@@ -45,6 +45,7 @@ plot(uv_srgb(:,1),uv_srgb(:,2),'x','Color','red') %srgb
 plot(uv_final(:,1),uv_final(:,2),'+','Color','blue') 
 title('uv')
 
+%calculate deltaE's for illum vs aim
 % for ch = 1:3
 % 
 %     test_illum(:, ch) = interp1(x, radiometric(:, ch), ...
