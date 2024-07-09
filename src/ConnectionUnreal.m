@@ -373,9 +373,8 @@ end
 load PredefinedRGB.mat %1-125 is cube rgb values. 126-x is lab values 224
 cont=0;
 clear range
-RGB_forLabs = rgbs;
-PredefinedRGB = round([rgb;RGB_forLabs].*255); %1-125 is RGB cube, 126-end is labs
-range = double([rgb;RGB_forLabs]);
+PredefinedRGB = round([rgb;rgbs].*255); %1-125 is RGB cube, 126-end is labs
+range = double([rgb;rgbs]);
 
 for i = 165
 %for i = 126:size(PredefinedRGB, 1)
