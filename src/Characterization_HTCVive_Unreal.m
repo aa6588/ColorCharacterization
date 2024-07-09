@@ -359,12 +359,12 @@ PM = double(PM);
 [PM_optim, fval] = fminsearch(@Day,PM,options,XYZmeas,RGBStest,x,Xs,Ys,Zs);
 
 %rerun deltaE
-radiometric = (PM_optim \ [Xs(:, 4) Ys(:, 4) Zs(:, 4)]')';
+radiometric_opitm = (PM_optim \ [Xs(:, 4) Ys(:, 4) Zs(:, 4)]')';
 for ch = 1:3
 
-    RGBStestLinear(:, ch) = interp1(x, radiometric(:, ch), ...
+    RGBStestLinear(:, ch) = interp1(x, radiometric_optim(:, ch), ...
         RGBStest(:, ch));
-    RGBSwhite(:, ch) = interp1(x, radiometric(:, ch), 1);
+    RGBSwhite(:, ch) = interp1(x, radiometric_optim(:, ch), 1);
 end
 
 XYZ = (PM_optim * RGBStestLinear')';
@@ -373,7 +373,6 @@ XYZwhite = (PM_optim * RGBSwhite')';
 
 lab_meas = xyz2lab(XYZmeas, 'whitepoint', white.color.XYZ');
 lab_est  = xyz2lab(XYZ,     'whitepoint', XYZwhite);
-%lab_est = lab_values;
 dE_optim = deltaE00(lab_meas', lab_est');
 
 %chromaticity optim
@@ -397,7 +396,7 @@ plot(1:length(dE_optim), ones(1, length(dE_optim)), 'k--');
 
 %% Save characterization values and deltae errors
 if ~isempty(save_filename)
-    save(save_filename, 'PM','PM_optim', 'radiometric');
+    save(save_filename, 'PM','PM_optim', 'radiometric','radiometric_optim');
 end
 
 %% Display errors and estimated parameters
