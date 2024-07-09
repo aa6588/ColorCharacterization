@@ -5,12 +5,12 @@ clear
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % load('Calibration_UnrealStandard_Vive_6_11_2024.mat');
-% save_filename = 'dE_Calibration_UnrealStandard_Quest_06_18_2024.mat';
+ save_filename = 'dE_Calibration_D65_Vive_07_9_2024.mat';
 addpath(genpath('C:\Users\orange\Documents\GitHub\ColorCharacterization\src\color_transformations\'))
-addpath(genpath('C:\Users\orange\Documents\GitHub\MCSL-Tools\'))
+addpath(genpath('C:\Users\orange\Documents\GitHub\MCSL-Tools\Convert\'))
 
 %% Comment or uncomment accordingly (HTC 5:255)
-x = (0:17:255)./255;
+x = (0:5:255)./255;
 
 primaries(1, :) = [Red];
 primaries(2, :) = [Green];
@@ -163,8 +163,8 @@ xlabel('Unreal RGB Reflectance');ylabel('RGB radiometric scalar');title('EOTF');
 % LOOK AT TEST COLORS RGB
 load PredefinedRGB.mat
 
-RGBStest = rgb; 
-aux  = Validation_rand(1:125); 
+RGBStest = [rgb;rgbs]; 
+aux  = Validation_rand; 
 
 for ch = 1:3
 
@@ -265,26 +265,15 @@ axis([min([lab_est(:, 3); lab_meas(:, 3)]) max([lab_est(:, 3);...
 
 %% Perform the validation using the calibration matrix and gamma values
 % LOOK AT TEST COLORS Labs
+%NEED TO COMPARE TO ORIGININAL LABS
+aux  = Validation_lab; 
 
-RGBStest = RGB_forLabs; 
-aux  = Validation_rand(126:end); 
-
-for ch = 1:3
-
-    RGBStestLinear(:, ch) = interp1(x, radiometric(:, ch), ...
-        RGBStest(:, ch));
-    RGBSwhite(:, ch) = interp1(x, radiometric(:, ch), 1);
-    
-end
-
-XYZ = (PM * RGBStestLinear')';
-xyY = XYZToxyY(XYZ')';
-XYZwhite = (PM * RGBSwhite')';
-
+clear XYZmeas
 for i=1:length(aux)
     XYZmeas(i, :) = aux(i).color.XYZ;
 end
-
+XYZ = Lab2XYZ(lab_values,[95.04  100  108.88] );
+xyY = XYZToxyY(XYZ')';
 xyYmeas = XYZToxyY(XYZmeas')';
 
 %% Plot the results
@@ -300,15 +289,17 @@ title('Chromaticity Error Labs')
 
 %% Compute deltae2000
 lab_meas = xyz2lab(XYZmeas, 'whitepoint', white.color.XYZ');
-lab_est  = xyz2lab(XYZ,     'whitepoint', XYZwhite);
+lab_est  = lab_values;
 
 dE = deltaE00(lab_meas', lab_est');
+viz = Lab2XYZ(lab_values,[95.04  100  108.88] );
+rgb_viz = XYZ2RGB(viz);
 
 figure;
 msize = 20;
 for i=1:length(dE)
-    plot(i, dE(i), 'o', 'color', RGBStest(i, :), ...
-        'markerfacecolor', RGBStest(i, :), 'markersize', msize);hold on
+    plot(i, dE(i), 'o', 'color', rgb_viz(i, :), ...
+        'markerfacecolor', rgb_viz(i, :), 'markersize', msize);hold on
 end
 plot(1:length(dE), ones(1, length(dE)), 'k--');
 
@@ -322,8 +313,8 @@ msize=15;
 figure;
 subplot 131;
 for i = 2:size(lab_est, 1)
-    plot(lab_est(i, 2), lab_est(i, 3), 'o', 'color', RGBStest(i, :), ...
-        'markerfacecolor', RGBStest(i, :), 'markersize', msize);hold on
+    plot(lab_est(i, 2), lab_est(i, 3), 'o', 'color', rgb_viz(i, :), ...
+        'markerfacecolor', rgb_viz(i, :), 'markersize', msize);hold on
     
     plot(lab_meas(i, 2), lab_meas(i, 3), 'kx', 'markersize', msize);hold on
     xlabel('a*','FontSize',15)
@@ -336,8 +327,8 @@ axis([min([lab_est(:, 2); lab_meas(:, 2)]) max([lab_est(:, 2);...
 
 subplot 132;
 for i = 2:size(lab_est, 1)
-    plot(lab_est(i, 2), lab_est(i, 1), 'o', 'color', RGBStest(i, :), ...
-        'markerfacecolor', RGBStest(i, :), 'markersize', msize);hold on
+    plot(lab_est(i, 2), lab_est(i, 1), 'o', 'color', rgb_viz(i, :), ...
+        'markerfacecolor', rgb_viz(i, :), 'markersize', msize);hold on
     
     plot(lab_meas(i, 2), lab_meas(i, 1), 'kx', 'markersize', msize);hold on
     xlabel('a*','FontSize',15)
@@ -350,8 +341,8 @@ axis([min([lab_est(:, 2); lab_meas(:, 2)]) max([lab_est(:, 2);...
 
 subplot 133;
 for i = 2:size(lab_est, 1)
-    plot(lab_est(i, 3), lab_est(i, 1), 'o', 'color', RGBStest(i, :), ...
-        'markerfacecolor', RGBStest(i, :), 'markersize', msize);hold on
+    plot(lab_est(i, 3), lab_est(i, 1), 'o', 'color', rgb_viz(i, :), ...
+        'markerfacecolor', rgb_viz(i, :), 'markersize', msize);hold on
     
     plot(lab_meas(i, 3), lab_meas(i, 1), 'kx', 'markersize', msize);hold on
     xlabel('b*','FontSize',15)
@@ -382,6 +373,7 @@ XYZwhite = (PM_optim * RGBSwhite')';
 
 lab_meas = xyz2lab(XYZmeas, 'whitepoint', white.color.XYZ');
 lab_est  = xyz2lab(XYZ,     'whitepoint', XYZwhite);
+%lab_est = lab_values;
 dE_optim = deltaE00(lab_meas', lab_est');
 
 %chromaticity optim
@@ -405,8 +397,7 @@ plot(1:length(dE_optim), ones(1, length(dE_optim)), 'k--');
 
 %% Save characterization values and deltae errors
 if ~isempty(save_filename)
-    save(save_filename, 'PM', 'radiometric', ...
-        'dE_optim', 'lab_meas', 'lab_est', 'dE_nocalib');
+    save(save_filename, 'PM','PM_optim', 'radiometric');
 end
 
 %% Display errors and estimated parameters

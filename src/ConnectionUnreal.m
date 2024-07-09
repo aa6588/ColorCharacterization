@@ -2,14 +2,14 @@ clc
 clear
 addpath(genpath('C:\Users\orange\Documents\GitHub\ColorCharacterization\utils\'))
 addpath(genpath('C:\Users\orange\Documents\GitHub\ColorCharacterization\src\color_transformations\'))
-addpath(genpath('C:\Users\orange\Documents\GitHub\MCSL-Tools\'))
+addpath(genpath('C:\Users\orange\Documents\GitHub\MCSL-Tools\Convert\'))
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
 %% Main function for Matlab/Unreal connection measure primaries
 %% D:\VR_Projects\CalibrationHMD unreal
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-save_filename = 'Calibration_FinalScene_WHITE03int_frontlight_1.0wall_16step_Vive_7_2_2024.mat';
+save_filename = 'Calibration_D65_03int_frontlight_1.0wall_16step_Vive_7_9_2024.mat';
 
 % HTC=0;
 % Pimax=1;
@@ -35,7 +35,7 @@ fopen(t);
 % yCompare=-1;
 % zCompare=1000;
 
-range = (0:17:255)./255;
+range = (0:5:255)./255;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
 %% Measure Red channel
@@ -64,7 +64,7 @@ while i <= length(range)
     xyzObtain_red(i,:)=Red(i).color.XYZ';
 
     if i > 1
-        while abs(xyzObtain_red(i,1) - xyzObtain_red(i-1,1)) < .3 
+        while abs(xyzObtain_red(i,1) - xyzObtain_red(i-1,1)) < .05 
             fwrite(t, "Value:" + range(i) + "," + 0 + "," + 0);
             a = fscanf(t, '%s\n');
 
@@ -148,7 +148,7 @@ while i<=length(range)
     xyzObtain_green(i,:)=Green(i).color.XYZ';
 
    if i > 1
-        while abs(xyzObtain_green(i,2) - xyzObtain_green(i-1,2)) < .3 
+        while abs(xyzObtain_green(i,2) - xyzObtain_green(i-1,2)) < .05 
             fwrite(t, "Value:" + 0 + "," + range(i) +  "," + 0);
             a = fscanf(t, '%s\n');
 
@@ -229,7 +229,7 @@ while i<=length(range)
     xyzObtain_blue(i,:)=Blue(i).color.XYZ';
 
     if i > 1
-        while abs(xyzObtain_blue(i,3) - xyzObtain_blue(i-1,3)) < .3 
+        while abs(xyzObtain_blue(i,3) - xyzObtain_blue(i-1,3)) < .05 
             fwrite(t, "Value:" + 0 + "," + 0 + "," + range(i));
             a = fscanf(t, '%s\n');
 
@@ -310,7 +310,7 @@ while i<=length(range)
     
 
     if i > 1
-        while abs(xyzObtain_gray(i,2) - xyzObtain_gray(i-1,2)) < .3 
+        while abs(xyzObtain_gray(i,2) - xyzObtain_gray(i-1,2)) < .1 
             fwrite(t, "Value:" + range(i) + "," + range(i) + "," + range(i));
             a = fscanf(t, '%s\n');
 
@@ -370,13 +370,15 @@ end
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-load PredefinedRGB.mat %1-125 is cube rgb values. 126-x is lab values
+load PredefinedRGB.mat %1-125 is cube rgb values. 126-x is lab values 224
 cont=0;
 clear range
+RGB_forLabs = rgbs;
 PredefinedRGB = round([rgb;RGB_forLabs].*255); %1-125 is RGB cube, 126-end is labs
 range = double([rgb;RGB_forLabs]);
 
-for i = 1:size(PredefinedRGB, 1)
+for i = 165
+%for i = 126:size(PredefinedRGB, 1)
     tic
 
     fwrite(t, "Value:" + range(i, 1) + "," + range(i, 2) + "," ...
@@ -395,7 +397,7 @@ for i = 1:size(PredefinedRGB, 1)
     xyzObtain_valid(i,:)=Validation_rand(i).color.XYZ';
 
     if i > 1
-        while max(abs(xyzObtain_valid(i,:) - xyzObtain_valid(i-1,:))) < .4 
+        while max(abs(xyzObtain_valid(i,:) - xyzObtain_valid(i-1,:))) < .05 
             fwrite(t, "Value:" + range(i, 1) + "," + range(i, 2) + "," ...
             + range(i, 3));
             a = fscanf(t, '%s\n');
@@ -422,10 +424,67 @@ for i = 1:size(PredefinedRGB, 1)
 end
 
 
-% save(save_filename, 'Red', 'Blue', 'Green', 'Gray', 'White','-v7.3');
+ %save(save_filename, 'Red', 'Blue', 'Green', 'Gray', 'White');
 
-save(save_filename, 'Red', 'Blue', 'Green', 'Gray', 'White', ...
-                     'Validation_rand', 'PredefinedRGB');
+save(save_filename, 'Red', 'Blue', 'Green', 'Gray', 'White','Validation_rand', 'PredefinedRGB');
 
-                
+    %%  LAB Validation
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+load Lab_RGBs.mat %1-125 is cube rgb values. 126-x is lab values
+cont=0;
+clear range
+RGB_forLabs = RGB_forLabs_D65;
+RGB_labs = round(RGB_forLabs.*255); %1-125 is RGB cube, 126-end is labs
+range = double(RGB_forLabs);
+
+for i = 96
+%for i = 1:size(RGB_labs, 1)
+    tic
+
+    fwrite(t, "Value:" + range(i, 1) + "," + range(i, 2) + "," ...
+        + range(i, 3));
+    a = fscanf(t, '%s\n');
+
+    while ~strcmp(a, "SHOT")
+        a = fscanf(t, '%s\n');
+        fwrite(t, "Value:" + range(i, 1) + "," + range(i, 2) + ...
+            "," + range(i, 3));
+    end
+
+    disp("Value:" + range(i, 1) + "," + range(i, 2) + "," + range(i, 3))
+    pause(3)
+    Validation_lab(i) = cs2000.measure;
+    xyzObtain_lab(i,:)=Validation_lab(i).color.XYZ';
+
+    if i > 1
+        while max(abs(xyzObtain_lab(i,:) - xyzObtain_lab(i-1,:))) < .05 
+            fwrite(t, "Value:" + range(i, 1) + "," + range(i, 2) + "," ...
+            + range(i, 3));
+            a = fscanf(t, '%s\n');
+
+        while ~strcmp(a, "SHOT")
+            a = fscanf(t, '%s\n');
+            fwrite(t, "Value:" + range(i, 1) + "," + range(i, 2) + ...
+            "," + range(i, 3));
+        end
+    disp('Measurement is the same as previous, taking a new measurement...')
+    disp("Retake Value:" + range(i, 1) + "," + range(i, 2) + "," + range(i, 3))
+    pause(3)
+    Validation_lab(i) = cs2000.measure;
+    xyzObtain_lab(i,:)=Validation_lab(i).color.XYZ';
+        end
+
+    end
+
+    t_time = toc;
+    disp(['It took ', num2str(t_time), ' s']);
+    disp(['Trial #: ', num2str(i),' out of ',num2str(size(RGB_labs, 1))])
+    disp '-------------------------------------------'
+
+end       
+
+save(save_filename, 'Red', 'Blue', 'Green', 'Gray', 'White','Validation_rand', 'RGB_labs','Validation_lab','PredefinedRGB');
+
 %fwrite(t,"DONE:0");

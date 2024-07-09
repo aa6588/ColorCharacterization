@@ -1,58 +1,59 @@
-% Define the angles for 12 directions (like a clock)
-angles = linspace(0, 2*pi, 12);
-
-% Define the radius steps
-radii = linspace(0, 20, 4); % 3 steps from 0 to 20
+% Define the range and steps for a* and b*
+a_values = -20:5:20;
+b_values = -20:5:20;
 
 % Define the fixed levels of L*
-L_levels = [55 70 85];
+L_levels = [40, 60, 80];
 
 % Initialize an array to store the L*a*b* values
 lab_values = [];
 
-% Loop over the L* levels, angles, and radii to generate the values
+% Loop over the L* levels, a* values, and b* values to generate the grid
 for L = L_levels
-    for angle = angles
-        for r = radii
-            a_value = r * cos(angle);
-            b_value = r * sin(angle);
-            lab_values = [lab_values; L, a_value, b_value];
+    for a = a_values
+        for b = b_values
+            % Check if the point is on the horizontal, vertical, or diagonal lines
+            if (a == 0 || b == 0 || abs(a) == abs(b))
+                lab_values = [lab_values; L, a, b];
+            end
         end
     end
 end
-lab_values = round(lab_values);
 
 viz = Lab2XYZ(lab_values,[95.04  100  108.88] );
-rgb = XYZ2RGB(viz);
+rgbs = XYZ2RGB(viz);
+
 figure;
-for i = 1:48
+for i = 1:33
     plot(lab_values(i, 2), lab_values(i, 3), 'o', 'color', rgb(i, :), ...
-        'markerfacecolor', rgb(i, :), 'markersize', msize);hold on
+        'markerfacecolor', rgb(i, :), 'markersize', 40);hold on
     xlabel('a*','FontSize',15)
     ylabel('b*','FontSize',15)
 end
 figure;
-for i = 49:96
+for i = 34:66
     plot(lab_values(i, 2), lab_values(i, 3), 'o', 'color', rgb(i, :), ...
-        'markerfacecolor', rgb(i, :), 'markersize', msize);hold on
+        'markerfacecolor', rgb(i, :), 'markersize', 40);hold on
     xlabel('a*','FontSize',15)
     ylabel('b*','FontSize',15)
 end
 figure;
-for i = 97:144
+for i = 67:99
     plot(lab_values(i, 2), lab_values(i, 3), 'o', 'color', rgb(i, :), ...
-        'markerfacecolor', rgb(i, :), 'markersize', msize);hold on
+        'markerfacecolor', rgb(i, :), 'markersize', 40);hold on
     xlabel('a*','FontSize',15)
     ylabel('b*','FontSize',15)
 end
 
 %apply characterization
 XYZs_forLab = Lab2XYZ(lab_values,white.color.XYZ);
-rgb_aim = (PM \ XYZs_forLab')';
+rgb_aim = (PM_optim \ XYZs_forLab')';
 
 for i=1:size(rgb_aim,1)
-    RGB_forLabs(i,1) = interp1(radiometric(:, 1),x,rgb_aim(i,1),'linear',1);
-    RGB_forLabs(i,2) = interp1(radiometric(:, 2),x,rgb_aim(i,2),'linear',1);
-    RGB_forLabs(i,3) = interp1(radiometric(:, 3),x,rgb_aim(i,3),'linear',1);
+    RGB_forLabs_D65(i,1) = interp1(radiometric(:, 1),x,rgb_aim(i,1),'spline','extrap');
+    RGB_forLabs_D65(i,2) = interp1(radiometric(:, 2),x,rgb_aim(i,2),'spline','extrap');
+    RGB_forLabs_D65(i,3) = interp1(radiometric(:, 3),x,rgb_aim(i,3),'spline','extrap');
 end
+RGB_forLabs_D65 = min(max(RGB_forLabs_D65,0),1);
 
+save('Lab_RGBs.mat',"RGB_forLabs_D65","RGB_forLabs_Red")
