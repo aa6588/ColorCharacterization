@@ -373,7 +373,7 @@ end
 load PredefinedRGB.mat %1-125 is cube rgb values. 126-x is lab values 224
 cont=0;
 clear range
-PredefinedRGB = round([rgb;rgbs].*255); %1-125 is RGB cube, 126-end is labs
+PredefinedRGB = [rgb;rgbs]; %1-125 is RGB cube, 126-end is labs
 range = double([rgb;rgbs]);
 
 for i = 165
@@ -484,6 +484,6 @@ for i = 96
 
 end       
 
-save(save_filename, 'Red', 'Blue', 'Green', 'Gray', 'White','Validation_rand', 'RGB_labs','Validation_lab','PredefinedRGB');
+save(save_filename, 'Red', 'Blue', 'Green', 'Gray', 'White','Validation_rand', 'RGB_forLabs','Validation_lab','PredefinedRGB');
 
 %fwrite(t,"DONE:0");
