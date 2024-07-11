@@ -44,16 +44,18 @@ for i = 67:99
     xlabel('a*','FontSize',15)
     ylabel('b*','FontSize',15)
 end
-
+%%
 %apply characterization
+load lab_aim.mat
+load Lab_RGBs.mat
 XYZs_forLab = Lab2XYZ(lab_values,white.color.XYZ);
 rgb_aim = (PM_optim \ XYZs_forLab')';
 
 for i=1:size(rgb_aim,1)
-    RGB_forLabs_D65(i,1) = interp1(radiometric_optim(:, 1),x,rgb_aim(i,1),'spline','extrap');
-    RGB_forLabs_D65(i,2) = interp1(radiometric_optim(:, 2),x,rgb_aim(i,2),'spline','extrap');
-    RGB_forLabs_D65(i,3) = interp1(radiometric_optim(:, 3),x,rgb_aim(i,3),'spline','extrap');
+    RGB_forLabs_Red(i,1) = interp1(radiometric_optim(:, 1),x,rgb_aim(i,1),'spline','extrap');
+    RGB_forLabs_Red(i,2) = interp1(radiometric_optim(:, 2),x,rgb_aim(i,2),'spline','extrap');
+    RGB_forLabs_Red(i,3) = interp1(radiometric_optim(:, 3),x,rgb_aim(i,3),'spline','extrap');
 end
-RGB_forLabs_D65 = min(max(RGB_forLabs_D65,0),1);
+RGB_forLabs_Red = min(max(RGB_forLabs_Red,0),1);
 
 save('Lab_RGBs.mat',"RGB_forLabs_D65","RGB_forLabs_Red")

@@ -5,7 +5,7 @@ clear
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % load('Calibration_UnrealStandard_Vive_6_11_2024.mat');
- save_filename = 'dE_Calibration_D65_Vive_07_9_2024.mat';
+%save_filename = 'dE_Calibration_Red_Vive_07_11_2024.mat';
 addpath(genpath('C:\Users\orange\Documents\GitHub\ColorCharacterization\src\color_transformations\'))
 addpath(genpath('C:\Users\orange\Documents\GitHub\MCSL-Tools\Convert\'))
 
@@ -309,49 +309,49 @@ xlabel('Colours','FontSize',40)
 ylabel('DeltaE00','FontSize',40)
 
 
-msize=15;
-figure;
-subplot 131;
-for i = 2:size(lab_est, 1)
-    plot(lab_est(i, 2), lab_est(i, 3), 'o', 'color', rgb_viz(i, :), ...
-        'markerfacecolor', rgb_viz(i, :), 'markersize', msize);hold on
-    
-    plot(lab_meas(i, 2), lab_meas(i, 3), 'kx', 'markersize', msize);hold on
-    xlabel('a*','FontSize',15)
-    ylabel('b*','FontSize',15)
-end
-axis equal
-axis([min([lab_est(:, 2); lab_meas(:, 2)]) max([lab_est(:, 2);...
-    lab_meas(:, 2)]) min([lab_est(:, 3); lab_meas(:, 3)]) ...
-    max([lab_meas(:, 3);lab_est(:, 3)])])
-
-subplot 132;
-for i = 2:size(lab_est, 1)
-    plot(lab_est(i, 2), lab_est(i, 1), 'o', 'color', rgb_viz(i, :), ...
-        'markerfacecolor', rgb_viz(i, :), 'markersize', msize);hold on
-    
-    plot(lab_meas(i, 2), lab_meas(i, 1), 'kx', 'markersize', msize);hold on
-    xlabel('a*','FontSize',15)
-    ylabel('L*','FontSize',15)
-end
-axis equal
-axis([min([lab_est(:, 2); lab_meas(:, 2)]) max([lab_est(:, 2);...
-    lab_meas(:, 2)]) min([lab_est(:, 1); lab_meas(:, 1)]) ...
-    max([lab_meas(:, 1);lab_est(:, 1)])])
-
-subplot 133;
-for i = 2:size(lab_est, 1)
-    plot(lab_est(i, 3), lab_est(i, 1), 'o', 'color', rgb_viz(i, :), ...
-        'markerfacecolor', rgb_viz(i, :), 'markersize', msize);hold on
-    
-    plot(lab_meas(i, 3), lab_meas(i, 1), 'kx', 'markersize', msize);hold on
-    xlabel('b*','FontSize',15)
-    ylabel('L*','FontSize',15)
-end
-axis equal
-axis([min([lab_est(:, 3); lab_meas(:, 3)]) max([lab_est(:, 3);...
-    lab_meas(:, 3)]) min([lab_est(:, 1); lab_meas(:, 1)]) ...
-    max([lab_meas(:, 1);lab_est(:, 1)])])
+% msize=15;
+% figure;
+% subplot 131;
+% for i = 2:size(lab_est, 1)
+%     plot(lab_est(i, 2), lab_est(i, 3), 'o', 'color', rgb_viz(i, :), ...
+%         'markerfacecolor', rgb_viz(i, :), 'markersize', msize);hold on
+% 
+%     plot(lab_meas(i, 2), lab_meas(i, 3), 'kx', 'markersize', msize);hold on
+%     xlabel('a*','FontSize',15)
+%     ylabel('b*','FontSize',15)
+% end
+% axis equal
+% axis([min([lab_est(:, 2); lab_meas(:, 2)]) max([lab_est(:, 2);...
+%     lab_meas(:, 2)]) min([lab_est(:, 3); lab_meas(:, 3)]) ...
+%     max([lab_meas(:, 3);lab_est(:, 3)])])
+% 
+% subplot 132;
+% for i = 2:size(lab_est, 1)
+%     plot(lab_est(i, 2), lab_est(i, 1), 'o', 'color', rgb_viz(i, :), ...
+%         'markerfacecolor', rgb_viz(i, :), 'markersize', msize);hold on
+% 
+%     plot(lab_meas(i, 2), lab_meas(i, 1), 'kx', 'markersize', msize);hold on
+%     xlabel('a*','FontSize',15)
+%     ylabel('L*','FontSize',15)
+% end
+% axis equal
+% axis([min([lab_est(:, 2); lab_meas(:, 2)]) max([lab_est(:, 2);...
+%     lab_meas(:, 2)]) min([lab_est(:, 1); lab_meas(:, 1)]) ...
+%     max([lab_meas(:, 1);lab_est(:, 1)])])
+% 
+% subplot 133;
+% for i = 2:size(lab_est, 1)
+%     plot(lab_est(i, 3), lab_est(i, 1), 'o', 'color', rgb_viz(i, :), ...
+%         'markerfacecolor', rgb_viz(i, :), 'markersize', msize);hold on
+% 
+%     plot(lab_meas(i, 3), lab_meas(i, 1), 'kx', 'markersize', msize);hold on
+%     xlabel('b*','FontSize',15)
+%     ylabel('L*','FontSize',15)
+% end
+% axis equal
+% axis([min([lab_est(:, 3); lab_meas(:, 3)]) max([lab_est(:, 3);...
+%     lab_meas(:, 3)]) min([lab_est(:, 1); lab_meas(:, 1)]) ...
+%     max([lab_meas(:, 1);lab_est(:, 1)])])
 %% optional optimization
 options = optimset('Display','iter');
 PM = double(PM);
@@ -359,7 +359,7 @@ PM = double(PM);
 [PM_optim, fval] = fminsearch(@Day,PM,options,XYZmeas,RGBStest,x,Xs,Ys,Zs);
 
 %rerun deltaE
-radiometric_opitm = (PM_optim \ [Xs(:, 4) Ys(:, 4) Zs(:, 4)]')';
+radiometric_optim = (PM_optim \ [Xs(:, 4) Ys(:, 4) Zs(:, 4)]')';
 for ch = 1:3
 
     RGBStestLinear(:, ch) = interp1(x, radiometric_optim(:, ch), ...

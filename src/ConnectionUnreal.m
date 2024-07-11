@@ -9,7 +9,7 @@ addpath(genpath('C:\Users\orange\Documents\GitHub\MCSL-Tools\Convert\'))
 %% D:\VR_Projects\CalibrationHMD unreal
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-save_filename = 'Calibration_D65_03int_frontlight_1.0wall_16step_Vive_7_9_2024.mat';
+save_filename = 'Calibration_Red_03int_frontlight_1.0wall_16step_Vive_7_11_2024.mat';
 
 % HTC=0;
 % Pimax=1;
@@ -376,8 +376,8 @@ clear range
 PredefinedRGB = [rgb;rgbs]; %1-125 is RGB cube, 126-end is labs
 range = double([rgb;rgbs]);
 
-for i = 165
-%for i = 126:size(PredefinedRGB, 1)
+for i = 74
+%for i = 1:size(PredefinedRGB, 1)
     tic
 
     fwrite(t, "Value:" + range(i, 1) + "," + range(i, 2) + "," ...
@@ -434,12 +434,12 @@ save(save_filename, 'Red', 'Blue', 'Green', 'Gray', 'White','Validation_rand', '
 load Lab_RGBs.mat %1-125 is cube rgb values. 126-x is lab values
 cont=0;
 clear range
-RGB_forLabs = RGB_forLabs_D65;
+RGB_forLabs = RGB_forLabs_Red;
 RGB_labs = round(RGB_forLabs.*255); %1-125 is RGB cube, 126-end is labs
 range = double(RGB_forLabs);
 
-for i = 96
-%for i = 1:size(RGB_labs, 1)
+%for i = 83
+for i = 1:size(RGB_labs, 1)
     tic
 
     fwrite(t, "Value:" + range(i, 1) + "," + range(i, 2) + "," ...
@@ -458,7 +458,7 @@ for i = 96
     xyzObtain_lab(i,:)=Validation_lab(i).color.XYZ';
 
     if i > 1
-        while max(abs(xyzObtain_lab(i,:) - xyzObtain_lab(i-1,:))) < .05 
+        while max(abs(xyzObtain_lab(i,:) - xyzObtain_lab(i-1,:))) < .08 
             fwrite(t, "Value:" + range(i, 1) + "," + range(i, 2) + "," ...
             + range(i, 3));
             a = fscanf(t, '%s\n');
@@ -486,4 +486,4 @@ end
 
 save(save_filename, 'Red', 'Blue', 'Green', 'Gray', 'White','Validation_rand', 'RGB_forLabs','Validation_lab','PredefinedRGB');
 
-%fwrite(t,"DONE:0");
+% %fwrite(t,"DONE:0");
