@@ -17,8 +17,8 @@ end
 XYZ_predict = (pm * rgb_scalar')';
 XYZwhite = (pm * rgbw')' ;
 
-Lab_predict = xyz2lab(XYZ_predict,'WhitePoint',XYZwhite);
-    Lab_meas = xyz2lab(XYZmeas,'WhitePoint',[Xs(end,4), Ys(end,4), Zs(end,4)]);
+Lab_predict = XYZ2Lab(XYZ_predict,XYZwhite);
+    Lab_meas = XYZ2Lab(XYZmeas,[Xs(end,4), Ys(end,4), Zs(end,4)]);
     deltaE = deltaE00(Lab_predict',Lab_meas');
     avg_dE = mean(deltaE);
 end

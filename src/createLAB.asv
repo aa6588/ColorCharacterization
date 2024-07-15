@@ -58,4 +58,4 @@ for i=1:size(rgb_aim,1)
 end
 RGB_forLabs_Blue = min(max(RGB_forLabs_Blue,0),1);
 
-save('Lab_RGBs.mat',"RGB_forLabs_D65","RGB_forLabs_Red","RGB_forLabs_Green",'RGB_forLabs_Blue')
+save('Lab_RGBs.mat',"RGB_forLabs_D65","RGB_forLabs_Red","RGB_forLabs_Green",)

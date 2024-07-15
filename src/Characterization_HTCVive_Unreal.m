@@ -5,7 +5,7 @@ clear
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % load('Calibration_UnrealStandard_Vive_6_11_2024.mat');
-%save_filename = 'dE_Calibration_Red_Vive_07_11_2024.mat';
+save_filename = 'dE_Calibration_Blue_Vive_07_11_2024.mat';
 addpath(genpath('C:\Users\orange\Documents\GitHub\ColorCharacterization\src\color_transformations\'))
 addpath(genpath('C:\Users\orange\Documents\GitHub\MCSL-Tools\Convert\'))
 
@@ -42,8 +42,10 @@ for i=1:size(primaries, 1)
 end
 
 primary = [0.64, .33; .3, .6; .15, .06; .64, .33];
+display = [xs(end,1), ys(end,1);xs(end,2),ys(end,2);xs(end,3),ys(end,3);xs(end,1),ys(end,1)];
 k1 = plot(primary(:,1),primary(:,2),'--k'); %gamut
-legend(k1,'sRGB Gamut')
+k2 = plot(display(:,1),display(:,2),'-r'); %gamut
+legend([k1 k2],{'sRGB Gamut','display gamut'})
 title('Primary Ramp Chromaticity')
 
 yticks([0 0.2 0.4 0.6 0.8])
@@ -175,14 +177,14 @@ for ch = 1:3
 end
 
 XYZ = (PM * RGBStestLinear')';
-xyY = XYZToxyY(XYZ')';
+xyY = XYZ2xyY(XYZ')';
 XYZwhite = (PM * RGBSwhite')';
 
 for i=1:length(aux)
     XYZmeas(i, :) = aux(i).color.XYZ;
 end
 
-xyYmeas = XYZToxyY(XYZmeas')';
+xyYmeas = XYZ2xyY(XYZmeas')';
 
 %% Plot the results
 plotChrom();hold on
@@ -196,13 +198,13 @@ title('Chromaticity Error')
 
 
 %% Compute deltae2000
-lab_meas = xyz2lab(XYZmeas, 'whitepoint', white.color.XYZ');
-lab_est  = xyz2lab(XYZ,     'whitepoint', XYZwhite);
-lab_nocalib  = rgb2lab(RGBStest, 'whitepoint', [1 1 1], ...
-    'ColorSpace','linear-rgb');
+lab_meas = XYZ2Lab(XYZmeas, white.color.XYZ');
+lab_est  = XYZ2Lab(XYZ, XYZwhite);
+%lab_nocalib  = rgb2lab(RGBStest, 'whitepoint', [1 1 1], ...
+ %   'ColorSpace','linear-rgb');
 
 dE = deltaE00(lab_meas', lab_est');
-dE_nocalib = deltaE00(lab_meas', lab_nocalib');
+%dE_nocalib = deltaE00(lab_meas', lab_nocalib');
 
 
 figure;
@@ -267,19 +269,19 @@ axis([min([lab_est(:, 3); lab_meas(:, 3)]) max([lab_est(:, 3);...
 % LOOK AT TEST COLORS Labs
 %NEED TO COMPARE TO ORIGININAL LABS
 aux  = Validation_lab; 
-
+load lab_aim.mat
 clear XYZmeas
 for i=1:length(aux)
     XYZmeas(i, :) = aux(i).color.XYZ;
 end
-XYZ = Lab2XYZ(lab_values,[95.04  100  108.88] );
-xyY = XYZToxyY(XYZ')';
-xyYmeas = XYZToxyY(XYZmeas')';
+XYZ = Lab2XYZ(lab_values,white.color.XYZ );
+xyY = XYZ2xyY(XYZ')';
+xyYmeas = XYZ2xyY(XYZmeas')';
 
 %% Plot the results
 plotChrom();hold on
-plot(xyY(:, 1),xyY(:, 2),'bo','MarkerSize',10,'LineWidth',2);
-plot(xyYmeas(:,1),xyYmeas(:,2),'kx','markersize',12,'linewidth',2)
+plot(xyY(1:34, 1),xyY(1:34, 2),'bo','MarkerSize',10,'LineWidth',2);
+plot(xyYmeas(1:34,1),xyYmeas(1:34,2),'kx','markersize',12,'linewidth',2)
 set(gca,'FontSize',15,'LineWidth',2)
 box off
 xlabel('x','FontSize',15)
@@ -288,7 +290,7 @@ title('Chromaticity Error Labs')
 
 
 %% Compute deltae2000
-lab_meas = xyz2lab(XYZmeas, 'whitepoint', white.color.XYZ');
+lab_meas = XYZ2Lab(XYZmeas, white.color.XYZ');
 lab_est  = lab_values;
 
 dE = deltaE00(lab_meas', lab_est');
@@ -309,49 +311,49 @@ xlabel('Colours','FontSize',40)
 ylabel('DeltaE00','FontSize',40)
 
 
-% msize=15;
-% figure;
-% subplot 131;
-% for i = 2:size(lab_est, 1)
-%     plot(lab_est(i, 2), lab_est(i, 3), 'o', 'color', rgb_viz(i, :), ...
-%         'markerfacecolor', rgb_viz(i, :), 'markersize', msize);hold on
-% 
-%     plot(lab_meas(i, 2), lab_meas(i, 3), 'kx', 'markersize', msize);hold on
-%     xlabel('a*','FontSize',15)
-%     ylabel('b*','FontSize',15)
-% end
-% axis equal
-% axis([min([lab_est(:, 2); lab_meas(:, 2)]) max([lab_est(:, 2);...
-%     lab_meas(:, 2)]) min([lab_est(:, 3); lab_meas(:, 3)]) ...
-%     max([lab_meas(:, 3);lab_est(:, 3)])])
-% 
-% subplot 132;
-% for i = 2:size(lab_est, 1)
-%     plot(lab_est(i, 2), lab_est(i, 1), 'o', 'color', rgb_viz(i, :), ...
-%         'markerfacecolor', rgb_viz(i, :), 'markersize', msize);hold on
-% 
-%     plot(lab_meas(i, 2), lab_meas(i, 1), 'kx', 'markersize', msize);hold on
-%     xlabel('a*','FontSize',15)
-%     ylabel('L*','FontSize',15)
-% end
-% axis equal
-% axis([min([lab_est(:, 2); lab_meas(:, 2)]) max([lab_est(:, 2);...
-%     lab_meas(:, 2)]) min([lab_est(:, 1); lab_meas(:, 1)]) ...
-%     max([lab_meas(:, 1);lab_est(:, 1)])])
-% 
-% subplot 133;
-% for i = 2:size(lab_est, 1)
-%     plot(lab_est(i, 3), lab_est(i, 1), 'o', 'color', rgb_viz(i, :), ...
-%         'markerfacecolor', rgb_viz(i, :), 'markersize', msize);hold on
-% 
-%     plot(lab_meas(i, 3), lab_meas(i, 1), 'kx', 'markersize', msize);hold on
-%     xlabel('b*','FontSize',15)
-%     ylabel('L*','FontSize',15)
-% end
-% axis equal
-% axis([min([lab_est(:, 3); lab_meas(:, 3)]) max([lab_est(:, 3);...
-%     lab_meas(:, 3)]) min([lab_est(:, 1); lab_meas(:, 1)]) ...
-%     max([lab_meas(:, 1);lab_est(:, 1)])])
+msize=15;
+figure;
+subplot 131;
+for i = 1:size(lab_est, 1)
+    plot(lab_est(i, 2), lab_est(i, 3), 'o', 'color', rgb_viz(i, :), ...
+        'markerfacecolor', rgb_viz(i, :), 'markersize', msize);hold on
+
+    plot(lab_meas(i, 2), lab_meas(i, 3), 'kx', 'markersize', msize);hold on
+    xlabel('a*','FontSize',15)
+    ylabel('b*','FontSize',15)
+end
+axis equal
+axis([min([lab_est(:, 2); lab_meas(:, 2)]) max([lab_est(:, 2);...
+    lab_meas(:, 2)]) min([lab_est(:, 3); lab_meas(:, 3)]) ...
+    max([lab_meas(:, 3);lab_est(:, 3)])])
+
+subplot 132;
+for i = 1:size(lab_est, 1)
+    plot(lab_est(i, 2), lab_est(i, 1), 'o', 'color', rgb_viz(i, :), ...
+        'markerfacecolor', rgb_viz(i, :), 'markersize', msize);hold on
+
+    plot(lab_meas(i, 2), lab_meas(i, 1), 'kx', 'markersize', msize);hold on
+    xlabel('a*','FontSize',15)
+    ylabel('L*','FontSize',15)
+end
+axis equal
+axis([min([lab_est(:, 2); lab_meas(:, 2)]) max([lab_est(:, 2);...
+    lab_meas(:, 2)]) min([lab_est(:, 1); lab_meas(:, 1)]) ...
+    max([lab_meas(:, 1);lab_est(:, 1)])])
+
+subplot 133;
+for i = 1:size(lab_est, 1)
+    plot(lab_est(i, 3), lab_est(i, 1), 'o', 'color', rgb_viz(i, :), ...
+        'markerfacecolor', rgb_viz(i, :), 'markersize', msize);hold on
+
+    plot(lab_meas(i, 3), lab_meas(i, 1), 'kx', 'markersize', msize);hold on
+    xlabel('b*','FontSize',15)
+    ylabel('L*','FontSize',15)
+end
+axis equal
+axis([min([lab_est(:, 3); lab_meas(:, 3)]) max([lab_est(:, 3);...
+    lab_meas(:, 3)]) min([lab_est(:, 1); lab_meas(:, 1)]) ...
+    max([lab_meas(:, 1);lab_est(:, 1)])])
 %% optional optimization
 options = optimset('Display','iter');
 PM = double(PM);
@@ -368,11 +370,11 @@ for ch = 1:3
 end
 
 XYZ = (PM_optim * RGBStestLinear')';
-xyY = XYZToxyY(XYZ')';
+xyY = XYZ2xyY(XYZ')';
 XYZwhite = (PM_optim * RGBSwhite')';
 
-lab_meas = xyz2lab(XYZmeas, 'whitepoint', white.color.XYZ');
-lab_est  = xyz2lab(XYZ,     'whitepoint', XYZwhite);
+lab_meas = XYZ2Lab(XYZmeas, white.color.XYZ');
+lab_est  = XYZ2Lab(XYZ, XYZwhite);
 dE_optim = deltaE00(lab_meas', lab_est');
 
 %chromaticity optim
@@ -405,6 +407,6 @@ disp(num2str([mean(dE) median(dE) std(dE) min(dE) max(dE)]))
 disp 'Optim deltaE00 -> mean, median, std, min and max'
 disp(num2str([mean(dE_optim) median(dE_optim) std(dE_optim) min(dE_optim) max(dE_optim)]))
 
-disp 'deltaE00 no calibration -> mean, median, std, min and max'
-disp(num2str([mean(dE_nocalib) median(dE_nocalib) ...
-    std(dE_nocalib) min(dE_nocalib) max(dE_nocalib)]))
+% disp 'deltaE00 no calibration -> mean, median, std, min and max'
+% disp(num2str([mean(dE_nocalib) median(dE_nocalib) ...
+%     std(dE_nocalib) min(dE_nocalib) max(dE_nocalib)]))
