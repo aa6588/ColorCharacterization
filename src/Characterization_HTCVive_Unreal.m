@@ -5,7 +5,7 @@ clear
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % load('Calibration_UnrealStandard_Vive_6_11_2024.mat');
-save_filename = 'dE_Calibration_Blue_Vive_07_11_2024.mat';
+save_filename = 'dE_Calibration_Red_Vive_07_11_2024.mat';
 addpath(genpath('C:\Users\orange\Documents\GitHub\ColorCharacterization\src\color_transformations\'))
 addpath(genpath('C:\Users\orange\Documents\GitHub\MCSL-Tools\Convert\'))
 
@@ -188,8 +188,10 @@ xyYmeas = XYZ2xyY(XYZmeas')';
 
 %% Plot the results
 plotChrom();hold on
-plot(xyY(:, 1),xyY(:, 2),'bo','MarkerSize',10,'LineWidth',2);
+plot(xyY(:, 1),xyY(:, 2),'ro','MarkerSize',10,'LineWidth',2);
 plot(xyYmeas(:,1),xyYmeas(:,2),'kx','markersize',12,'linewidth',2)
+k1 = plot(primary(:,1),primary(:,2),'--k'); %gamut
+k2 = plot(display(:,1),display(:,2),'-r'); %gamut
 set(gca,'FontSize',15,'LineWidth',2)
 box off
 xlabel('x','FontSize',15)
@@ -198,7 +200,7 @@ title('Chromaticity Error')
 
 
 %% Compute deltae2000
-lab_meas = XYZ2Lab(XYZmeas, white.color.XYZ');
+lab_meas = XYZ2Lab(XYZmeas, White.color.XYZ');
 lab_est  = XYZ2Lab(XYZ, XYZwhite);
 %lab_nocalib  = rgb2lab(RGBStest, 'whitepoint', [1 1 1], ...
  %   'ColorSpace','linear-rgb');
@@ -274,14 +276,16 @@ clear XYZmeas
 for i=1:length(aux)
     XYZmeas(i, :) = aux(i).color.XYZ;
 end
-XYZ = Lab2XYZ(lab_values,white.color.XYZ );
+XYZ = Lab2XYZ(lab_values,White.color.XYZ );
 xyY = XYZ2xyY(XYZ')';
 xyYmeas = XYZ2xyY(XYZmeas')';
 
 %% Plot the results
 plotChrom();hold on
-plot(xyY(1:34, 1),xyY(1:34, 2),'bo','MarkerSize',10,'LineWidth',2);
-plot(xyYmeas(1:34,1),xyYmeas(1:34,2),'kx','markersize',12,'linewidth',2)
+plot(xyY(:, 1),xyY(:, 2),'ro','MarkerSize',10,'LineWidth',2);
+plot(xyYmeas(:,1),xyYmeas(:,2),'kx','markersize',12,'linewidth',2)
+k1 = plot(primary(:,1),primary(:,2),'--k'); %gamut
+k2 = plot(display(:,1),display(:,2),'-r'); %gamut
 set(gca,'FontSize',15,'LineWidth',2)
 box off
 xlabel('x','FontSize',15)
@@ -290,7 +294,7 @@ title('Chromaticity Error Labs')
 
 
 %% Compute deltae2000
-lab_meas = XYZ2Lab(XYZmeas, white.color.XYZ');
+lab_meas = XYZ2Lab(XYZmeas, White.color.XYZ');
 lab_est  = lab_values;
 
 dE = deltaE00(lab_meas', lab_est');
@@ -373,7 +377,7 @@ XYZ = (PM_optim * RGBStestLinear')';
 xyY = XYZ2xyY(XYZ')';
 XYZwhite = (PM_optim * RGBSwhite')';
 
-lab_meas = XYZ2Lab(XYZmeas, white.color.XYZ');
+lab_meas = XYZ2Lab(XYZmeas, White.color.XYZ');
 lab_est  = XYZ2Lab(XYZ, XYZwhite);
 dE_optim = deltaE00(lab_meas', lab_est');
 
