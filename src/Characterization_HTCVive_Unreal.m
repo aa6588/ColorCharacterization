@@ -188,7 +188,7 @@ xyYmeas = XYZ2xyY(XYZmeas')';
 
 %% Plot the results
 plotChrom();hold on
-plot(xyY(:, 1),xyY(:, 2),'bo','MarkerSize',10,'LineWidth',2);
+plot(xyY(:, 1),xyY(:, 2),'ro','MarkerSize',10,'LineWidth',2);
 plot(xyYmeas(:,1),xyYmeas(:,2),'kx','markersize',12,'linewidth',2)
 k1 = plot(primary(:,1),primary(:,2),'--k'); %gamut
 k2 = plot(display(:,1),display(:,2),'-r'); %gamut
@@ -282,7 +282,7 @@ xyYmeas = XYZ2xyY(XYZmeas')';
 
 %% Plot the results
 plotChrom();hold on
-plot(xyY(:, 1),xyY(:, 2),'bo','MarkerSize',10,'LineWidth',2);
+plot(xyY(:, 1),xyY(:, 2),'ro','MarkerSize',10,'LineWidth',2);
 plot(xyYmeas(:,1),xyYmeas(:,2),'kx','markersize',12,'linewidth',2)
 k1 = plot(primary(:,1),primary(:,2),'--k'); %gamut
 k2 = plot(display(:,1),display(:,2),'-r'); %gamut

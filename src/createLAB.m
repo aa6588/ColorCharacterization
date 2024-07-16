@@ -1,6 +1,6 @@
 % Define the range and steps for a* and b*
-a_values = -15:3:15;
-b_values = -15:3:15;
+a_values = -30:5:30;
+b_values = -30:5:30;
 
 % Define the fixed levels of L*
 L_levels = [40, 60, 80];
@@ -24,7 +24,7 @@ viz = Lab2XYZ(lab_values,[95.04  100  108.88] );
 rgbs = XYZ2RGB(viz);
 
 figure;
-for i = 1:41
+for i = 1:14
     plot(lab_values(i, 2), lab_values(i, 3), 'o', 'color', rgbs(i, :), ...
         'markerfacecolor', rgbs(i, :), 'markersize', 40);hold on
     xlabel('a*','FontSize',15)
