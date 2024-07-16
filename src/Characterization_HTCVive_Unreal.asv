@@ -5,7 +5,7 @@ clear
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % load('Calibration_UnrealStandard_Vive_6_11_2024.mat');
-save_filename = 'dE_Calibration_Blue_Vive_07_11_2024.mat';
+save_filename = 'dE_Calibration_Red_Vive_07_11_2024.mat';
 addpath(genpath('C:\Users\orange\Documents\GitHub\ColorCharacterization\src\color_transformations\'))
 addpath(genpath('C:\Users\orange\Documents\GitHub\MCSL-Tools\Convert\'))
 
@@ -42,9 +42,10 @@ for i=1:size(primaries, 1)
 end
 
 primary = [0.64, .33; .3, .6; .15, .06; .64, .33];
-display = [xs(end,1), ys(end,1);xs(end,2),ys(end,2)]
+display = [xs(end,1), ys(end,1);xs(end,2),ys(end,2);xs(end,3),ys(end,3);xs(end,1),ys(end,1)];
 k1 = plot(primary(:,1),primary(:,2),'--k'); %gamut
-legend(k1,'sRGB Gamut')
+k2 = plot(display(:,1),display(:,2),'-r'); %gamut
+legend([k1 k2],{'sRGB Gamut','display gamut'})
 title('Primary Ramp Chromaticity')
 
 yticks([0 0.2 0.4 0.6 0.8])
@@ -189,6 +190,8 @@ xyYmeas = XYZ2xyY(XYZmeas')';
 plotChrom();hold on
 plot(xyY(:, 1),xyY(:, 2),'bo','MarkerSize',10,'LineWidth',2);
 plot(xyYmeas(:,1),xyYmeas(:,2),'kx','markersize',12,'linewidth',2)
+k1 = plot(primary(:,1),primary(:,2),'--k'); %gamut
+k2 = plot(display(:,1),display(:,2),'-r'); %gamut
 set(gca,'FontSize',15,'LineWidth',2)
 box off
 xlabel('x','FontSize',15)
@@ -279,8 +282,10 @@ xyYmeas = XYZ2xyY(XYZmeas')';
 
 %% Plot the results
 plotChrom();hold on
-plot(xyY(1:34, 1),xyY(1:34, 2),'bo','MarkerSize',10,'LineWidth',2);
-plot(xyYmeas(1:34,1),xyYmeas(1:34,2),'kx','markersize',12,'linewidth',2)
+plot(xyY(:, 1),xyY(:98, 2),'bo','MarkerSize',10,'LineWidth',2);
+plot(xyYmeas(68:98,1),xyYmeas(68:98,2),'kx','markersize',12,'linewidth',2)
+k1 = plot(primary(:,1),primary(:,2),'--k'); %gamut
+k2 = plot(display(:,1),display(:,2),'-r'); %gamut
 set(gca,'FontSize',15,'LineWidth',2)
 box off
 xlabel('x','FontSize',15)
