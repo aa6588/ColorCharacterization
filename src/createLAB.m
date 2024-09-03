@@ -1,6 +1,20 @@
+%plot 3D Labs for each illum
+[xyzs,xyzw]=modRGB2XYZ(PM_optim,radiometric_optim,rgbs);
+Labs = XYZ2Lab(xyzs,xyzw);
+colors = rgbs;
+figure;
+msize = 10;
+for i=1:length(Labs)
+    plot3(Labs(i,2),Labs(i,3),Labs(i,1), '-o','color',colors(i, :), ...
+        'markerfacecolor', colors(i, :), 'markersize', msize);hold on
+end
+xlabel('a*')
+ylabel('b*')
+zlabel('L*')
+%%
 % Define the range and steps for a* and b*
-a_values = -30:5:30;
-b_values = -30:5:30;
+a_values = -10:2:10;
+b_values = -10:2:10;
 
 % Define the fixed levels of L*
 L_levels = [40, 60, 80];
@@ -24,7 +38,7 @@ viz = Lab2XYZ(lab_values,[95.04  100  108.88] );
 rgbs = XYZ2RGB(viz);
 
 figure;
-for i = 1:14
+for i = 1:41
     plot(lab_values(i, 2), lab_values(i, 3), 'o', 'color', rgbs(i, :), ...
         'markerfacecolor', rgbs(i, :), 'markersize', 40);hold on
     xlabel('a*','FontSize',15)
@@ -46,16 +60,8 @@ for i = 82:123
 end
 %%
 %apply characterization
-load lab_aim.mat
-load Lab_RGBs.mat
-XYZs_forLab = Lab2XYZ(lab_values,white.color.XYZ);
-rgb_aim = (PM_optim \ XYZs_forLab')';
+%load lab_aim.mat
+XYZs_forLab = Lab2XYZ(lab_values,xyzw);
+[RGBs_pred, gamut] = modXYZ2RGB(PM_optim,radiometric_optim,XYZs_forLab);
 
-for i=1:size(rgb_aim,1)
-    RGB_forLabs_Blue(i,1) = interp1(radiometric_optim(:, 1),x,rgb_aim(i,1),'linear','extrap');
-    RGB_forLabs_Blue(i,2) = interp1(radiometric_optim(:, 2),x,rgb_aim(i,2),'linear','extrap');
-    RGB_forLabs_Blue(i,3) = interp1(radiometric_optim(:, 3),x,rgb_aim(i,3),'linear','extrap');
-end
-RGB_forLabs_Blue = min(max(RGB_forLabs_Blue,0),1);
-
-save('Lab_RGBs.mat',"RGB_forLabs_D65","RGB_forLabs_Red","RGB_forLabs_Green",'RGB_forLabs_Blue')
+%save('Lab_RGBs.mat',"RGB_forLabs_D65","RGB_forLabs_Red","RGB_forLabs_Green",'RGB_forLabs_Blue')
