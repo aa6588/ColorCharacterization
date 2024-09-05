@@ -14,7 +14,7 @@ ylabel('b*')
 zlabel('L*')
 %%
 % Define the range and steps for a* and b*
-a_values = -10:2:10;
+a_values = -10:2:0;
 b_values = -16:2:6;
 
 % Define the fixed levels of L*
@@ -62,8 +62,8 @@ end
 %%
 %apply characterization
 %load lab_aim.mat
-XYZs_forLab = Lab2XYZ(lab_values_y,xyzw);
-xyY_y = XYZ2xyY(XYZs_forLab);
+XYZs_forLab = Lab2XYZ(lab_values_r,xyzw);
+xyY_r = XYZ2xyY(XYZs_forLab);
 [RGBs_pred, gamut] = modXYZ2RGB(PM_optim,radiometric_optim,XYZs_forLab);
 
 % colors = XYZ2RGB(Lab2XYZ(lab_values_b,xyzw));
