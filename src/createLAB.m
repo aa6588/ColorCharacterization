@@ -24,17 +24,18 @@ end
 
 %%
 %apply characterization
-plotChrom();
-primary = [0.64, .33; .3, .6; .15, .06; .64, .33];
-display = [xs(end,1), ys(end,1);xs(end,2),ys(end,2);xs(end,3),ys(end,3);xs(end,1),ys(end,1)];
-k1 = plot(primary(:,1),primary(:,2),'--k'); %gamut
-k2 = plot(display(:,1),display(:,2),'-r'); %gamut
-scatter(illums(:,1),illums(:,2),'k')
+% plotChrom();
+% primary = [0.64, .33; .3, .6; .15, .06; .64, .33];
+% display = [xs(end,1), ys(end,1);xs(end,2),ys(end,2);xs(end,3),ys(end,3);xs(end,1),ys(end,1)];
+% k1 = plot(primary(:,1),primary(:,2),'--k'); %gamut
+% k2 = plot(display(:,1),display(:,2),'-r'); %gamut
+% scatter(illums(:,1),illums(:,2),'k')
 
-XYZs_forLab_70 = Lab2XYZ(Lab_L70,wp_w);
-XYZs_forLab_55 = Lab2XYZ(Lab_L55,wp_w);
-XYZs_forLab_40 = Lab2XYZ(Lab_L40,wp_w);
+XYZs_forLab_70 = Lab2XYZ(grid_w_L70,wp_w);
+XYZs_forLab_55 = Lab2XYZ(grid_w_L55,wp_w);
+XYZs_forLab_40 = Lab2XYZ(grid_w_L40,wp_w);
 %xyY = XYZ2xyY(XYZs_forLab_80);
+%gamut check
 [RGBs_pred, gamut] = modXYZ2RGB(PM_w,LUT_w,[XYZs_forLab_40;XYZs_forLab_55;XYZs_forLab_70]);
 %scatter(xyY(:,1),xyY(:,2),'b')
 
@@ -53,15 +54,6 @@ scatter(uv_illums(:,1),uv_illums(:,2),'k','filled')
 title('White uv adjustments')
 legend({'L* 40','L* 55','L* 70','illums'})
 
-
-% colors = XYZ2RGB(Lab2XYZ(lab_values_b,xyzw));
-% for i=1:length(lab_values_b)
-%     plot3(lab_values_b(i,2),lab_values_b(i,3),lab_values_b(i,1), '-o','color',colors(i, :), ...
-%         'markerfacecolor', colors(i, :), 'markersize', msize);hold on
-% end
-% xlabel('a*')
-% ylabel('b*')
-% zlabel('L*')
 
 %save('Lab_RGBs.mat',"RGB_forLabs_D65","RGB_forLabs_Red","RGB_forLabs_Green",'RGB_forLabs_Blue')
 %%

@@ -1,38 +1,5 @@
-% 
-% % Define ranges and steps
-% b_min = -2;
-% b_max = 14;
-% b_step = 2;
-% a_min = -10;
-% a_max = 10;
-% a_step = 2;
-% 
-% % Define L values
-% L_values = [40, 60, 80];
-% 
-% % Create a grid for a and b
-% [b_grid, a_grid] = meshgrid(b_min:b_step:b_max, a_min:a_step:a_max);
-% 
-% % Get the number of elements in the a and b grids
-% num_a = size(a_grid, 1);
-% num_b = size(a_grid, 2);
-% 
-% % Preallocate matrices for each L value
-% Lab_L40 = zeros(num_a * num_b, 3);
-% Lab_L60 = zeros(num_a * num_b, 3);
-% Lab_L80 = zeros(num_a * num_b, 3);
-% 
-% % Populate matrices
-% for i = 1:num_a
-%     for j = 1:num_b
-%         idx = (i - 1) * num_b + j;
-%         Lab_L40(idx, :) = [40, a_grid(i, j), b_grid(i, j)];
-%         Lab_L60(idx, :) = [60, a_grid(i, j), b_grid(i, j)];
-%         Lab_L80(idx, :) = [80, a_grid(i, j), b_grid(i, j)];
-%     end
-% end
+%% Define Lab grids
 
-%% different
 % Define ranges and steps for each L value
 b_min_L40 = -10; b_max_L40 = 10; b_step_L40 = 2;
 a_min_L40 = -10; a_max_L40 = 10; a_step_L40 = 2;
