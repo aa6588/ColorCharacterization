@@ -39,7 +39,7 @@ for i = 1:size(PredefinedRGB, 1)
     end
 
     disp("Value:" + range(i, 1) + "," + range(i, 2) + "," + range(i, 3))
-    %press key
+    %press key in Unreal 
 
      t_time = toc;
      disp(['It took ', num2str(t_time), ' s']);
@@ -51,5 +51,5 @@ end
 
  %save(save_filename, 'Red', 'Blue', 'Green', 'Gray', 'White');
 
-save(save_filename, 'Red', 'Blue', 'Green', 'Gray', 'White','Validation_rand', 'PredefinedRGB');
+%save(save_filename, 'Red', 'Blue', 'Green', 'Gray', 'White','Validation_rand', 'PredefinedRGB');
 % %fwrite(t,"DONE:0");
