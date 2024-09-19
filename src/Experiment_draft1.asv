@@ -19,19 +19,17 @@ fopen(t);
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%load rgb_grids.mat %1-125 is cube rgb values. 126-x is lab values 224
+load rgb_grids.mat %1-125 is cube rgb values. 126-x is lab values 224
 %cont=0;
 clear range
-Lab_vals = grid_w_L40; %1-125 is RGB cube, 126-end is labs
-range = RGBs_w_L40;
+Lab_vals = grid_b_L40; %1-125 is RGB cube, 126-end is labs
+range = RGBs_b_L40;
 
 %a = fscanf(t, '%s\n');
 col_idx = randi(size(range, 1));
 row_idx = randi(size(range, 1));
-    disp("Starting Lab:" + Lab_vals(row_idx, col_idx, 1) + "," + Lab_vals(row_idx,col_idx, 2) + "," ...
-        + Lab_vals(row_idx,col_idx, 3))
-a = 'start';
-while ~strcmp(a, "next_trial")
+disp(Lab_vals(row_idx,col_idx,:))
+while col_idx < 10
     
     fwrite(t, "Value:" + range(row_idx, col_idx, 1) + "," + range(row_idx,col_idx, 2) + "," ...
         + range(row_idx,col_idx, 3));
@@ -54,18 +52,18 @@ switch a
            col_idx = col_idx - 1;
         end
     case "uparrow"
-        disp('up')
+        disp('left')
         if row_idx > 1
            row_idx = row_idx - 1;
         end
     case "downarrow"
-        disp('down')
+        disp('left')
         if row_idx < size(range, 1)
            row_idx = row_idx + 1;
         end
 end  
 
-    disp("RGB Value:" + range(row_idx, col_idx, 1) + "," + range(row_idx,col_idx, 2) + "," ...
+    disp("Value:" + range(row_idx, col_idx, 1) + "," + range(row_idx,col_idx, 2) + "," ...
         + range(row_idx,col_idx, 3));
     disp("Lab:" + Lab_vals(row_idx, col_idx, 1) + "," + Lab_vals(row_idx,col_idx, 2) + "," ...
         + Lab_vals(row_idx,col_idx, 3))
