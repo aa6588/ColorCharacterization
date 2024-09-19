@@ -8,7 +8,7 @@ addpath(genpath('C:\Users\orange\Documents\GitHub\MCSL-Tools\Convert\'))
 %% Main function for Color Constancy Experiment VR
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-save_filename = 'Participant.mat'; %look at HK files
+%save_filename = 'Participant.mat'; %look at HK files
 
 % %% Create the connection
 t = tcpip('127.0.0.1', 8890);
