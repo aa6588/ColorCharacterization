@@ -19,11 +19,10 @@ fopen(t);
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%load rgb_grids.mat %1-125 is cube rgb values. 126-x is lab values 224
-%cont=0;
+load rgb_grids.mat 
 clear range
-Lab_vals = grid_w_L40; %1-125 is RGB cube, 126-end is labs
-range = RGBs_w_L40;
+Lab_vals = grid_w_L70; 
+range = RGBs_w_L70;
 
 %a = fscanf(t, '%s\n');
 col_idx = randi(size(range, 1));
