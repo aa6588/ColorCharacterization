@@ -9,7 +9,7 @@ function [participant] = ChromAdapt_VR_main
 %temptag = 'session';
 %
 % define path to participant folder
-paths.participant  = 'C:\Users\Andrea\Documents\GitHub\ColorCharacterization\src\Participants\';
+paths.participant  = 'C:\Users\orange\Documents\GitHub\ColorCharacterization\src\Participants\';
 addpath(genpath('C:\Users\orange\Documents\GitHub\ColorCharacterization\utils\'))
 addpath(genpath('C:\Users\orange\Documents\GitHub\MCSL-Tools\Convert\'))
 % cd into the folde  r
