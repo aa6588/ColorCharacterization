@@ -20,9 +20,11 @@ fopen(t);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 load rgb_grids.mat 
+load lab_grids.mat
 clear range
-Lab_vals = grid_w_L70; 
-range = RGBs_w_L70;
+Lab_vals = grid_w_L40; 
+range = RGBs_w_L40;
+
 
 %a = fscanf(t, '%s\n');
 col_idx = randi(size(range, 1));
