@@ -66,7 +66,7 @@ end
 % save participant data
 %save([paths.participant sprintf('Participant_%03g.mat',participant.ID)],'participant');  
 % experiment function
-
+%end
 %% Run through RGB values by pressing key to advance
 
 function adapting(illumRGB,connect,adapt_time)
@@ -148,4 +148,3 @@ disp("Starting Lab:" + lab(row_idx, col_idx, 1) + "," + lab(row_idx,col_idx, 2) 
 
     end
 end
-%end
