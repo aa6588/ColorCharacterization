@@ -14,6 +14,7 @@ load LAB_grid_struct.mat LAB_grid
 %load models_data.mat model
 load Illuminants.mat RGB_illum
 
+participant = struct();
 %% Define randomization of vars
 
 %lights
@@ -21,27 +22,65 @@ RGB_white_illum = RGB_illum(1,:);
 RGB_chrom_illum = RGB_illum(2:end,:);
 illum_color = {'r','g','b','y'};
 illum_rand = randperm(length(illum_color));
-
+participant.illum_order = illum_color(illum_rand);
 %patch lightness
 L_star = {'L40' 'L55' 'L70'};
-rownames = {'RGB Select','Lab Select'};
+colnames = {'RGB Select','Lab Select','Starting Lab'};
 %% Start Experiment
 
-%start with white illum always
-rand_L = L_star(randperm(length(L_star)));
-participant = struct();
-for L = 1:length(L_star)
-    [participant.w(1).(rand_L{L}), participant.w(2).(rand_L{L})] = run_experiment('w',RGB_white_illum,rand_L{L},RGB_grid,LAB_grid,t);
+%start with white illum
+adapting(RGB_white_illum,t,120); %run adapting function with set illum
+tempTable = table();
+for rep = 1:3 %repeat exp 3 times
+    rand_L = L_star(randperm(length(L_star))); %randomize lightness
+    for L = 1:length(L_star)
+        %participant.w.(rand_L{L}) = tempTable;
+        [curr_select,curr_lab_select,curr_lab_start] = run_experiment('w',RGB_white_illum,rand_L{L},RGB_grid,LAB_grid,t);
+        tempTable = table(curr_select,curr_lab_select,curr_lab_start,'VariableNames',colnames);
+        participant.w.(rand_L{L})(rep,:)= tempTable;
+        %[participant.w(rep).(rand_L{L}), participant.w(rep+3).(rand_L{L}),participant.w(rep+6).(rand_L{L})] = run_experiment('w',RGB_white_illum,rand_L{L},RGB_grid,LAB_grid,t);
+    end
 end
 
-
+%white trial is done, advance to chromatic illums
+for illums = 1:4
+adapting(RGB_chrom_illum(illum_rand(illums),:),t,120); %adapt to illum for 2 mins
+    for rep = 1:3
+        rand_L = L_star(randperm(length(L_star))); %randomize lightness
+        for L = 1:length(L_star)
+            curr_illum = illum_color{illum_rand(illums)}; % get label for current illum (rgby)
+            curr_illumRGB = RGB_chrom_illum(illum_rand(illums));
+            [curr_select,curr_lab_select,curr_lab_start] = run_experiment(curr_illum,RGB_white_illum,rand_L{L},RGB_grid,LAB_grid,t);
+            tempTable = table(curr_select,curr_lab_select,curr_lab_start,'VariableNames',colnames);
+            participant.curr_illum.(rand_L{L})(rep,:)= tempTable;
+        end
+    end
+%add interjection of white illum trial
+    if illums < 4
+        adapting(RGB_white_illum,t,30); %adapt to white for 30 secs
+        [curr_select,curr_lab_select,curr_lab_start] = run_experiment('w',RGB_white_illum,rand_L{L},RGB_grid,LAB_grid,t);
+        tempTable = table(curr_select,curr_lab_select,curr_lab_start,'VariableNames',colnames);
+        participant.curr_illum.(rand_L{L})(rep,:)= tempTable;
+    end
+end
 % save participant data
 %save([paths.participant sprintf('Participant_%03g.mat',participant.ID)],'participant');  
 % experiment function
 
-% Run through RGB values by pressing key to advance
+%% Run through RGB values by pressing key to advance
 
-function [selection,lab_selection] = run_experiment(illum_color,illumRGB,lightness_level,rgb_grids,lab_grids,connect)
+function adapting(illumRGB,connect,adapt_time)
+fwrite(connect, "Light:" + illumRGB(1) + "," + illumRGB(2) + "," + illumRGB(3));
+pause(1/8)
+
+%adapting . . .
+fwrite(connect, "Value:" + 1+ "," + 1 + "," + 1); %set patch to blend in with BG (1,1,1)
+pause(adapt_time) %adapt for x mins
+beep %make noise
+
+end
+
+function [selection,lab_selection,starting_lab] = run_experiment(illum_color,illumRGB,lightness_level,rgb_grids,lab_grids,connect)
 
 %set vars
 grid = rgb_grids.(illum_color).(lightness_level);
@@ -51,12 +90,19 @@ lab_selection = zeros(1,3);
 
 %set lights
 a = "start";
-fwrite(connect, "Light:" + illumRGB(1) + "," + illumRGB(2) + "," + illumRGB(3));
-pause(1/8)
+% fwrite(connect, "Light:" + illumRGB(1) + "," + illumRGB(2) + "," + illumRGB(3));
+% pause(1/8)
+% 
+% %adapting . . .
+% fwrite(connect, "Value:" + 1+ "," + 1 + "," + 1); %set patch to blend in with BG (1,1,1)
+% pause(adapt_time) %adapt for x mins
+% beep %make noise
+
 %random starting point
 col_idx = randi(size(grid, 1));
 row_idx = randi(size(grid, 1));
 
+starting_lab(1,:) = lab(row_idx, col_idx, :);
 disp("Starting Lab:" + lab(row_idx, col_idx, 1) + "," + lab(row_idx,col_idx, 2) + "," ...
         + lab(row_idx,col_idx, 3)) 
 

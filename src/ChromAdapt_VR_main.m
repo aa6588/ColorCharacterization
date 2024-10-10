@@ -42,7 +42,7 @@ clear tmp name lastParticipant;
 %% Run the Experiment Session
 %
 % Call the main experiment 
-participant = HK_2AFC_Exp_V2(participant,paths);
+participant = ChromAdapt_VR_draft2(participant,paths);
 %Save the participant
 save([paths.participant sprintf('Participant_%03g.mat',participant.ID)],'participant');
 %
