@@ -60,7 +60,7 @@ adapting(RGB_chrom_illum(illum_rand(illums),:),t,120); %adapt to illum for 2 min
         adapting(RGB_white_illum,t,30); %adapt to white for 30 secs
         [curr_select,curr_lab_select,curr_lab_start] = run_experiment('w',RGB_white_illum,'L55',RGB_grid,LAB_grid,t);
         tempTable = table(curr_select,curr_lab_select,curr_lab_start,'VariableNames',colnames);
-        participant.w.('L55')(rep+3,:)= tempTable;
+        participant.w.('L55')(rep+3,:)= tempTable; %adds to column after the first 3 reps
     end
 end
 % save participant data
