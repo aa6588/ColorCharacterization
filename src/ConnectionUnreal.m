@@ -9,7 +9,7 @@ addpath(genpath('C:\Users\orange\Documents\GitHub\MCSL-Tools\Convert\'))
 %% D:\VR_Projects\CalibrationHMD unreal
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-save_filename = 'Calibration_Blue_03int_frontlight_1.0wall_16step_Vive_7_11_2024.mat';
+save_filename = 'test_withVRlens_10_16_2024.mat';
 
 cs2000 = CS2000('COM5');
 % Synchronization
@@ -21,7 +21,7 @@ cs2000.setSync(sync);
 t = tcpip('127.0.0.1', 8890);
 fopen(t);
 
-range = (0:5:255)./255;
+range = (0:16:255)./255;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
 %% Measure Red channel
@@ -248,8 +248,8 @@ clear range
 PredefinedRGB = [rgb;rgbs]; %1-125 is RGB cube, 126-end is labs
 range = double([rgb;rgbs]);
 
-for i = 7
-%for i = 1:size(PredefinedRGB, 1)
+
+for i = 1:size(PredefinedRGB, 1)
     tic
 
     fwrite(t, "Value:" + range(i, 1) + "," + range(i, 2) + "," ...
