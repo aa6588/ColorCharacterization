@@ -9,7 +9,7 @@ addpath(genpath('C:\Users\orange\Documents\GitHub\MCSL-Tools\Convert\'))
 %% D:\VR_Projects\CalibrationHMD unreal
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-save_filename = 'test_withVRlens_10_16_2024.mat';
+save_filename = 'White_withVRlens_10_16_2024.mat';
 
 cs2000 = CS2000('COM5');
 % Synchronization
@@ -21,7 +21,7 @@ cs2000.setSync(sync);
 t = tcpip('127.0.0.1', 8890);
 fopen(t);
 
-range = (0:15:255)./255;
+range = (0:16:255)./255;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
 %% Measure Red channel
