@@ -42,7 +42,7 @@ for rep = 1:3 %repeat exp 3 times
     end
 end
 
-%white trial is done, advance to chromatic illums
+%% white trial is done, advance to chromatic illums
 for illums = 1:4
 adapting(RGB_chrom_illum(illum_rand(illums),:),t,5); %adapt to illum for 2 mins
     for rep = 1:3
@@ -57,10 +57,10 @@ adapting(RGB_chrom_illum(illum_rand(illums),:),t,5); %adapt to illum for 2 mins
     end
 %add interjection of white illum trial L55 only
     if illums < 4
-        adapting(RGB_white_illum,t,30); %adapt to white for 30 secs
+        adapting(RGB_white_illum,t,5); %adapt to white for 30 secs
         [curr_select,curr_lab_select,curr_lab_start] = run_experiment('w',RGB_white_illum,'L55',RGB_grid,LAB_grid,t);
         tempTable = table(curr_select,curr_lab_select,curr_lab_start,'VariableNames',colnames);
-        participant.w.('L55')(rep+4,:)= tempTable; %adds to column after the first 3 reps
+        participant.w.('L55')(illums+3,:)= tempTable; %adds to column after the first 3 reps
     end
 end
 % save participant data
