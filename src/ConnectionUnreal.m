@@ -9,7 +9,7 @@ addpath(genpath('C:\Users\orange\Documents\GitHub\MCSL-Tools\Convert\'))
 %% D:\VR_Projects\CalibrationHMD unreal
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-save_filename = 'White_withVRlens_10_16_2024.mat';
+save_filename = 'Ramps_NewScene_12_9_24.mat';
 
 cs2000 = CS2000('COM5');
 % Synchronization
@@ -21,7 +21,7 @@ cs2000.setSync(sync);
 t = tcpip('127.0.0.1', 8890);
 fopen(t);
 
-range = (0:16:255)./255;
+range = (0:17:255)./255;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
 %% Measure Red channel
@@ -200,7 +200,7 @@ while i<=length(range)
     end
     
     disp("Value:" + range(i) + "," + range(i) + "," + range(i))
-    pause(2)
+    pause(1)
     Gray(i) = cs2000.measure;
     xyzObtain_gray(i,:)=Gray(i).color.XYZ';
     
@@ -216,7 +216,7 @@ while i<=length(range)
         end
     disp('Measurement is the same as previous, taking a new measurement...')
     disp("Retake Value:" + range(i) + "," + range(i) + "," + range(i))
-    pause(3)
+    pause(1)
     Gray(i) = cs2000.measure;
     xyzObtain_gray(i,:)=Gray(i).color.XYZ';
         end
