@@ -12,14 +12,14 @@ fopen(t);
 load RGB_grid_struct.mat RGB_grid
 load LAB_grid_struct.mat LAB_grid
 %load models_data.mat model
-load Illuminants.mat RGB_illum
+load FinalSceneIllums.mat newRGB_illum
 
 participant = struct();
 %% Define randomization of vars
 
 %lights
-RGB_white_illum = RGB_illum(1,:);
-RGB_chrom_illum = RGB_illum(2:end,:);
+RGB_white_illum = newRGB_illum(1,:);
+RGB_chrom_illum = newRGB_illum(2:end,:);
 illum_color = {'r','g','b','y'};
 illum_rand = randperm(length(illum_color));
 participant.illum_order = illum_color(illum_rand);
