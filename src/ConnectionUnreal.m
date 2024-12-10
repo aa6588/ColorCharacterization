@@ -249,7 +249,8 @@ PredefinedRGB = [rgb;rgbs]; %1-125 is RGB cube, 126-end is labs
 range = double([rgb;rgbs]);
 
 
-for i = 1:size(PredefinedRGB, 1)
+for i = 121
+    %i = 1:size(PredefinedRGB, 1)
     tic
 
     fwrite(t, "Value:" + range(i, 1) + "," + range(i, 2) + "," ...
@@ -297,7 +298,7 @@ end
 
  %save(save_filename, 'Red', 'Blue', 'Green', 'Gray', 'White');
 
-save(save_filename, 'Red', 'Blue', 'Green', 'Gray', 'White','Validation_rand', 'PredefinedRGB');
+%save(save_filename, 'Red', 'Blue', 'Green', 'Gray', 'White','Validation_rand', 'PredefinedRGB');
 
     %%  LAB Validation
 %%

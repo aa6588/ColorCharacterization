@@ -10,7 +10,7 @@ addpath(genpath('C:\Users\orange\Documents\GitHub\ColorCharacterization\src\colo
 addpath(genpath('C:\Users\orange\Documents\GitHub\MCSL-Tools\Convert\'))
 
 %% Comment or uncomment accordingly (HTC 5:255)
-x = (0:5:255)./255;
+x = (0:17:255)./255;
 
 primaries(1, :) = [Red];
 primaries(2, :) = [Green];
