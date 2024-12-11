@@ -5,12 +5,12 @@ clear
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % load('Calibration_UnrealStandard_Vive_6_11_2024.mat');
-%save_filename = 'dE_Calibration_Red_Vive_07_11_2024.mat';
+save_filename = 'dE_White_12_11_24.mat';
 addpath(genpath('C:\Users\orange\Documents\GitHub\ColorCharacterization\src\color_transformations\'))
 addpath(genpath('C:\Users\orange\Documents\GitHub\MCSL-Tools\Convert\'))
 
 %% Comment or uncomment accordingly (HTC 5:255)
-x = (0:5:255)./255;
+x = (0:17:255)./255;
 
 primaries(1, :) = [Red];
 primaries(2, :) = [Green];
@@ -218,9 +218,10 @@ end
 plot(1:length(dE), ones(1, length(dE)), 'k--');
 
 %ylim([0 5])
+xlim([0 length(dE)])
 set(gca, 'FontSize', 22)
-xlabel('Colours','FontSize',40)
-ylabel('DeltaE00','FontSize',40)
+xlabel('Verification Colors','FontSize',20)
+ylabel('DeltaE00','FontSize',20)
 
 
 msize=15;
@@ -399,6 +400,10 @@ for i=1:length(dE_optim)
         'markerfacecolor', RGBStest(i, :), 'markersize', msize);hold on
 end
 plot(1:length(dE_optim), ones(1, length(dE_optim)), 'k--');
+xlim([0 length(dE)])
+set(gca, 'FontSize', 22)
+xlabel('Verification Colors','FontSize',20)
+ylabel('DeltaE00','FontSize',20)
 
 %% Save characterization values and deltae errors
 if ~isempty(save_filename)
@@ -407,10 +412,12 @@ end
 
 %% Display errors and estimated parameters
 disp 'deltaE00 -> mean, median, std, min and max'
-disp(num2str([mean(dE) median(dE) std(dE) min(dE) max(dE)]))
+disp(num2str([mean(dE(126:end)) median(dE(126:end)) std(dE) min(dE(126:end)) max(dE(126:end))]))
 disp 'Optim deltaE00 -> mean, median, std, min and max'
-disp(num2str([mean(dE_optim) median(dE_optim) std(dE_optim) min(dE_optim) max(dE_optim)]))
+disp(num2str([mean(dE_optim(126:end)) median(dE_optim(126:end)) std(dE_optim) min(dE_optim(126:end)) max(dE_optim(126:end))]))
 
 % disp 'deltaE00 no calibration -> mean, median, std, min and max'
 % disp(num2str([mean(dE_nocalib) median(dE_nocalib) ...
 %     std(dE_nocalib) min(dE_nocalib) max(dE_nocalib)]))
+
+dEtable = table([dE_w;dE_r;dE_g;dE_b;dE_y],[dE_w_optim;dE_r_optim;dE_g_optim;dE_b_optim;dE_y_optim],'VariableNames',{'deltaE00 (mean,min,max)','optim deltaE (mean,min,max)'},'RowNames',{'White','Red','Green','Blue','Yellow'})

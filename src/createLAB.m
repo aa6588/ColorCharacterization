@@ -1,5 +1,5 @@
 %plot 3D Labs for each illum
-[xyzs,xyzw]=modRGB2XYZ(PM_b,LUT_b,rgbs);
+[xyzs,xyzw]=modRGB2XYZ(PM_y,LUT_y,rgbs);
 Labs = XYZ2Lab(xyzs,xyzw);
 %Labw = XYZ2Lab(XYZw ,xyzw );
 colors = XYZ2RGB(Lab2XYZ(Labs,xyzw));
@@ -51,19 +51,19 @@ RGBs_y_L70 = reshape(RGBs_y_L70,size(grid_y_L70));
 
 
 %% u/v/
-uv_illums = XYZ2uvY(xyY2XYZ(illums));
-figure;
-hold on;
-
-uv_adj_40 = XYZ2uvY(XYZs_forLab_40);
-uv_adj_55 = XYZ2uvY(XYZs_forLab_55);
-uv_adj_70 = XYZ2uvY(XYZs_forLab_70);
-scatter(uv_adj_40(:,1),uv_adj_40(:,2),'r')
-scatter(uv_adj_55(:,1),uv_adj_55(:,2),'g')
-scatter(uv_adj_70(:,1),uv_adj_70(:,2),'b')
-scatter(uv_illums(:,1),uv_illums(:,2),'k','filled')
-title('White uv adjustments')
-legend({'L* 40','L* 55','L* 70','illums'})
+% uv_illums = XYZ2uvY(xyY2XYZ(illums));
+% figure;
+% hold on;
+% 
+% uv_adj_40 = XYZ2uvY(XYZs_forLab_40);
+% uv_adj_55 = XYZ2uvY(XYZs_forLab_55);
+% uv_adj_70 = XYZ2uvY(XYZs_forLab_70);
+% scatter(uv_adj_40(:,1),uv_adj_40(:,2),'r')
+% scatter(uv_adj_55(:,1),uv_adj_55(:,2),'g')
+% scatter(uv_adj_70(:,1),uv_adj_70(:,2),'b')
+% scatter(uv_illums(:,1),uv_illums(:,2),'k','filled')
+% title('White uv adjustments')
+% legend({'L* 40','L* 55','L* 70','illums'})
 
 
 %save('Lab_RGBs.mat',"RGB_forLabs_D65","RGB_forLabs_Red","RGB_forLabs_Green",'RGB_forLabs_Blue')
