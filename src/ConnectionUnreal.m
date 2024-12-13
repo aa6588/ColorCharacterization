@@ -309,7 +309,7 @@ load LAB_grid_struct.mat
 
 %one illum at a time
 level = {'L40','L55','L70'};
-illum = 'w';
+illum = 'y';
 
 %loop lightness
 for j = 1:3
@@ -344,32 +344,34 @@ for i = 1:size(RGBs, 1)
     disp("Value:" + RGBs(i,1) + "," + RGBs(i,2) + "," + RGBs(i,3))
     pause(1)
     Validation_lab = cs2000.measure;
+    xyzObtain_lab(i,:)=Validation_lab.color.XYZ';
     rand_idx.(illum).(level{j}).XYZs(i,:) =Validation_lab.color.XYZ';
    % rand_idx.(illum).(level{j}).Labs(i,:) = LAB_grid.(illum).(level{j})(rand_row(i),rand_col(i),:);
 
-    % if i > 1
-    %     while max(abs(xyzObtain_lab(i,:) - xyzObtain_lab(i-1,:))) < .08 
-    %         fwrite(t, "Value:" + range(i, 1) + "," + range(i, 2) + "," ...
-    %         + range(i, 3));
-    %         a = fscanf(t, '%s\n');
-    % 
-    %     while ~strcmp(a, "SHOT")
-    %         a = fscanf(t, '%s\n');
-    %         fwrite(t, "Value:" + range(i, 1) + "," + range(i, 2) + ...
-    %         "," + range(i, 3));
-    %     end
-    % disp('Measurement is the same as previous, taking a new measurement...')
-    % disp("Retake Value:" + range(i, 1) + "," + range(i, 2) + "," + range(i, 3))
-    % pause(3)
-    % Validation_lab(i) = cs2000.measure;
-    % xyzObtain_lab(i,:)=Validation_lab(i).color.XYZ';
-    %     end
-    % 
-    % end
+    if i > 1
+        while max(abs(xyzObtain_lab(i,:) - xyzObtain_lab(i-1,:))) < .015 
+            fwrite(t, "Value:" + range(i, 1) + "," + range(i, 2) + "," ...
+            + range(i, 3));
+            a = fscanf(t, '%s\n');
+
+        while ~strcmp(a, "SHOT")
+            a = fscanf(t, '%s\n');
+            fwrite(t, "Value:" + range(i, 1) + "," + range(i, 2) + ...
+            "," + range(i, 3));
+        end
+    disp('Measurement is the same as previous, taking a new measurement...')
+    disp("Retake Value:" + range(i, 1) + "," + range(i, 2) + "," + range(i, 3))
+    pause(3)
+    Validation_lab = cs2000.measure;
+    xyzObtain_lab(i,:)=Validation_lab.color.XYZ';
+    rand_idx.(illum).(level{j}).XYZs(i,:) =Validation_lab.color.XYZ';
+        end
+
+    end
 
     t_time = toc;
     disp(['It took ', num2str(t_time), ' s']);
-    disp(['Trial #: ', num2str(i),' out of ',num2str(size(rand_row, 1))])
+    disp(['Trial #: ', num2str(i),' out of ',num2str(size(RGBs, 1))])
     disp '-------------------------------------------'
 
 end       

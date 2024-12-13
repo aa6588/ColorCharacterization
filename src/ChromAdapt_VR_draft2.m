@@ -13,7 +13,8 @@ load RGBs_grids_struct.mat RGB_grid
 load LAB_grid_struct.mat LAB_grid
 load models_info.mat model
 load FinalSceneIllums.mat newRGB_illum
-
+%make participant Id and VR/Flat
+%set prompt and set it as var to use 
 participant = struct();
 %% Define randomization of vars
 
