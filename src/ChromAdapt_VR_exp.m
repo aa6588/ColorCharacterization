@@ -1,7 +1,4 @@
-%function [participant] = ChromAdapt_VR_draft2(participant,paths)
-%% startup
-%addpath(genpath('C:\Users\orange\Documents\GitHub\ColorCharacterization\utils\'))
-%addpath(genpath('C:\Users\orange\Documents\GitHub\MCSL-Tools\Convert\'))
+function [participant] = ChromAdapt_VR_exp(participant,paths)
 
 %% Main function for Color Constancy Experiment VR
 % Create the connection
@@ -11,10 +8,8 @@ fopen(t);
 %load variables
 load RGBs_grids_struct.mat RGB_grid
 load LAB_grid_struct.mat LAB_grid
-load models_info.mat model
+%load models_info.mat model
 load FinalSceneIllums.mat newRGB_illum
-
-participant = struct();
 %% Define randomization of vars
 
 %lights
@@ -34,11 +29,9 @@ tempTable = table();
 for rep = 1:3 %repeat exp 3 times
     rand_L = L_star(randperm(length(L_star))); %randomize lightness
     for L = 1:length(L_star)
-        %participant.w.(rand_L{L}) = tempTable;
         [curr_select,curr_lab_select,curr_lab_start] = run_experiment('w',RGB_white_illum,rand_L{L},RGB_grid,LAB_grid,t);
         tempTable = table(curr_select,curr_lab_select,curr_lab_start,'VariableNames',colnames);
         participant.w.(rand_L{L})(rep,:)= tempTable;
-        %[participant.w(rep).(rand_L{L}), participant.w(rep+3).(rand_L{L}),participant.w(rep+6).(rand_L{L})] = run_experiment('w',RGB_white_illum,rand_L{L},RGB_grid,LAB_grid,t);
     end
 end
 
@@ -64,9 +57,8 @@ adapting(RGB_chrom_illum(illum_rand(illums),:),t,5); %adapt to illum for 2 mins
     end
 end
 % save participant data
-%save([paths.participant sprintf('Participant_%03g.mat',participant.ID)],'participant');  
-% experiment function
-%end
+save([paths.participant sprintf('Participant_%02g.mat',participant.ID)],'participant');  
+end
 %% Run through RGB values by pressing key to advance
 
 function adapting(illumRGB,connect,adapt_time)
@@ -74,7 +66,7 @@ fwrite(connect, "Light:" + illumRGB(1) + "," + illumRGB(2) + "," + illumRGB(3));
 pause(1/8)
 
 %adapting . . .
-fwrite(connect, "Value:" + 1+ "," + 1 + "," + 1); %set patch to blend in with BG (1,1,1)
+fwrite(connect, "Value:" + 0 + "," + 0 + "," + 0); %set patch to black
 pause(adapt_time) %adapt for x mins
 fs = 44100;      % Sampling frequency (samples per second)
 time = 0:1/fs:0.2;  % Time vector for 0.2 seconds
@@ -93,13 +85,6 @@ lab_selection = zeros(1,3);
 
 %set lights
 a = "start";
-% fwrite(connect, "Light:" + illumRGB(1) + "," + illumRGB(2) + "," + illumRGB(3));
-% pause(1/8)
-% 
-% %adapting . . .
-% fwrite(connect, "Value:" + 1+ "," + 1 + "," + 1); %set patch to blend in with BG (1,1,1)
-% pause(adapt_time) %adapt for x mins
-% beep %make noise
 
 %random starting point
 col_idx = randi(size(grid, 2));

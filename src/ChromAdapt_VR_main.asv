@@ -14,11 +14,10 @@ cd(paths.participant);
 participant = struct();
 % Determine new participant ID number
 prompt = "Participant ID? ";
-pID = input(prompt);
+x = input(prompt)
 participant.ID = pID;
 %VR or Flat 
-mode = input("VR or Flat? ", 's');
-participant.mode = mode;
+%participant.mode = 'VR';
 
 %% Run the Experiment Session
 %
