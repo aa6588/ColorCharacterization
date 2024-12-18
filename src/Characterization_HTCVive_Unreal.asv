@@ -274,34 +274,33 @@ axis([min([lab_est(:, 3); lab_meas(:, 3)]) max([lab_est(:, 3);...
 load  lab_meas.mat
 load whitepoints.mat
 level = {'L40','L55','L70'};
-illum = 'w';
+illum = 'b';
 
-for j=1:3
-    rand_idx.(illum).(level{j}).XYZs
-end
-% XYZ = Lab2XYZ(lab_values,White.color.XYZ );
-% xyY = XYZ2xyY(XYZ')';
-% xyYmeas = XYZ2xyY(XYZmeas')';
+XYZmeas = [rand_idx.(illum).(level{1}).XYZs;rand_idx.(illum).(level{2}).XYZs;rand_idx.(illum).(level{3}).XYZs];
+lab_values = [rand_idx.(illum).(level{1}).Labs;rand_idx.(illum).(level{2}).Labs;rand_idx.(illum).(level{3}).Labs];
+ XYZ = Lab2XYZ(lab_values,wp_b);
+ xyY = XYZ2xyY(XYZ')';
+ xyYmeas = XYZ2xyY(XYZmeas')';
 
 %% Plot the results
-% plotChrom();hold on
-% plot(xyY(:, 1),xyY(:, 2),'ro','MarkerSize',10,'LineWidth',2);
-% plot(xyYmeas(:,1),xyYmeas(:,2),'kx','markersize',12,'linewidth',2)
-% k1 = plot(primary(:,1),primary(:,2),'--k'); %gamut
-% k2 = plot(display(:,1),display(:,2),'-r'); %gamut
-% set(gca,'FontSize',15,'LineWidth',2)
-% box off
-% xlabel('x','FontSize',15)
-% ylabel('y','FontSize',15)
-% title('Chromaticity Error Labs')
+plotChrom();hold on
+plot(xyY(:, 1),xyY(:, 2),'go','MarkerSize',10,'LineWidth',2);
+plot(xyYmeas(:,1),xyYmeas(:,2),'kx','markersize',12,'linewidth',2)
+k1 = plot(primary(:,1),primary(:,2),'--k'); %gamut
+k2 = plot(display(:,1),display(:,2),'-r'); %gamut
+set(gca,'FontSize',15,'LineWidth',2)
+box off
+xlabel('x','FontSize',15)
+ylabel('y','FontSize',15)
+title('Chromaticity Error Labs')
 
 
 %% Compute deltae2000
-lab_meas = XYZ2Lab(XYZmeas, White.color.XYZ');
-lab_est  = lab_values;
-
-dE = deltaE00(lab_meas', lab_est');
-viz = Lab2XYZ(lab_values,[95.04  100  108.88] );
+lab_meas = XYZ2Lab(XYZmeas, wp_y);
+lab_est = lab_values;
+dE = deltaE00(lab_values',lab_meas');
+dE_y = [mean(dE), min(dE), max(dE)];
+viz = Lab2XYZ(lab_values,wp_y );
 rgb_viz = XYZ2RGB(viz);
 
 figure;
@@ -422,4 +421,5 @@ disp(num2str([mean(dE_optim(126:end)) median(dE_optim(126:end)) std(dE_optim) mi
 % disp(num2str([mean(dE_nocalib) median(dE_nocalib) ...
 %     std(dE_nocalib) min(dE_nocalib) max(dE_nocalib)]))
 
-dEtable = table([dE_w;dE_r;dE_g;dE_b;dE_y],[dE_w_optim;dE_r_optim;dE_g_optim;dE_b_optim;dE_y_optim],'VariableNames',{'deltaE00 (mean,min,max)','optim deltaE (mean,min,max)'},'RowNames',{'White','Red','Green','Blue','Yellow'})
+%dEtable = table([dE_w;dE_r;dE_g;dE_b;dE_y],[dE_w_optim;dE_r_optim;dE_g_optim;dE_b_optim;dE_y_optim],'VariableNames',{'deltaE00 (mean,min,max)','optim deltaE (mean,min,max)'},'RowNames',{'White','Red','Green','Blue','Yellow'})
+dEtable_labs = table([dE_w;dE_r;dE_g;dE_b;dE_y],'VariableNames',{'Lab deltaE00 (mean,min,max)'},'RowNames',{'White','Red','Green','Blue','Yellow'})

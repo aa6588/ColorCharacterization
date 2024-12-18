@@ -278,21 +278,21 @@ illum = 'y';
 
 XYZmeas = [rand_idx.(illum).(level{1}).XYZs;rand_idx.(illum).(level{2}).XYZs;rand_idx.(illum).(level{3}).XYZs];
 lab_values = [rand_idx.(illum).(level{1}).Labs;rand_idx.(illum).(level{2}).Labs;rand_idx.(illum).(level{3}).Labs];
-% XYZ = Lab2XYZ(lab_values,White.color.XYZ );
-% xyY = XYZ2xyY(XYZ')';
-% xyYmeas = XYZ2xyY(XYZmeas')';
+ XYZ = Lab2XYZ(lab_values,wp_y);
+ xyY = XYZ2xyY(XYZ')';
+ xyYmeas = XYZ2xyY(XYZmeas')';
 
 %% Plot the results
-% plotChrom();hold on
-% plot(xyY(:, 1),xyY(:, 2),'ro','MarkerSize',10,'LineWidth',2);
-% plot(xyYmeas(:,1),xyYmeas(:,2),'kx','markersize',12,'linewidth',2)
-% k1 = plot(primary(:,1),primary(:,2),'--k'); %gamut
-% k2 = plot(display(:,1),display(:,2),'-r'); %gamut
-% set(gca,'FontSize',15,'LineWidth',2)
-% box off
-% xlabel('x','FontSize',15)
-% ylabel('y','FontSize',15)
-% title('Chromaticity Error Labs')
+plotChrom();hold on
+plot(xyY(:, 1),xyY(:, 2),'yo','MarkerSize',10,'LineWidth',2);
+plot(xyYmeas(:,1),xyYmeas(:,2),'kx','markersize',12,'linewidth',2)
+k1 = plot(primary(:,1),primary(:,2),'--k'); %gamut
+k2 = plot(display(:,1),display(:,2),'-r'); %gamut
+set(gca,'FontSize',15,'LineWidth',2)
+box off
+xlabel('x','FontSize',15)
+ylabel('y','FontSize',15)
+title('Chromaticity Error Labs')
 
 
 %% Compute deltae2000
