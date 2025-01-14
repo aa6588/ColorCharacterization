@@ -5,11 +5,9 @@ function [participant] = ChromAdapt_VR_main
 %% Participant Configuration
 
 % define path to participant folder
-paths.participant  = 'C:\Users\orange\Documents\GitHub\ColorCharacterization\src\ParticipantsVR\';
 addpath(genpath('C:\Users\orange\Documents\GitHub\ColorCharacterization\utils\'))
 addpath(genpath('C:\Users\orange\Documents\GitHub\MCSL-Tools\Convert\'))
-% cd into the folder
-cd(paths.participant); 
+
 % A initialize participant
 participant = struct();
 % Determine new participant ID number
@@ -19,6 +17,7 @@ participant.ID = pID;
 %VR or Flat 
 mode = input("VR or Flat? ", 's');
 participant.mode = mode;
+paths.participant  = append('C:\Users\orange\Documents\GitHub\ColorCharacterization\src\Participants\',mode,'\');
 
 %% Run the Experiment Session
 %

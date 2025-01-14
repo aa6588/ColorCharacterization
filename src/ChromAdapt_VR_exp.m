@@ -58,12 +58,14 @@ adapting(RGB_chrom_illum(illum_rand(illums),:),t,5); %adapt to illum for 2 mins
 end
 % save participant data
 save([paths.participant sprintf('Participant_%02g.mat',participant.ID)],'participant');  
+%experiment end
+fwrite(t,"End:0")
 end
 %% Run through RGB values by pressing key to advance
 
 function adapting(illumRGB,connect,adapt_time)
 fwrite(connect, "Light:" + illumRGB(1) + "," + illumRGB(2) + "," + illumRGB(3));
-pause(1/8)
+pause(1/5)
 
 %adapting . . .
 fwrite(connect, "Value:" + 0 + "," + 0 + "," + 0); %set patch to black
