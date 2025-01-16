@@ -59,6 +59,7 @@ end
 % save participant data
 save([paths.participant sprintf('Participant_%02g.mat',participant.ID)],'participant');  
 %experiment end
+beep
 fwrite(t,"End:0")
 end
 %% Run through RGB values by pressing key to advance
