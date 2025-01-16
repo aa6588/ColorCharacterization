@@ -24,7 +24,7 @@ colnames = {'RGB Select','Lab Select','Starting Lab'};
 %% Start Experiment
 
 %start with white illum
-adapting(RGB_white_illum,t,5); %run adapting function with set illum
+adapting(RGB_white_illum,t,120); %run adapting function with set illum
 tempTable = table();
 for rep = 1:3 %repeat exp 3 times
     rand_L = L_star(randperm(length(L_star))); %randomize lightness
@@ -37,7 +37,7 @@ end
 
 %% white trial is done, advance to chromatic illums
 for illums = 1:4
-adapting(RGB_chrom_illum(illum_rand(illums),:),t,5); %adapt to illum for 2 mins
+adapting(RGB_chrom_illum(illum_rand(illums),:),t,120); %adapt to illum for 2 mins
     for rep = 1:3
         rand_L = L_star(randperm(length(L_star))); %randomize lightness
         for L = 1:length(L_star)
@@ -50,7 +50,7 @@ adapting(RGB_chrom_illum(illum_rand(illums),:),t,5); %adapt to illum for 2 mins
     end
 %add interjection of white illum trial L55 only
     if illums < 4
-        adapting(RGB_white_illum,t,5); %adapt to white for 30 secs
+        adapting(RGB_white_illum,t,30); %adapt to white for 30 secs
         [curr_select,curr_lab_select,curr_lab_start] = run_experiment('w',RGB_white_illum,'L55',RGB_grid,LAB_grid,t);
         tempTable = table(curr_select,curr_lab_select,curr_lab_start,'VariableNames',colnames);
         participant.w.('L55')(illums+3,:)= tempTable; %adds to column after the first 3 reps
