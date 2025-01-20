@@ -24,6 +24,7 @@ colnames = {'RGB Select','Lab Select','Starting Lab'};
 %% Start Experiment
 
 %start with white illum
+fwrite(t, "Value:" + 0 + "," + 0 + "," + 0);
 adapting(RGB_white_illum,t,120); %run adapting function with set illum
 tempTable = table();
 for rep = 1:3 %repeat exp 3 times
@@ -66,7 +67,7 @@ end
 
 function adapting(illumRGB,connect,adapt_time)
 fwrite(connect, "Light:" + illumRGB(1) + "," + illumRGB(2) + "," + illumRGB(3));
-pause(1/5)
+pause(1/4)
 
 %adapting . . .
 fwrite(connect, "Value:" + 0 + "," + 0 + "," + 0); %set patch to black
