@@ -66,16 +66,17 @@ end
 %% Run through RGB values by pressing key to advance
 
 function adapting(illumRGB,connect,adapt_time)
-fwrite(connect, "Light:" + illumRGB(1) + "," + illumRGB(2) + "," + illumRGB(3));
-pause(1/4)
-
-%adapting . . .
-fwrite(connect, "Value:" + 0 + "," + 0 + "," + 0); %set patch to black
-pause(adapt_time) %adapt for x mins
 fs = 44100;      % Sampling frequency (samples per second)
 time = 0:1/fs:0.2;  % Time vector for 0.2 seconds
 f = 500;        % Frequency of the bleep (in Hz)
-bleep = sin(2*pi*f*time);  % Generate a sine wave at 500 Hz
+bleep = sin(2*pi*f*time); 
+fwrite(connect, "Light:" + illumRGB(1) + "," + illumRGB(2) + "," + illumRGB(3));
+pause(1/4)
+sound(bleep, fs);
+%adapting . . .
+fwrite(connect, "Value:" + 0 + "," + 0 + "," + 0); %set patch to black
+pause(adapt_time) %adapt for x mins
+ % Generate a sine wave at 500 Hz
 sound(bleep, fs);
 end
 
@@ -157,6 +158,8 @@ disp("Starting Lab:" + lab(row_idx, col_idx, 1) + "," + lab(row_idx,col_idx, 2) 
             lab_selection(1,:) = lab(row_idx,col_idx,:);
             a = 'next_trial';
             disp(a)
+            fwrite(connect, "Value:" + 0 + "," + 0 + "," + 0);
+            pause(1/4)
     end  
 
     end
