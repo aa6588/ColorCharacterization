@@ -78,7 +78,7 @@ function submitSurvey(participantID, ageField, bgRgcb, bgBycb, bgGender, bgHisp,
     Ethnic = length(bgEthnic.Children) - ethnicIndex + 1;  % Reverse index
 
     % Save the results to a file
-    filename = '../data/survey.xls';
+    filename = 'C:\Users\orange\Documents\GitHub\ColorCharacterization\src\Participants\survey.xls';
 
     % Define the row of data to be added
     TimeStamp = sprintf('%s', datestr(now, 'yyyymmdd_HHMMSS'));
