@@ -105,8 +105,4 @@ for i = 1:length(illuminants)
     finalTable(finalTable.Illuminant == current_illum, :).CI_uv = chrom2CI(obs_uv, chrom_test_uv, chrom_ref_uv);
 end
 
-%timestamp = datestr(datetime('now'), 'yyyy-mm-dd_HH-MM-SS');
-%filename = ['obsData_' timestamp '.csv'];
-%writeTable(finalTable, filename);
-
-%% separate into color illum tables
+%% separate into 
