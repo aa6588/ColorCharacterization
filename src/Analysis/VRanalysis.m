@@ -110,3 +110,14 @@ end
 %writeTable(finalTable, filename);
 
 %% separate into color illum tables
+%resultTable = groupsummary(finalTable, {'Illuminant', 'Lightness'}, 'mean', 'CI_uv');
+
+%Test if CI for red illum is significantly different for lightness levels
+redData = finalTable(finalTable.Illuminant == 'r', :);
+% Group CI values by Lightness levels
+groupLabels =redData.Lightness;
+% Extract CI values
+CI_values = redData.CI_uv;
+[p, tbl, stats] = anova1(CI_values, groupLabels, 'off');  % 'off' suppresses the plot
+% Display the p-value
+fprintf('P-value for one-way ANOVA: %.4f\n', p);
