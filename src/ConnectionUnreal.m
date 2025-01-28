@@ -9,7 +9,7 @@ addpath(genpath('C:\Users\orange\Documents\GitHub\MCSL-Tools\Convert\'))
 %% D:\VR_Projects\CalibrationHMD unreal
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-save_filename = 'Yellow_Calib_12_10_24.mat';
+save_filename = 'Flat_White_Calib_1_27_25.mat';
 
 cs2000 = CS2000('COM5');
 % Synchronization
