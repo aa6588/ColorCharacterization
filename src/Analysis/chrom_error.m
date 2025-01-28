@@ -26,5 +26,5 @@ y_rmse = sqrt(mse);
 
 % Display the RMSE
 illuminant_names = {'White Illum', 'Red Illum', 'Green Illum', 'Blue Illum', 'Yellow Illum'};
-result_table = table(w_rmse,r_rmse,g_rmse,b_rmse,y_rmse, 'VariableNames', illuminant_names,'RowNames',{'Gray Ramp Chromaticity RMSE'});
+result_table = table(w_rmse,r_rmse,g_rmse,b_rmse,y_rmse, 'VariableNames', illuminant_names,'RowNames',{'VR Gray Ramp Chromaticity RMSE'});
 result_table{:, :} = round(result_table{:, :}, 4)

@@ -108,6 +108,7 @@ end
 %timestamp = datestr(datetime('now'), 'yyyy-mm-dd_HH-MM-SS');
 %filename = ['obsData_' timestamp '.csv'];
 %writeTable(finalTable, filename);
+%save('VRData.mat','finalTable');
 
 %% separate into color illum tables
 %resultTable = groupsummary(finalTable, {'Illuminant', 'Lightness'}, 'mean', 'CI_uv');
