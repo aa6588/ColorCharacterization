@@ -303,12 +303,12 @@ save(save_filename, 'Red', 'Blue', 'Green', 'Gray', 'White','Validation_rand', '
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-load RGBs_grids_struct.mat %1-125 is cube rgb values. 126-x is lab values
-load LAB_grid_struct.mat
+load Flat_RGB_grids_struct.mat %1-125 is cube rgb values. 126-x is lab values
+load Flat_LAB_grid_struct.mat
 
 %one illum at a time
 level = {'L40','L55','L70'};
-illum = 'y';
+illum = 'w';
 
 %loop lightness
 for j = 1:3

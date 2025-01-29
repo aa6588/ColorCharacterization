@@ -31,24 +31,29 @@ end
 % k2 = plot(display(:,1),display(:,2),'-r'); %gamut
 % scatter(illums(:,1),illums(:,2),'k')
 %reshape
-grid_y_L70_calc = reshape(grid_y_L70,[],3);
-grid_y_L55_calc = reshape(grid_y_L55,[],3);
-grid_y_L40_calc = reshape(grid_y_L40,[],3);
+grid_b_L70_calc = reshape(grid_b_L70,[],3);
+grid_b_L55_calc = reshape(grid_b_L55,[],3);
+grid_b_L40_calc = reshape(grid_b_L40,[],3);
 
-XYZs_forLab_70= Lab2XYZ(grid_y_L70_calc,wp_y);
-XYZs_forLab_55 = Lab2XYZ(grid_y_L55_calc,wp_y);
-XYZs_forLab_40 = Lab2XYZ(grid_y_L40_calc,wp_y);
+PM = Flat_model.b.PM;
+LUT = Flat_model.b.LUT;
+wp = Flat_model.b.wp;
+
+XYZs_forLab_70= Lab2XYZ(grid_b_L70_calc,wp);
+XYZs_forLab_55 = Lab2XYZ(grid_b_L55_calc,wp);
+XYZs_forLab_40 = Lab2XYZ(grid_b_L40_calc,wp);
 %xyY = XYZ2xyY(XYZs_forLab_80);
 %gamut check
-[RGBs_y_L40, gamut] = modXYZ2RGB(PM_y,LUT_y,XYZs_forLab_40);
-[RGBs_y_L55, gamut] = modXYZ2RGB(PM_y,LUT_y,XYZs_forLab_55);
-[RGBs_y_L70, gamut] = modXYZ2RGB(PM_y,LUT_y,XYZs_forLab_70);
+[RGBs_y_L40, gamut] = modXYZ2RGB(PM,LUT,XYZs_forLab_40);
+[RGBs_y_L55, gamut] = modXYZ2RGB(PM,LUT,XYZs_forLab_55);
+[RGBs_y_L70, gamut] = modXYZ2RGB(PM,LUT,XYZs_forLab_70);
 %scatter(xyY(:,1),xyY(:,2),'b')
 
-RGBs_y_L40 = reshape(RGBs_y_L40,size(grid_y_L40));
-RGBs_y_L55 = reshape(RGBs_y_L55,size(grid_y_L55));
-RGBs_y_L70 = reshape(RGBs_y_L70,size(grid_y_L70));
+Flat_RGB_grid.b.L40 = reshape(RGBs_y_L40,size(grid_b_L40));
+Flat_RGB_grid.b.L55 = reshape(RGBs_y_L55,size(grid_b_L55));
+Flat_RGB_grid.b.L70 = reshape(RGBs_y_L70,size(grid_b_L70));
 
+LAB_grid.y.L70 = reshape(grid_y_L70_calc,size(grid_y_L70));
 
 %% u/v/
 % uv_illums = XYZ2uvY(xyY2XYZ(illums));

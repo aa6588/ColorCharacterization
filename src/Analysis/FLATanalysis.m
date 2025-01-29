@@ -5,10 +5,10 @@
 % average lightness level for all participants (aggregate)
 % should end up with one RGB value per lightness per illum
 addpath('C:\Users\Andrea\Documents\GitHub\ColorCharacterization\src\color_transformations\')
-%% VR section
+%% FLAT section
 %48 trials per participant
 
-cd C:\Users\Andrea\Documents\GitHub\ColorCharacterization\src\Participants\VR\
+cd C:\Users\Andrea\Documents\GitHub\ColorCharacterization\src\Participants\Flat\
 %cd C:\Users\orange\Documents\GitHub\ColorCharacterization\src\Participants\VR\
 files = dir('Pa*.mat');
 finalTable = table();  % Initialize an empty table
@@ -56,7 +56,7 @@ end
 
 %% Divide each illuminant's results
 cd ..\..\
-load models_info.mat 
+load Flat_models_info.mat 
 finalTable.XYZ = zeros(height(finalTable),3);
 finalTable(finalTable.Illuminant == 'w', :).XYZ = modRGB2XYZ(model.w.PM,model.w.LUT,finalTable(finalTable.Illuminant == 'w', :).RGB);
 finalTable(finalTable.Illuminant == 'r', :).XYZ = modRGB2XYZ(model.r.PM,model.r.LUT,finalTable(finalTable.Illuminant == 'r', :).RGB);
@@ -114,11 +114,11 @@ end
 %resultTable = groupsummary(finalTable, {'Illuminant', 'Lightness'}, 'mean', 'CI_uv');
 
 %Test if CI for red illum is significantly different for lightness levels
-yellowData = finalTable(finalTable.Illuminant == 'y', :);
+redData = finalTable(finalTable.Illuminant == 'r', :);
 % Group CI values by Lightness levels
-groupLabels =yellowData.Lightness;
+groupLabels =redData.Lightness;
 % Extract CI values
-CI_values = yellowData.CI_uv;
+CI_values = redData.CI_uv;
 [p, tbl, stats] = anova1(CI_values, groupLabels, 'off');  % 'off' suppresses the plot
 % Display the p-value
 fprintf('P-value for one-way ANOVA: %.4f\n', p);
