@@ -275,10 +275,10 @@ load  lab_meas.mat
 load whitepoints.mat
 level = {'L40','L55','L70'};
 illum = 'y';
-
+wp = Flat_model.y.wp;
 XYZmeas = [rand_idx.(illum).(level{1}).XYZs;rand_idx.(illum).(level{2}).XYZs;rand_idx.(illum).(level{3}).XYZs];
 lab_values = [rand_idx.(illum).(level{1}).Labs;rand_idx.(illum).(level{2}).Labs;rand_idx.(illum).(level{3}).Labs];
- XYZ = Lab2XYZ(lab_values,wp_y);
+ XYZ = Lab2XYZ(lab_values,wp);
  xyY = XYZ2xyY(XYZ')';
  xyYmeas = XYZ2xyY(XYZmeas')';
 
@@ -296,11 +296,11 @@ title('Chromaticity Error Labs')
 
 
 %% Compute deltae2000
-lab_meas = XYZ2Lab(XYZmeas, wp_y);
+lab_meas = XYZ2Lab(XYZmeas, wp);
 lab_est = lab_values;
 dE = deltaE00(lab_values',lab_meas');
 dE_y = [mean(dE), min(dE), max(dE)];
-viz = Lab2XYZ(lab_values,wp_y );
+viz = Lab2XYZ(lab_values,wp );
 rgb_viz = XYZ2RGB(viz);
 
 figure;

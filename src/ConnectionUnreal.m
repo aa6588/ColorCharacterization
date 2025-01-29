@@ -308,11 +308,11 @@ load Flat_LAB_grid_struct.mat
 
 %one illum at a time
 level = {'L40','L55','L70'};
-illum = 'w';
+illum = 'y';
 
 %loop lightness
 for j = 1:3
- RGB_forLabs = RGB_grid.(illum).(level{j});
+ RGB_forLabs = Flat_RGB_grid.(illum).(level{j});
  RGBs = [];
 %rand row and col
  rand_row = randperm(size(RGB_forLabs,1),min(size(RGB_forLabs,1),10));
@@ -322,7 +322,7 @@ for j = 1:3
  min_idx = min(length(rand_row),length(rand_col));
  for sample = 1:min_idx
      RGBs(sample,:) = RGB_forLabs(rand_row(sample),rand_col(sample),:);
-     rand_idx.(illum).(level{j}).Labs(sample,:) = LAB_grid.(illum).(level{j})(rand_row(sample),rand_col(sample),:);
+     rand_idx.(illum).(level{j}).Labs(sample,:) = Flat_LAB_grid.(illum).(level{j})(rand_row(sample),rand_col(sample),:);
  end
 rand_idx.(illum).(level{j}).RGBs = RGBs;
 
