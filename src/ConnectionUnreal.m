@@ -9,7 +9,7 @@ addpath(genpath('C:\Users\orange\Documents\GitHub\MCSL-Tools\Convert\'))
 %% D:\VR_Projects\CalibrationHMD unreal
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-save_filename = 'Flat_White_Calib_1_27_25.mat';
+save_filename = 'Flat_Blue_Calib_1_29_25.mat';
 
 cs2000 = CS2000('COM5');
 % Synchronization
@@ -249,8 +249,7 @@ PredefinedRGB = [rgb;rgbs]; %1-125 is RGB cube, 126-end is labs
 range = double([rgb;rgbs]);
 
 
-for i = 121
-    %i = 1:size(PredefinedRGB, 1)
+for  i = 1:size(PredefinedRGB, 1)
     tic
 
     fwrite(t, "Value:" + range(i, 1) + "," + range(i, 2) + "," ...
@@ -298,7 +297,7 @@ end
 
  %save(save_filename, 'Red', 'Blue', 'Green', 'Gray', 'White');
 
-%save(save_filename, 'Red', 'Blue', 'Green', 'Gray', 'White','Validation_rand', 'PredefinedRGB');
+save(save_filename, 'Red', 'Blue', 'Green', 'Gray', 'White','Validation_rand', 'PredefinedRGB');
 
     %%  LAB Validation
 %%
