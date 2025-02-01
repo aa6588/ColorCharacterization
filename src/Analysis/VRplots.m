@@ -1,5 +1,5 @@
 %VR plots
-
+addpath 'C:\Users\Andrea\Documents\GitHub\ColorCharacterization\src'
 %load VRData.mat
 load uv_aims_VR.mat
 load FinalSceneIllums.mat illum_xyY
