@@ -1,37 +1,37 @@
-function [participant] = ChromAdapt_Flat_exp(participant,paths)
+function [participant] = ChromAdapt_VR_exp(participant,paths)
 
-%% Main function for Color Constancy Experiment Flat
+%% Main function for Color Constancy Experiment VR
 % Create the connection
 t = tcpip('127.0.0.1', 8890);
 fopen(t);
 
 %load variables
-load Flat_RGB_grids_struct.mat Flat_RGB_grid
-load Flat_LAB_grid_struct.mat Flat_LAB_grid
+load RGBs_grids_struct.mat RGB_grid
+load LAB_grid_struct.mat LAB_grid
 %load models_info.mat model
-load Flat_illums.mat flatRGB_illum 
+load FinalSceneIllums.mat newRGB_illum
 %% Define randomization of vars
 
 %lights
-RGB_white_illum = flatRGB_illum(1,:);
-RGB_chrom_illum = flatRGB_illum(2:end,:);
+RGB_white_illum = newRGB_illum(1,:);
+RGB_chrom_illum = newRGB_illum(2:end,:);
 illum_color = {'r','g','b','y'};
 illum_rand = randperm(length(illum_color));
 participant.illum_order = illum_color(illum_rand);
 %patch lightness
 L_star = {'L40' 'L55' 'L70'};
-colnames = {'RGB Select','Lab Select','Starting Lab','Idx'};
+colnames = {'RGB Select','Lab Select','Starting Lab'};
 %% Start Experiment
 
 %start with white illum
 fwrite(t, "Value:" + 0 + "," + 0 + "," + 0);
 adapting(RGB_white_illum,t,120); %run adapting function with set illum
-%tempTable = table();
+tempTable = table();
 for rep = 1:3 %repeat exp 3 times
     rand_L = L_star(randperm(length(L_star))); %randomize lightness
     for L = 1:length(L_star)
-        [curr_select,curr_lab_select,curr_lab_start,Idx] = run_experiment('w',RGB_white_illum,rand_L{L},Flat_RGB_grid,Flat_LAB_grid,t);
-        tempTable = table(curr_select,curr_lab_select,curr_lab_start,Idx,'VariableNames',colnames);
+        [curr_select,curr_lab_select,curr_lab_start] = run_experiment('w',RGB_white_illum,rand_L{L},RGB_grid,LAB_grid,t);
+        tempTable = table(curr_select,curr_lab_select,curr_lab_start,'VariableNames',colnames);
         participant.w.(rand_L{L})(rep,:)= tempTable;
     end
 end
@@ -44,16 +44,16 @@ adapting(RGB_chrom_illum(illum_rand(illums),:),t,120); %adapt to illum for 2 min
         for L = 1:length(L_star)
             curr_illum = illum_color{illum_rand(illums)}; % get label for current illum (rgby)
             curr_illumRGB = RGB_chrom_illum(illum_rand(illums),:);
-            [curr_select,curr_lab_select,curr_lab_start,Idx] = run_experiment(curr_illum,curr_illumRGB,rand_L{L},Flat_RGB_grid,Flat_LAB_grid,t);
-            tempTable = table(curr_select,curr_lab_select,curr_lab_start,Idx,'VariableNames',colnames);
+            [curr_select,curr_lab_select,curr_lab_start] = run_experiment(curr_illum,curr_illumRGB,rand_L{L},RGB_grid,LAB_grid,t);
+            tempTable = table(curr_select,curr_lab_select,curr_lab_start,'VariableNames',colnames);
             participant.(curr_illum).(rand_L{L})(rep,:)= tempTable;
         end
     end
 %add interjection of white illum trial L55 only
     if illums < 4
         adapting(RGB_white_illum,t,30); %adapt to white for 30 secs
-        [curr_select,curr_lab_select,curr_lab_start,Idx] = run_experiment('w',RGB_white_illum,'L55',Flat_RGB_grid,Flat_LAB_grid,t);
-        tempTable = table(curr_select,curr_lab_select,curr_lab_start,Idx,'VariableNames',colnames);
+        [curr_select,curr_lab_select,curr_lab_start] = run_experiment('w',RGB_white_illum,'L55',RGB_grid,LAB_grid,t);
+        tempTable = table(curr_select,curr_lab_select,curr_lab_start,'VariableNames',colnames);
         participant.w.('L55')(illums+3,:)= tempTable; %adds to column after the first 3 reps
     end
 end
@@ -88,6 +88,7 @@ lab = lab_grids.(illum_color).(lightness_level);
 selection = zeros(1,3);
 lab_selection = zeros(1,3);
 select_idx = zeros(1,2);
+
 %set lights
 a = "start";
 

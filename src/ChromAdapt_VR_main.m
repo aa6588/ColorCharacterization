@@ -17,6 +17,8 @@ participant.ID = pID;
 %VR or Flat 
 mode = input("VR or Flat? ", 's');
 participant.mode = mode;
+first = input("First experiment? "); %1 if yes 0 if no
+participant.first = first;
 paths.participant  = append('C:\Users\orange\Documents\GitHub\ColorCharacterization\src\Participants\',mode,'\');
 
 %% Run the Experiment Session

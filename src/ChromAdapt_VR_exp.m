@@ -20,7 +20,7 @@ illum_rand = randperm(length(illum_color));
 participant.illum_order = illum_color(illum_rand);
 %patch lightness
 L_star = {'L40' 'L55' 'L70'};
-colnames = {'RGB Select','Lab Select','Starting Lab'};
+colnames = {'RGB Select','Lab Select','Starting Lab','Idx'};
 %% Start Experiment
 
 %start with white illum
@@ -30,8 +30,8 @@ tempTable = table();
 for rep = 1:3 %repeat exp 3 times
     rand_L = L_star(randperm(length(L_star))); %randomize lightness
     for L = 1:length(L_star)
-        [curr_select,curr_lab_select,curr_lab_start] = run_experiment('w',RGB_white_illum,rand_L{L},RGB_grid,LAB_grid,t);
-        tempTable = table(curr_select,curr_lab_select,curr_lab_start,'VariableNames',colnames);
+        [curr_select,curr_lab_select,curr_lab_start, idx] = run_experiment('w',RGB_white_illum,rand_L{L},RGB_grid,LAB_grid,t);
+        tempTable = table(curr_select,curr_lab_select,curr_lab_start,idx, 'VariableNames',colnames);
         participant.w.(rand_L{L})(rep,:)= tempTable;
     end
 end
@@ -44,8 +44,8 @@ adapting(RGB_chrom_illum(illum_rand(illums),:),t,120); %adapt to illum for 2 min
         for L = 1:length(L_star)
             curr_illum = illum_color{illum_rand(illums)}; % get label for current illum (rgby)
             curr_illumRGB = RGB_chrom_illum(illum_rand(illums),:);
-            [curr_select,curr_lab_select,curr_lab_start] = run_experiment(curr_illum,curr_illumRGB,rand_L{L},RGB_grid,LAB_grid,t);
-            tempTable = table(curr_select,curr_lab_select,curr_lab_start,'VariableNames',colnames);
+            [curr_select,curr_lab_select,curr_lab_start,idx] = run_experiment(curr_illum,curr_illumRGB,rand_L{L},RGB_grid,LAB_grid,t);
+            tempTable = table(curr_select,curr_lab_select,curr_lab_start,idx,'VariableNames',colnames);
             participant.(curr_illum).(rand_L{L})(rep,:)= tempTable;
         end
     end
@@ -80,13 +80,14 @@ pause(adapt_time) %adapt for x mins
 sound(bleep, fs);
 end
 
-function [selection,lab_selection,starting_lab] = run_experiment(illum_color,illumRGB,lightness_level,rgb_grids,lab_grids,connect)
+function [selection,lab_selection,starting_lab,select_idx] = run_experiment(illum_color,illumRGB,lightness_level,rgb_grids,lab_grids,connect)
 
 %set vars
 grid = rgb_grids.(illum_color).(lightness_level);
 lab = lab_grids.(illum_color).(lightness_level);
 selection = zeros(1,3);
 lab_selection = zeros(1,3);
+select_idx = zeros(1,2);
 
 %set lights
 a = "start";
@@ -156,6 +157,7 @@ disp("Starting Lab:" + lab(row_idx, col_idx, 1) + "," + lab(row_idx,col_idx, 2) 
                 + lab(row_idx,col_idx, 3))
             selection(1,:) = grid(row_idx,col_idx,:);
             lab_selection(1,:) = lab(row_idx,col_idx,:);
+            select_idx = [row_idx,col_idx];
             a = 'next_trial';
             disp(a)
             fwrite(connect, "Value:" + 0 + "," + 0 + "," + 0);
