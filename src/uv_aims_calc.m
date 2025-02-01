@@ -1,6 +1,8 @@
 %calc uv aims for plot
-load LAB_grid_struct.mat LAB_grid
-load models_info.mat model
+load Flat_LAB_grid_struct.mat 
+load Flat_model.mat 
+model = Flat_model;
+LAB_grid = Flat_LAB_grid
 
 illuminants = {'r', 'g', 'b', 'y'};
 lightnessValues = {'L40', 'L55', 'L70'};
