@@ -5,6 +5,7 @@
 % average lightness level for all participants (aggregate)
 % should end up with one RGB value per lightness per illum
 addpath('C:\Users\Andrea\Documents\GitHub\ColorCharacterization\src\color_transformations\')
+addpath('C:\Users\Andrea\Documents\GitHub\ColorCharacterization\src\Analysis\')
 %% VR section
 %48 trials per participant
 
@@ -33,9 +34,8 @@ for i = 1:numel(files)
                     RGB = tbl{trial, 1};
                     Lab = tbl{trial, "Lab Select"};
                     %Idx = tbl{trial, "Select Idx"};
-                    lab_slice = reshape(Lab, 1, 1, []);
 
-                    % Compare each slice in lab to the selection
+                    lab_slice = reshape(Lab, 1, 1, []);
                     logicalMask = all(LAB_grid.(illuminant).(lightness) == lab_slice, 3); % Check equality along the third dimension
                     [row_idx, col_idx] = find(logicalMask);
                     Idx = [row_idx, col_idx];
@@ -83,6 +83,7 @@ load FinalSceneIllums.mat illum_xyY
 illum_uvY = xyY2uvY(illum_xyY);
 
 %% calculate CIs
+cd C:\Users\Andrea\Documents\GitHub\ColorCharacterization\src\Analysis\
 finalTable.CI = zeros(length(finalTable.xyY),1);
 finalTable.CI_uv = zeros(length(finalTable.xyY),1);
 
@@ -118,60 +119,4 @@ end
 %writeTable(finalTable, filename);
 %save('VRData.mat','finalTable');
 
-%% separate into color illum tables
-load LAB_grid_struct.mat LAB_grid
-%red
-redData = finalTable(finalTable.Illuminant == 'r', :);
 
-%separate lightnessess 
-redData_L40 = redData(redData.Lightness == 'L40', :);
-redData_L55 = redData(redData.Lightness == 'L55', :);
-redData_L70 = redData(redData.Lightness == 'L70', :);
-
-%plot grids per lightness
-XYZs_L40 = Lab2XYZ(reshape(LAB_grid.r.L40,[],3),model.r.wp);
-uv_aims_L40 = XYZ2uvY(XYZs_L40);
-
-scatter(uv_aims_L40(:,1),uv_aims_L40(:,2))
-hold on
-scatter(illum_uvY(2,1),illum_uvY(2,2))
-scatter(illum_uvY(1,1),illum_uvY(1,2))
-scatter(redData_L40.uvY(:,1),redData_L40.uvY(:,2))
-
-h = histogram2(redData_L40.uvY(:,1), redData_L40.uvY(:,2),30, 'DisplayStyle', 'tile', 'Normalization', 'count');
-colormap('jet');  % Set colormap (you can choose other colormaps)
-colorbar;  % Show color bar to represent frequency
-xlabel('U values');
-ylabel('V values');
-title('Heatmap of Selected UV Values');
-hold on
-scatter(illum_uvY(2,1),illum_uvY(2,2))
-scatter(illum_uvY(1,1),illum_uvY(1,2))
-scatter(uv_aims_L40(:,1),uv_aims_L40(:,2))
-
-%%
-[counts, xedges, yedges] = histcounts2(redData_L40.uvY(:,1), redData_L40.uvY(:,2),30);
-
-% Get bin centers (calculated from the edges)
-x_centers = (xedges(1:end-1) + xedges(2:end)) / 2;
-y_centers = (yedges(1:end-1) + yedges(2:end)) / 2;
-
-% Set a constant size for the circles (you can adjust this value)
-circle_size = 50;
-
-% Create scatter plot with circles where the color represents the count
-counts_normalized = (counts - min(counts(:))) / (max(counts(:)) - min(counts(:)));
-cmap = colormap('jet');  % Choose the colormap you want, 'jet' is used here
-colors = cmap(floor(counts_normalized * (size(cmap, 1) - 1)) + 1, :);
-
-% Create scatter plot with circles where the color represents the count
-scatter(x_centers(:), y_centers(:), circle_size, 'filled', 'Marker', 'o');
-
-% Set colormap and color bar to represent the frequency (count)
-colormap('jet');  % Set colormap (you can choose other colormaps)
-colorbar;  % Show color bar to represent frequency
-
-% Labeling the axes
-xlabel('U values');
-ylabel('V values');
-title('Heatmap of Selected UV Values with Circular Markers');

@@ -1,10 +1,6 @@
 %% Analysis of Raw data
-
-% organize VR vs Flat
-% average trials per lightness level for each participant
-% average lightness level for all participants (aggregate)
-% should end up with one RGB value per lightness per illum
 addpath('C:\Users\Andrea\Documents\GitHub\ColorCharacterization\src\color_transformations\')
+addpath('C:\Users\Andrea\Documents\GitHub\ColorCharacterization\src\Analysis\')
 %% FLAT section
 %48 trials per participant
 
@@ -32,6 +28,7 @@ for i = 1:numel(files)
                     % Extract the RGB values for the current trial
                     RGB = tbl{trial, 1};
                     Lab = tbl{trial, "Lab Select"};
+                    Idx = tbl{trial, "Select Idx"};
                     
                     % Create a temporary row to append to the final table
                     newRow = table( ...
@@ -42,7 +39,8 @@ for i = 1:numel(files)
                         trial, ...  % Add the trial number
                         RGB, ...  % RGB values for the current trial
                         Lab, ...
-                        'VariableNames', {'ParticipantID', 'Mode', 'Illuminant', 'Lightness', 'Rep', 'RGB','Lab Grid'} ...
+                        Idx, ...
+                        'VariableNames', {'ParticipantID', 'Mode', 'Illuminant', 'Lightness', 'Rep', 'RGB','Lab Grid','Idx'} ...
                     );
                     
                     % Append the new row to the final table
@@ -56,13 +54,13 @@ end
 
 %% Divide each illuminant's results
 cd ..\..\
-load Flat_models_info.mat 
+load Flat_model.mat Flat_model
 finalTable.XYZ = zeros(height(finalTable),3);
-finalTable(finalTable.Illuminant == 'w', :).XYZ = modRGB2XYZ(model.w.PM,model.w.LUT,finalTable(finalTable.Illuminant == 'w', :).RGB);
-finalTable(finalTable.Illuminant == 'r', :).XYZ = modRGB2XYZ(model.r.PM,model.r.LUT,finalTable(finalTable.Illuminant == 'r', :).RGB);
-finalTable(finalTable.Illuminant == 'g', :).XYZ = modRGB2XYZ(model.g.PM,model.g.LUT,finalTable(finalTable.Illuminant == 'g', :).RGB);
-finalTable(finalTable.Illuminant == 'b', :).XYZ = modRGB2XYZ(model.b.PM,model.b.LUT,finalTable(finalTable.Illuminant == 'b', :).RGB);
-finalTable(finalTable.Illuminant == 'y', :).XYZ = modRGB2XYZ(model.y.PM,model.y.LUT,finalTable(finalTable.Illuminant == 'y', :).RGB);
+finalTable(finalTable.Illuminant == 'w', :).XYZ = modRGB2XYZ(Flat_model.w.PM,Flat_model.w.LUT,finalTable(finalTable.Illuminant == 'w', :).RGB);
+finalTable(finalTable.Illuminant == 'r', :).XYZ = modRGB2XYZ(Flat_model.r.PM,Flat_model.r.LUT,finalTable(finalTable.Illuminant == 'r', :).RGB);
+finalTable(finalTable.Illuminant == 'g', :).XYZ = modRGB2XYZ(Flat_model.g.PM,Flat_model.g.LUT,finalTable(finalTable.Illuminant == 'g', :).RGB);
+finalTable(finalTable.Illuminant == 'b', :).XYZ = modRGB2XYZ(Flat_model.b.PM,Flat_model.b.LUT,finalTable(finalTable.Illuminant == 'b', :).RGB);
+finalTable(finalTable.Illuminant == 'y', :).XYZ = modRGB2XYZ(Flat_model.y.PM,Flat_model.y.LUT,finalTable(finalTable.Illuminant == 'y', :).RGB);
 
 %number of chrom trials 
 trial_num = height(finalTable(finalTable.Illuminant == 'r', :));
@@ -108,17 +106,4 @@ end
 %timestamp = datestr(datetime('now'), 'yyyy-mm-dd_HH-MM-SS');
 %filename = ['obsData_' timestamp '.csv'];
 %writeTable(finalTable, filename);
-%save('VRData.mat','finalTable');
-
-%% separate into color illum tables
-%resultTable = groupsummary(finalTable, {'Illuminant', 'Lightness'}, 'mean', 'CI_uv');
-
-%Test if CI for red illum is significantly different for lightness levels
-redData = finalTable(finalTable.Illuminant == 'r', :);
-% Group CI values by Lightness levels
-groupLabels =redData.Lightness;
-% Extract CI values
-CI_values = redData.CI_uv;
-[p, tbl, stats] = anova1(CI_values, groupLabels, 'off');  % 'off' suppresses the plot
-% Display the p-value
-fprintf('P-value for one-way ANOVA: %.4f\n', p);
+%save('FLATData.mat','finalTable');

@@ -1,15 +1,14 @@
 %% Define Lab grids
 
 % Define ranges and steps for each L value
-b_min_L40 = -24; b_max_L40 = 4; b_step_L40 = 2;
-a_min_L40 = -8; a_max_L40 = 4; a_step_L40 = 2;
+b_min_L40 = -2; b_max_L40 = 16; b_step_L40 = 2;
+a_min_L40 = -8; a_max_L40 = 8; a_step_L40 = 2;
 
-b_min_L55 = -30; b_max_L55 = 6; b_step_L55 = 2;
-a_min_L55 = -10; a_max_L55 = 4; a_step_L55 = 2;
+b_min_L55 = -2; b_max_L55 = 20; b_step_L55 = 2;
+a_min_L55 = -10; a_max_L55 = 10; a_step_L55 = 2;
 
-b_min_L70 = -36; b_max_L70 =6; b_step_L70 = 2;
-a_min_L70 = -12; a_max_L70 = 6; a_step_L70 = 2;
-
+b_min_L70 = -2; b_max_L70 =24; b_step_L70 = 2;
+a_min_L70 = -12; a_max_L70 = 12; a_step_L70 = 2;
 
 % Generate and populate matrices for L40
 [b_grid_L40, a_grid_L40] = meshgrid(b_min_L40:b_step_L40:b_max_L40, a_min_L40:a_step_L40:a_max_L40);
@@ -47,6 +46,6 @@ for i = 1:num_a_L70
     end
 end
 
-grid_y_L70 = reshape(Lab_L70,[],10,3);
-grid_y_L55 = reshape(Lab_L55,[],8,3);
-grid_y_L40 = reshape(Lab_L40,[],7,3);
+grid_b_L70_calc = reshape(Lab_L70,14,[],3);
+grid_b_L55_calc = Lab_L55;
+grid_b_L40_calc = Lab_L40;
