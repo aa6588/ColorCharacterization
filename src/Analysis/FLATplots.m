@@ -1,5 +1,5 @@
-%VR plots
-
+%Flat plots
+addpath 'C:\Users\Andrea\Documents\GitHub\ColorCharacterization\src'
 %load FLATData.mat
 load uv_aims_FLAT.mat
 load FinalSceneIllums.mat illum_xyY
@@ -50,6 +50,19 @@ ylabel('v');
 title(['Participant responses Red Illuminant ', lightness]);
 grid on;
 end
+
+% CI plots
+avg_CIs = groupsummary(redData,{'ParticipantID','Lightness'},'mean','CI');
+%reshape table
+% Reshape from long to wide format
+T_wide = unstack(avg_CIs, 'mean_CI', 'Lightness');
+% Convert the table to a matrix for plotting
+data_matrix = T_wide{:, {'L40', 'L55', 'L70'}};
+figure;
+h = bar(data_matrix, 'grouped');
+xlabel('Participant')
+ylabel('Constancy Index')
+title('Average Constancy Index per Lightness Under Red Illuminant')
 %% GREEN
 % Count occurrences of each (x, y) pair
 lightnessValues = {'L40', 'L55','L70'};
@@ -87,6 +100,19 @@ ylabel('v');
 title(['Participant responses Green Illuminant ', lightness]);
 grid on;
 end
+
+% CI plots
+avg_CIs = groupsummary(greenData,{'ParticipantID','Lightness'},'mean','CI');
+%reshape table
+% Reshape from long to wide format
+T_wide = unstack(avg_CIs, 'mean_CI', 'Lightness');
+% Convert the table to a matrix for plotting
+data_matrix = T_wide{:, {'L40', 'L55', 'L70'}};
+figure;
+h = bar(data_matrix, 'grouped');
+xlabel('Participant')
+ylabel('Constancy Index')
+title('Average Constancy Index per Lightness Under Green Illuminant')
 %% blue
 % Count occurrences of each (x, y) pair
 lightnessValues = {'L40', 'L55','L70'};
@@ -124,6 +150,19 @@ ylabel('v');
 title(['Participant responses Blue Illuminant ', lightness]);
 grid on;
 end
+
+% CI plots
+avg_CIs = groupsummary(blueData,{'ParticipantID','Lightness'},'mean','CI');
+%reshape table
+% Reshape from long to wide format
+T_wide = unstack(avg_CIs, 'mean_CI', 'Lightness');
+% Convert the table to a matrix for plotting
+data_matrix = T_wide{:, {'L40', 'L55', 'L70'}};
+figure;
+h = bar(data_matrix, 'grouped');
+xlabel('Participant')
+ylabel('Constancy Index')
+title('Average Constancy Index per Lightness Under Blue Illuminant')
 %% yellow
 % Count occurrences of each (x, y) pair
 lightnessValues = {'L40', 'L55','L70'};
@@ -161,3 +200,16 @@ ylabel('v');
 title(['Participant responses Yellow Illuminant ', lightness]);
 grid on;
 end
+
+% CI plots
+avg_CIs = groupsummary(yellowData,{'ParticipantID','Lightness'},'mean','CI');
+%reshape table
+% Reshape from long to wide format
+T_wide = unstack(avg_CIs, 'mean_CI', 'Lightness');
+% Convert the table to a matrix for plotting
+data_matrix = T_wide{:, {'L40', 'L55', 'L70'}};
+figure;
+h = bar(data_matrix, 'grouped');
+xlabel('Participant')
+ylabel('Constancy Index')
+title('Average Constancy Index per Lightness Under Yellow Illuminant')
