@@ -75,7 +75,9 @@ pause(1/4)
 sound(bleep, fs);
 %adapting . . .
 fwrite(connect, "Value:" + 0 + "," + 0 + "," + 0); %set patch to black
+fclose(connect);
 pause(adapt_time) %adapt for x mins
+fopen(connect);
  % Generate a sine wave at 500 Hz
 sound(bleep, fs);
 end

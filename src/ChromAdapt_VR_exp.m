@@ -53,7 +53,7 @@ adapting(RGB_chrom_illum(illum_rand(illums),:),t,120); %adapt to illum for 2 min
     if illums < 4
         adapting(RGB_white_illum,t,30); %adapt to white for 30 secs
         [curr_select,curr_lab_select,curr_lab_start] = run_experiment('w',RGB_white_illum,'L55',RGB_grid,LAB_grid,t);
-        tempTable = table(curr_select,curr_lab_select,curr_lab_start,'VariableNames',colnames);
+        tempTable = table(curr_select,curr_lab_select,curr_lab_start,idx,'VariableNames',colnames);
         participant.w.('L55')(illums+3,:)= tempTable; %adds to column after the first 3 reps
     end
 end
@@ -75,9 +75,14 @@ pause(1/4)
 sound(bleep, fs);
 %adapting . . .
 fwrite(connect, "Value:" + 0 + "," + 0 + "," + 0); %set patch to black
+%AmAdapting=0
+%AmAdapting=1
+fclose(connect);
 pause(adapt_time) %adapt for x mins
  % Generate a sine wave at 500 Hz
+fopen(connect);
 sound(bleep, fs);
+%AmAdapting=0
 end
 
 function [selection,lab_selection,starting_lab,select_idx] = run_experiment(illum_color,illumRGB,lightness_level,rgb_grids,lab_grids,connect)
@@ -114,6 +119,8 @@ disp("Starting Lab:" + lab(row_idx, col_idx, 1) + "," + lab(row_idx,col_idx, 2) 
 
     switch a
         case "rightarrow"
+            %if AmAdapting=1
+        %else
             disp('right')
             if col_idx < size(grid, 2)
                 col_idx = col_idx + 1;
@@ -121,6 +128,7 @@ disp("Starting Lab:" + lab(row_idx, col_idx, 1) + "," + lab(row_idx,col_idx, 2) 
                 + grid(row_idx,col_idx, 3));
                 disp("Lab:" + lab(row_idx, col_idx, 1) + "," + lab(row_idx,col_idx, 2) + "," ...
                 + lab(row_idx,col_idx, 3));
+                %end
             end
         case "leftarrow"
             disp('left')
