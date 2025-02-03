@@ -1,6 +1,6 @@
 %Flat plots
 addpath 'C:\Users\Andrea\Documents\GitHub\ColorCharacterization\src'
-%load FLATData.mat
+load FLATData.mat
 load uv_aims_FLAT.mat
 load FinalSceneIllums.mat illum_xyY
 illum_uvY = xyY2uvY(illum_xyY);

@@ -5,7 +5,6 @@ addpath('C:\Users\Andrea\Documents\GitHub\ColorCharacterization\src\Analysis\')
 %48 trials per participant
 
 cd C:\Users\Andrea\Documents\GitHub\ColorCharacterization\src\Participants\Flat\
-%cd C:\Users\orange\Documents\GitHub\ColorCharacterization\src\Participants\VR\
 files = dir('Pa*.mat');
 finalTable = table();  % Initialize an empty table
 
@@ -28,7 +27,7 @@ for i = 1:numel(files)
                     % Extract the RGB values for the current trial
                     RGB = tbl{trial, 1};
                     Lab = tbl{trial, "Lab Select"};
-                    Idx = tbl{trial, "Select Idx"};
+                    Idx = tbl{trial, "Idx"};
                     
                     % Create a temporary row to append to the final table
                     newRow = table( ...
@@ -74,6 +73,7 @@ load FinalSceneIllums.mat illum_xyY
 illum_uvY = xyY2uvY(illum_xyY);
 
 %% calculate CIs
+cd C:\Users\Andrea\Documents\GitHub\ColorCharacterization\src\Analysis\
 finalTable.CI = zeros(length(finalTable.xyY),1);
 finalTable.CI_uv = zeros(length(finalTable.xyY),1);
 
@@ -107,4 +107,4 @@ end
 %timestamp = datestr(datetime('now'), 'yyyy-mm-dd_HH-MM-SS');
 %filename = ['obsData_' timestamp '.csv'];
 %writeTable(finalTable, filename);
-%save('FLATData.mat','finalTable');
+save('FLATData.mat','finalTable');

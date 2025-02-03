@@ -33,12 +33,12 @@ for i = 1:numel(files)
                     % Extract the RGB values for the current trial
                     RGB = tbl{trial, 1};
                     Lab = tbl{trial, "Lab Select"};
-                    %Idx = tbl{trial, "Select Idx"};
+                    Idx = tbl{trial, "Idx"};
 
-                    lab_slice = reshape(Lab, 1, 1, []);
-                    logicalMask = all(LAB_grid.(illuminant).(lightness) == lab_slice, 3); % Check equality along the third dimension
-                    [row_idx, col_idx] = find(logicalMask);
-                    Idx = [row_idx, col_idx];
+                    % lab_slice = reshape(Lab, 1, 1, []);
+                    % logicalMask = all(LAB_grid.(illuminant).(lightness) == lab_slice, 3); % Check equality along the third dimension
+                    % [row_idx, col_idx] = find(logicalMask);
+                    % Idx = [row_idx, col_idx];
             
 
                     % Create a temporary row to append to the final table
@@ -119,6 +119,6 @@ end
 %timestamp = datestr(datetime('now'), 'yyyy-mm-dd_HH-MM-SS');
 %filename = ['obsData_' timestamp '.csv'];
 %writeTable(finalTable, filename);
-%save('VRData.mat','finalTable');
+save('VRData.mat','finalTable');
 
 
