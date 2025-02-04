@@ -72,6 +72,8 @@ f = 500;        % Frequency of the bleep (in Hz)
 bleep = sin(2*pi*f*time); 
 fwrite(connect, "Light:" + illumRGB(1) + "," + illumRGB(2) + "," + illumRGB(3));
 pause(1/4)
+fwrite(connect, "Light:" + illumRGB(1) + "," + illumRGB(2) + "," + illumRGB(3));
+pause(1/4)
 sound(bleep, fs);
 %adapting . . .
 fwrite(connect, "Value:" + 0 + "," + 0 + "," + 0); %set patch to black
@@ -169,7 +171,9 @@ disp("Starting Lab:" + lab(row_idx, col_idx, 1) + "," + lab(row_idx,col_idx, 2) 
             a = 'next_trial';
             disp(a)
             fwrite(connect, "Value:" + 0 + "," + 0 + "," + 0);
-            pause(1/4)
+            pause(1/8)
+            fwrite(connect, "Value:" + 0 + "," + 0 + "," + 0);
+            pause(1/8)
     end  
 
     end
