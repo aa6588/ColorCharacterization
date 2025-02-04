@@ -1,10 +1,16 @@
 %% Analysis of Raw data
+
+% organize VR vs Flat
+% average trials per lightness level for each participant
+% average lightness level for all participants (aggregate)
+% should end up with one RGB value per lightness per illum
 addpath('C:\Users\Andrea\Documents\GitHub\ColorCharacterization\src\color_transformations\')
 addpath('C:\Users\Andrea\Documents\GitHub\ColorCharacterization\src\Analysis\')
-%% FLAT section
+%% VR section
 %48 trials per participant
 
-cd C:\Users\Andrea\Documents\GitHub\ColorCharacterization\src\Participants\Flat\
+cd C:\Users\Andrea\Documents\GitHub\ColorCharacterization\src\Participants\VR\
+%cd C:\Users\orange\Documents\GitHub\ColorCharacterization\src\Participants\VR\
 files = dir('Pa*.mat');
 finalTable = table();  % Initialize an empty table
 
@@ -28,7 +34,13 @@ for i = 1:numel(files)
                     RGB = tbl{trial, 1};
                     Lab = tbl{trial, "Lab Select"};
                     Idx = tbl{trial, "Idx"};
-                    
+
+                    % lab_slice = reshape(Lab, 1, 1, []);
+                    % logicalMask = all(LAB_grid.(illuminant).(lightness) == lab_slice, 3); % Check equality along the third dimension
+                    % [row_idx, col_idx] = find(logicalMask);
+                    % Idx = [row_idx, col_idx];
+            
+
                     % Create a temporary row to append to the final table
                     newRow = table( ...
                         participant.ID, ...
@@ -38,9 +50,9 @@ for i = 1:numel(files)
                         string(lightness), ...  % Store as string array
                         trial, ...  % Add the trial number
                         RGB, ...  % RGB values for the current trial
-                        Lab, ... 
+                        Lab, ...
                         Idx, ...
-                        'VariableNames', {'ParticipantID', 'Mode', 'illum_order','Illuminant', 'Lightness', 'Rep', 'RGB','Lab Grid','Idx'} ...
+                        'VariableNames', {'ParticipantID', 'Mode','illum_order', 'Illuminant', 'Lightness', 'Rep', 'RGB','Lab Grid','Idx'} ...
                     );
                     
                     % Append the new row to the final table
@@ -54,13 +66,13 @@ end
 
 %% Divide each illuminant's results
 cd ..\..\
-load Flat_model.mat Flat_model
+load models_info.mat 
 finalTable.XYZ = zeros(height(finalTable),3);
-finalTable(finalTable.Illuminant == 'w', :).XYZ = modRGB2XYZ(Flat_model.w.PM,Flat_model.w.LUT,finalTable(finalTable.Illuminant == 'w', :).RGB);
-finalTable(finalTable.Illuminant == 'r', :).XYZ = modRGB2XYZ(Flat_model.r.PM,Flat_model.r.LUT,finalTable(finalTable.Illuminant == 'r', :).RGB);
-finalTable(finalTable.Illuminant == 'g', :).XYZ = modRGB2XYZ(Flat_model.g.PM,Flat_model.g.LUT,finalTable(finalTable.Illuminant == 'g', :).RGB);
-finalTable(finalTable.Illuminant == 'b', :).XYZ = modRGB2XYZ(Flat_model.b.PM,Flat_model.b.LUT,finalTable(finalTable.Illuminant == 'b', :).RGB);
-finalTable(finalTable.Illuminant == 'y', :).XYZ = modRGB2XYZ(Flat_model.y.PM,Flat_model.y.LUT,finalTable(finalTable.Illuminant == 'y', :).RGB);
+finalTable(finalTable.Illuminant == 'w', :).XYZ = modRGB2XYZ(model.w.PM,model.w.LUT,finalTable(finalTable.Illuminant == 'w', :).RGB);
+finalTable(finalTable.Illuminant == 'r', :).XYZ = modRGB2XYZ(model.r.PM,model.r.LUT,finalTable(finalTable.Illuminant == 'r', :).RGB);
+finalTable(finalTable.Illuminant == 'g', :).XYZ = modRGB2XYZ(model.g.PM,model.g.LUT,finalTable(finalTable.Illuminant == 'g', :).RGB);
+finalTable(finalTable.Illuminant == 'b', :).XYZ = modRGB2XYZ(model.b.PM,model.b.LUT,finalTable(finalTable.Illuminant == 'b', :).RGB);
+finalTable(finalTable.Illuminant == 'y', :).XYZ = modRGB2XYZ(model.y.PM,model.y.LUT,finalTable(finalTable.Illuminant == 'y', :).RGB);
 
 %number of chrom trials 
 trial_num = height(finalTable(finalTable.Illuminant == 'r', :));
@@ -71,20 +83,17 @@ finalTable.uvY = xyY2uvY(finalTable.xyY);
 %calc illum xy and uv
 load FinalSceneIllums.mat illum_xyY
 illum_uvY = xyY2uvY(illum_xyY);
-
-%timestamp = datestr(datetime('now'), 'yyyy-mm-dd_HH-MM-SS');
-%filename = ['obsData_' timestamp '.csv'];
-%writeTable(finalTable, filename);
-save('FLATData.mat','finalTable');
+save('VRData.mat','finalTable');
 %% calculate CIs
 cd C:\Users\Andrea\Documents\GitHub\ColorCharacterization\src\Analysis\
+
 %average repetition XYZs
 avgTable = groupsummary(finalTable,{'ParticipantID','Lightness','Illuminant'},'mean','XYZ');
 avgTable.GroupCount = [];
 mergedTable = innerjoin(avgTable, unique(finalTable(:, {'ParticipantID' ,'Lightness', 'Illuminant','illum_order'})), 'Keys', {'ParticipantID', 'Lightness', 'Illuminant'});
 mergedTable.CI = zeros(height(mergedTable),1);
 %white chrom XYZ
-D65XYZ = whitepoint("d65").*Flat_model.w.wp(2);
+D65XYZ = whitepoint("d65").*model.w.wp(2);
 % List of illuminants
 illuminants = {'r', 'g', 'b', 'y'};
 
@@ -103,8 +112,7 @@ for i = 1:length(illuminants)
     mergedTable(mergedTable.Illuminant == current_illum, :).CI(part) = chrom2CI(adjXYZ_white(part,:),obsXYZ(part,:), D65XYZ,chrom_test_uv);
     end
 end
-avgDataCI = mergedTable;
-%save('FLATData_CI.mat','avgDataCI');
-
+avgDataC = mergedTable;
+%save('VRData_CI.mat','avgData');
 
 

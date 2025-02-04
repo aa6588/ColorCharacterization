@@ -84,13 +84,20 @@ finalTable.uvY = xyY2uvY(finalTable.xyY);
 load FinalSceneIllums.mat illum_xyY
 illum_uvY = xyY2uvY(illum_xyY);
 
+%timestamp = datestr(datetime('now'), 'yyyy-mm-dd_HH-MM-SS');
+%filename = ['obsData_' timestamp '.csv'];
+%writeTable(finalTable, filename);
+save('VRData.mat','finalTable');
 %% calculate CIs
 cd C:\Users\Andrea\Documents\GitHub\ColorCharacterization\src\Analysis\
-finalTable.CI = zeros(length(finalTable.xyY),1);
-finalTable.CI_uv = zeros(length(finalTable.xyY),1);
 
-% CI = d(color to obs) / d(color to ref)
-
+%average repetition XYZs
+avgTable = groupsummary(finalTable,{'ParticipantID','Lightness','Illuminant'},'mean','XYZ');
+avgTable.GroupCount = [];
+mergedTable = innerjoin(avgTable, unique(finalTable(:, {'ParticipantID' ,'Lightness', 'Illuminant','illum_order'})), 'Keys', {'ParticipantID', 'Lightness', 'Illuminant'});
+mergedTable.CI = zeros(height(mergedTable),1);
+%white chrom XYZ
+D65XYZ = whitepoint("d65").*model.w.wp(2);
 % List of illuminants
 illuminants = {'r', 'g', 'b', 'y'};
 
@@ -98,27 +105,18 @@ illuminants = {'r', 'g', 'b', 'y'};
 for i = 1:length(illuminants)
     % Get the current illuminant
     current_illum = illuminants{i};
-
-    % Extract the 'xyY' and 'uvY' data for the current illuminant
-    obs = finalTable(finalTable.Illuminant == current_illum, :).xyY(:,1:2);
-    obs_uv = finalTable(finalTable.Illuminant == current_illum, :).uvY(:,1:2);
-    
-    % Dynamically select the chrom_test index (1 to 5)
-    chrom_test = illum_xyY(i+1, :);  % Start at index 1 and go up to index 5
+    obsXYZ = mergedTable(mergedTable.Illuminant == current_illum, :).mean_XYZ;
+    adjXYZ_white = mergedTable(mergedTable.Illuminant == 'w', :).mean_XYZ;
+    %get chromatic illuminant uv (changes)
     chrom_test_uv = illum_uvY(i+1, :);
-    chrom_ref = illum_xyY(1, :);   % Reference chromaticity remains the same
-    chrom_ref_uv = illum_uvY(1, :);
 
-    % Calculate the Color Index (CI) for the current illuminant
-    finalTable(finalTable.Illuminant == current_illum, :).CI = chrom2CI(obs, chrom_test, chrom_ref);
-    
-    % Calculate the UV-based Color Index (CI_uv) for the current illuminant
-    finalTable(finalTable.Illuminant == current_illum, :).CI_uv = chrom2CI(obs_uv, chrom_test_uv, chrom_ref_uv);
+    % Calculate the Color Index (CI) for the current illuminant for all
+    % lightnesses and participants
+    for part = 1:length(obsXYZ)
+    mergedTable(mergedTable.Illuminant == current_illum, :).CI(part) = chrom2CI(adjXYZ_white(part,:),obsXYZ(part,:), D65XYZ,chrom_test_uv);
+    end
 end
-
-%timestamp = datestr(datetime('now'), 'yyyy-mm-dd_HH-MM-SS');
-%filename = ['obsData_' timestamp '.csv'];
-%writeTable(finalTable, filename);
-save('VRData.mat','finalTable');
+avgDataCI = mergedTable;
+%save('VRData_CI.mat','avgDataCI');
 
 

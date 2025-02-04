@@ -112,8 +112,7 @@ title('Red Illuminant Achromatic Chromaticity Selections')
 % end
 
 % CI plots
-avgRedData = avgDataCI(avgDataCI.Illuminant == 'r', :);
-avg_CIs = groupsummary(avgRedData,{'ParticipantID','Lightness'},'mean','CI');
+avg_CIs = groupsummary(avgData,{'ParticipantID','Lightness'},'mean','CI');
 %reshape table
 % Reshape from long to wide format
 T_wide = unstack(avg_CIs, 'mean_CI', 'Lightness');
