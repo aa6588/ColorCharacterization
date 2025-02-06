@@ -6,7 +6,7 @@ t = tcpip('127.0.0.1', 8890);
 fopen(t);
 
 %load variables
-load RGBs_grids_struct.mat RGB_grid
+load RGB_grids_struct.mat RGB_grid
 load LAB_grid_struct.mat LAB_grid
 %load models_info.mat model
 load FinalSceneIllums.mat newRGB_illum
@@ -100,8 +100,8 @@ select_idx = zeros(1,2);
 a = "start";
 
 %random starting point
-col_idx = randi(size(grid, 2));
-row_idx = randi(size(grid, 1));
+col_idx = randi(size(lab, 2));
+row_idx = randi(size(lab, 1));
 
 starting_lab(1,:) = lab(row_idx, col_idx, :);
 disp("Starting Lab:" + lab(row_idx, col_idx, 1) + "," + lab(row_idx,col_idx, 2) + "," ...
