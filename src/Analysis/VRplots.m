@@ -1,6 +1,7 @@
 %VR plots
 addpath 'C:\Users\Andrea\Documents\GitHub\ColorCharacterization\src'
 load VRData.mat
+load VRData_CI.mat
 load uv_aims_VR.mat
 load FinalSceneIllums.mat illum_xyY
 illum_uvY = xyY2uvY(illum_xyY);
@@ -16,16 +17,16 @@ whiteData = finalTable(finalTable.Illuminant == 'w', :);
 %% All color illums plots
 figure;
 w = scatter(whiteData.uvY(:,1),whiteData.uvY(:,2),50,'black','filled','o','MarkerEdgeColor','k');
-alpha(w,0.2);
+alpha(w,0.1);
 hold on
 r = scatter(redData.uvY(:,1),redData.uvY(:,2),50,'red','filled','o','MarkerEdgeColor','k');
-alpha(r,0.2);
+alpha(r,0.1);
 g = scatter(greenData.uvY(:,1),greenData.uvY(:,2),50,'green','filled','o','MarkerEdgeColor','k');
-alpha(g,0.2);
+alpha(g,0.1);
 b = scatter(blueData.uvY(:,1),blueData.uvY(:,2),50,'blue','filled','o','MarkerEdgeColor','k');
-alpha(b,0.2);
+alpha(b,0.1);
 y = scatter(yellowData.uvY(:,1),yellowData.uvY(:,2),50,'yellow','filled','o','MarkerEdgeColor','k');
-alpha(y,0.2);
+alpha(y,0.1);
 %scatter(uv_aims.r.(lightness)(:,1),uv_aims.r.(lightness)(:,2),50,[.8 .8 .8],'o')
 ri = scatter(illum_uvY(2,1),illum_uvY(2,2),60,'filled','rs','MarkerEdgeColor','k');
 gi = scatter(illum_uvY(3,1),illum_uvY(3,2),60,'filled','gs','MarkerEdgeColor','k');
@@ -39,6 +40,24 @@ xlim([.16 .24]);
 ylim([.41 .52]);
 title('[VR] Illuminant Achromatic Chromaticity Selections')
 legend([wi,ri,gi,bi,yi],{'white illum','red illum','green illum','blue illum','yellow illum'})
+
+%CI plots average all illum, each illum CI
+avg_CIs = groupsummary(avgDataCI,{'Illuminant'},'mean','CI');
+%reshape table
+% Reshape from long to wide format
+T_wide = unstack(avg_CIs, 'mean_CI', 'Illuminant');
+% Convert the table to a matrix for plotting
+data_matrix = T_wide{:, {'r', 'g', 'b','y'}};
+newNames = {'r', 'g', 'b','y'};
+figure;
+h = bar(data_matrix, 'grouped');
+h.FaceColor = 'flat';
+h.CData = [.8 0 0; 0 .8 0; 0 0 .9; .9 .9 0];
+set(gca, 'XTick',1:numel(newNames), 'XtickLabel',newNames)
+ylim([0 .8])
+xlabel('Illuminant')
+ylabel('Constancy Index')
+title('[VR] Average Constancy Index per Illuminant')
 %% WHITE
 x = whiteData.uvY(:,1);
 y = whiteData.uvY(:,2);
@@ -53,27 +72,27 @@ xlabel('u')
 ylabel('v')
 title('White Illuminant Achromatic Chromaticity Selections')
 %% RED
-%lightnessValues = {'L40', 'L55','L70'};
-%for i = 1:length(lightnessValues)
-       % lightness = lightnessValues{i};
+lightnessValues = {'L40', 'L55','L70'};
+for i = 1:length(lightnessValues)
+        lightness = lightnessValues{i};
         % Extract the subset for the current lightness
-        %currentData = redData(redData.Lightness == lightness, :);
-        %x = currentData.uvY(:,1);
-        %y = currentData.uvY(:,2);
-x = redData.uvY(:,1);
-y = redData.uvY(:,2);
+        currentData = redData(redData.Lightness == lightness, :);
+        x = currentData.uvY(:,1);
+        y = currentData.uvY(:,2);
+%x = redData.uvY(:,1);
+%y = redData.uvY(:,2);
 figure;
 s = scatter(x,y,50,'red','filled');
 alpha(s,0.2);
 hold on
-%scatter(uv_aims.r.(lightness)(:,1),uv_aims.r.(lightness)(:,2),50,[.8 .8 .8],'o')
+scatter(uv_aims.r.(lightness)(:,1),uv_aims.r.(lightness)(:,2),50,[.8 .8 .8],'o')
 scatter(illum_uvY(2,1),illum_uvY(2,2),60,'filled','rs')
 scatter(illum_uvY(1,1),illum_uvY(1,2),60,'ks')
 hold off
 xlabel('u')
 ylabel('v')
 title('Red Illuminant Achromatic Chromaticity Selections')
-%end
+end
 %GRID LIGHTNESS CHROMATICITY PLOTS (HEATMAP)
 % lightnessValues = {'L40', 'L55','L70'};
 % for i = 1:length(lightnessValues)

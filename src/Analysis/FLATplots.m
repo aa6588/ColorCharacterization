@@ -1,6 +1,7 @@
 %Flat plots
 addpath 'C:\Users\Andrea\Documents\GitHub\ColorCharacterization\src'
 load FLATData.mat
+load FLATData_CI.mat
 load uv_aims_FLAT.mat
 load FinalSceneIllums.mat illum_xyY
 illum_uvY = xyY2uvY(illum_xyY);
@@ -16,16 +17,16 @@ whiteData = finalTable(finalTable.Illuminant == 'w', :);
 %% All color illums plots
 figure;
 w = scatter(whiteData.uvY(:,1),whiteData.uvY(:,2),50,'black','filled','o','MarkerEdgeColor','k');
-alpha(w,0.2);
+alpha(w,0.1);
 hold on
 r = scatter(redData.uvY(:,1),redData.uvY(:,2),50,'red','filled','o','MarkerEdgeColor','k');
-alpha(r,0.2);
-g = scatter(greenData.uvY(:,1),greenData.uvY(:,2),50,'green','filled','o','MarkerEdgeColor','k');
-alpha(g,0.2);
-b = scatter(blueData.uvY(:,1),blueData.uvY(:,2),50,'blue','filled','o','MarkerEdgeColor','k');
-alpha(b,0.2);
-y = scatter(yellowData.uvY(:,1),yellowData.uvY(:,2),50,'yellow','filled','o','MarkerEdgeColor','k');
-alpha(y,0.2);
+alpha(r,0.1);
+g = scatter(greenData.uvY(:,1),greenData.uvY(:,2),50,'green','filled','MarkerEdgeColor','k');
+alpha(g,0.1);
+b = scatter(blueData.uvY(:,1),blueData.uvY(:,2),50,'blue','filled','MarkerEdgeColor','k');
+alpha(b,0.1);
+y = scatter(yellowData.uvY(:,1),yellowData.uvY(:,2),50,'yellow','filled','MarkerEdgeColor','k');
+alpha(y,0.1);
 %scatter(uv_aims.r.(lightness)(:,1),uv_aims.r.(lightness)(:,2),50,[.8 .8 .8],'o')
 ri = scatter(illum_uvY(2,1),illum_uvY(2,2),60,'filled','rs','MarkerEdgeColor','k');
 gi = scatter(illum_uvY(3,1),illum_uvY(3,2),60,'filled','gs','MarkerEdgeColor','k');
@@ -39,6 +40,24 @@ xlim([.16 .24]);
 ylim([.41 .52]);
 title('[FLAT] Illuminant Achromatic Chromaticity Selections')
 legend([wi,ri,gi,bi,yi],{'white illum','red illum','green illum','blue illum','yellow illum'})
+
+%CI plots average all illum, each illum CI
+avg_CIs = groupsummary(avgDataCI,{'Illuminant'},'mean','CI');
+%reshape table
+% Reshape from long to wide format
+T_wide = unstack(avg_CIs, 'mean_CI', 'Illuminant');
+% Convert the table to a matrix for plotting
+data_matrix = T_wide{:, {'r', 'g', 'b','y'}};
+newNames = {'r', 'g', 'b','y'};
+figure;
+h = bar(data_matrix, 'grouped');
+h.FaceColor = 'flat';
+h.CData = [.8 0 0; 0 .8 0; 0 0 .9; .9 .9 0];
+set(gca, 'XTick',1:numel(newNames), 'XtickLabel',newNames)
+xlabel('Illuminant')
+ylabel('Constancy Index')
+ylim([0 .8])
+title('[FLAT] Average Constancy Index per Illuminant')
 %% WHITE
 x = whiteData.uvY(:,1);
 y = whiteData.uvY(:,2);
