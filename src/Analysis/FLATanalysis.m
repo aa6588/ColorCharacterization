@@ -62,8 +62,6 @@ finalTable(finalTable.Illuminant == 'g', :).XYZ = modRGB2XYZ(Flat_model.g.PM,Fla
 finalTable(finalTable.Illuminant == 'b', :).XYZ = modRGB2XYZ(Flat_model.b.PM,Flat_model.b.LUT,finalTable(finalTable.Illuminant == 'b', :).RGB);
 finalTable(finalTable.Illuminant == 'y', :).XYZ = modRGB2XYZ(Flat_model.y.PM,Flat_model.y.LUT,finalTable(finalTable.Illuminant == 'y', :).RGB);
 
-%number of chrom trials 
-trial_num = height(finalTable(finalTable.Illuminant == 'r', :));
 % add xyY and uvY
 finalTable.xyY = XYZ2xyY(finalTable.XYZ);
 finalTable.uvY = xyY2uvY(finalTable.xyY);
@@ -71,7 +69,7 @@ finalTable.uvY = xyY2uvY(finalTable.xyY);
 %calc illum xy and uv
 load FinalSceneIllums.mat illum_xyY
 illum_uvY = xyY2uvY(illum_xyY);
-
+cd C:\Users\Andrea\Documents\GitHub\ColorCharacterization\src\Analysis\
 %timestamp = datestr(datetime('now'), 'yyyy-mm-dd_HH-MM-SS');
 %filename = ['obsData_' timestamp '.csv'];
 %writeTable(finalTable, filename);
@@ -104,7 +102,7 @@ for i = 1:length(illuminants)
     end
 end
 avgDataCI = mergedTable;
-%save('FLATData_CI.mat','avgDataCI');
+save('FLATData_CI.mat','avgDataCI');
 
 
 

@@ -74,8 +74,6 @@ finalTable(finalTable.Illuminant == 'g', :).XYZ = modRGB2XYZ(model.g.PM,model.g.
 finalTable(finalTable.Illuminant == 'b', :).XYZ = modRGB2XYZ(model.b.PM,model.b.LUT,finalTable(finalTable.Illuminant == 'b', :).RGB);
 finalTable(finalTable.Illuminant == 'y', :).XYZ = modRGB2XYZ(model.y.PM,model.y.LUT,finalTable(finalTable.Illuminant == 'y', :).RGB);
 
-%number of chrom trials 
-trial_num = height(finalTable(finalTable.Illuminant == 'r', :));
 % add xyY and uvY
 finalTable.xyY = XYZ2xyY(finalTable.XYZ);
 finalTable.uvY = xyY2uvY(finalTable.xyY);
@@ -83,10 +81,10 @@ finalTable.uvY = xyY2uvY(finalTable.xyY);
 %calc illum xy and uv
 load FinalSceneIllums.mat illum_xyY
 illum_uvY = xyY2uvY(illum_xyY);
-
-%timestamp = datestr(datetime('now'), 'yyyy-mm-dd_HH-MM-SS');
-%filename = ['obsData_' timestamp '.csv'];
-%writeTable(finalTable, filename);
+cd C:\Users\Andrea\Documents\GitHub\ColorCharacterization\src\Analysis\
+% timestamp = datestr(datetime('now'), 'yyyy-mm-dd_HH-MM-SS');
+% filename = ['obsData_' timestamp '.csv'];
+% writetable(finalTable, filename);
 save('VRData.mat','finalTable');
 %% calculate CIs
 cd C:\Users\Andrea\Documents\GitHub\ColorCharacterization\src\Analysis\
@@ -94,7 +92,7 @@ cd C:\Users\Andrea\Documents\GitHub\ColorCharacterization\src\Analysis\
 %average repetition XYZs
 avgTable = groupsummary(finalTable,{'ParticipantID','Lightness','Illuminant'},'mean','XYZ');
 avgTable.GroupCount = [];
-mergedTable = innerjoin(avgTable, unique(finalTable(:, {'ParticipantID' ,'Lightness', 'Illuminant','illum_order'})), 'Keys', {'ParticipantID', 'Lightness', 'Illuminant'});
+mergedTable = innerjoin(avgTable, unique(finalTable(:, {'ParticipantID' ,'Lightness', 'Illuminant','illum_order','Mode'})), 'Keys', {'ParticipantID', 'Lightness', 'Illuminant'});
 mergedTable.CI = zeros(height(mergedTable),1);
 %white chrom XYZ
 D65XYZ = whitepoint("d65").*model.w.wp(2);
@@ -117,6 +115,6 @@ for i = 1:length(illuminants)
     end
 end
 avgDataCI = mergedTable;
-%save('VRData_CI.mat','avgDataCI');
+save('VRData_CI.mat','avgDataCI');
 
 
