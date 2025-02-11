@@ -70,7 +70,7 @@ scatter(illum_uvY(1,1),illum_uvY(1,2),60,'ks')
 hold off
 xlabel('u')
 ylabel('v')
-title('White Illuminant Achromatic Chromaticity Selections')
+title('[VR] White Illuminant Achromatic Chromaticity Selections')
 %% RED
 lightnessValues = {'L40', 'L55','L70'};
 for i = 1:length(lightnessValues)
@@ -91,7 +91,7 @@ scatter(illum_uvY(1,1),illum_uvY(1,2),60,'ks')
 hold off
 xlabel('u')
 ylabel('v')
-title('Red Illuminant Achromatic Chromaticity Selections')
+title('[VR] Red Illuminant Achromatic Chromaticity Selections')
 end
 
 % CI plots
@@ -159,7 +159,7 @@ s = scatter(x,y,50,'green','filled');
 alpha(s,0.2);
 hold on
 scatter(uv_aims.g.(lightness)(:,1),uv_aims.g.(lightness)(:,2),50,[.8 .8 .8],'o')
-scatter(illum_uvY(2,1),illum_uvY(2,2),60,'filled','gs')
+scatter(illum_uvY(3,1),illum_uvY(3,2),60,'filled','gs')
 scatter(illum_uvY(1,1),illum_uvY(1,2),60,'ks')
 hold off
 xlabel('u')
@@ -194,7 +194,7 @@ s = scatter(x,y,50,'blue','filled');
 alpha(s,0.2);
 hold on
 scatter(uv_aims.b.(lightness)(:,1),uv_aims.b.(lightness)(:,2),50,[.8 .8 .8],'o')
-scatter(illum_uvY(2,1),illum_uvY(2,2),60,'filled','bs')
+scatter(illum_uvY(4,1),illum_uvY(4,2),60,'filled','bs')
 scatter(illum_uvY(1,1),illum_uvY(1,2),60,'ks')
 hold off
 xlabel('u')
@@ -229,7 +229,7 @@ s = scatter(x,y,50,'yellow','filled');
 alpha(s,0.2);
 hold on
 scatter(uv_aims.y.(lightness)(:,1),uv_aims.y.(lightness)(:,2),50,[.8 .8 .8],'o')
-scatter(illum_uvY(2,1),illum_uvY(2,2),60,'filled','ys')
+scatter(illum_uvY(5,1),illum_uvY(5,2),60,'filled','ys')
 scatter(illum_uvY(1,1),illum_uvY(1,2),60,'ks')
 hold off
 xlabel('u')

@@ -71,6 +71,28 @@ hold off
 xlabel('u')
 ylabel('v')
 title('White Illuminant Achromatic Chromaticity Selections')
+
+lightnessValues = {'L40', 'L55','L70'};
+for i = 1:length(lightnessValues)
+        lightness = lightnessValues{i};
+        % Extract the subset for the current lightness
+        currentData = whiteData(whiteData.Lightness == lightness, :);
+        x = currentData.uvY(:,1);
+        y = currentData.uvY(:,2);
+%x = redData.uvY(:,1);
+%y = redData.uvY(:,2);
+figure;
+s = scatter(x,y,50,'black','filled');
+alpha(s,0.2);
+hold on
+%scatter(uv_aims.r.(lightness)(:,1),uv_aims.r.(lightness)(:,2),50,[.8 .8 .8],'o')
+%scatter(illum_uvY(2,1),illum_uvY(2,2),60,'filled','rs')
+scatter(illum_uvY(1,1),illum_uvY(1,2),60,'ks')
+hold off
+xlabel('u')
+ylabel('v')
+title('White Illuminant Achromatic Chromaticity Selections')
+end
 %% RED
 lightnessValues = {'L40', 'L55','L70'};
 for i = 1:length(lightnessValues)
@@ -158,8 +180,8 @@ figure;
 s = scatter(x,y,50,'green','filled');
 alpha(s,0.2);
 hold on
-scatter(uv_aims.r.(lightness)(:,1),uv_aims.r.(lightness)(:,2),50,[.8 .8 .8],'o')
-scatter(illum_uvY(2,1),illum_uvY(2,2),60,'filled','gs')
+scatter(uv_aims.g.(lightness)(:,1),uv_aims.g.(lightness)(:,2),50,[.8 .8 .8],'o')
+scatter(illum_uvY(3,1),illum_uvY(3,2),60,'filled','gs')
 scatter(illum_uvY(1,1),illum_uvY(1,2),60,'ks')
 hold off
 xlabel('u')
@@ -194,8 +216,8 @@ figure;
 s = scatter(x,y,50,'blue','filled');
 alpha(s,0.2);
 hold on
-scatter(uv_aims.r.(lightness)(:,1),uv_aims.r.(lightness)(:,2),50,[.8 .8 .8],'o')
-scatter(illum_uvY(2,1),illum_uvY(2,2),60,'filled','bs')
+scatter(uv_aims.b.(lightness)(:,1),uv_aims.b.(lightness)(:,2),50,[.8 .8 .8],'o')
+scatter(illum_uvY(4,1),illum_uvY(4,2),60,'filled','bs')
 scatter(illum_uvY(1,1),illum_uvY(1,2),60,'ks')
 hold off
 xlabel('u')
@@ -230,8 +252,8 @@ figure;
 s = scatter(x,y,50,'yellow','filled');
 alpha(s,0.2);
 hold on
-scatter(uv_aims.r.(lightness)(:,1),uv_aims.r.(lightness)(:,2),50,[.8 .8 .8],'o')
-scatter(illum_uvY(2,1),illum_uvY(2,2),60,'filled','ys')
+scatter(uv_aims.y.(lightness)(:,1),uv_aims.y.(lightness)(:,2),50,[.8 .8 .8],'o')
+scatter(illum_uvY(5,1),illum_uvY(5,2),60,'filled','ys')
 scatter(illum_uvY(1,1),illum_uvY(1,2),60,'ks')
 hold off
 xlabel('u')
