@@ -6,7 +6,7 @@ load uv_aims_FLAT.mat
 load FinalSceneIllums.mat illum_xyY
 illum_uvY = xyY2uvY(illum_xyY);
 
-%% separate into color illum tables for plot
+% separate into color illum tables for plot
 %separate illums 
 redData = finalTable(finalTable.Illuminant == 'r', :);
 greenData = finalTable(finalTable.Illuminant == 'g', :);
@@ -63,7 +63,7 @@ x = whiteData.uvY(:,1);
 y = whiteData.uvY(:,2);
 figure;
 s = scatter(x,y,50,'black','filled','MarkerEdgeColor','k');
-alpha(s,0.2);
+alpha(s,0.1);
 hold on
 %scatter(uv_aims.w.(lightness)(:,1),uv_aims.w.(lightness)(:,2),50,[.8 .8 .8],'o')
 scatter(illum_uvY(1,1),illum_uvY(1,2),60,'ks')
@@ -83,9 +83,9 @@ for i = 1:length(lightnessValues)
 %y = redData.uvY(:,2);
 figure;
 s = scatter(x,y,50,'black','filled');
-alpha(s,0.2);
+alpha(s,0.1);
 hold on
-%scatter(uv_aims.r.(lightness)(:,1),uv_aims.r.(lightness)(:,2),50,[.8 .8 .8],'o')
+scatter(uv_aims.w.(lightness)(:,1),uv_aims.w.(lightness)(:,2),50,[.8 .8 .8],'o')
 %scatter(illum_uvY(2,1),illum_uvY(2,2),60,'filled','rs')
 scatter(illum_uvY(1,1),illum_uvY(1,2),60,'ks')
 hold off
@@ -124,8 +124,10 @@ avg_CIs = groupsummary(avgRedData,{'ParticipantID','Lightness'},'mean','CI');
 T_wide = unstack(avg_CIs, 'mean_CI', 'Lightness');
 % Convert the table to a matrix for plotting
 data_matrix = T_wide{:, {'L40', 'L55', 'L70'}};
+cats = string(unique(avg_CIs.ParticipantID));
 figure;
 h = bar(data_matrix, 'grouped');
+xticklabels(cats)
 xlabel('Participant')
 ylabel('Constancy Index')
 title('Average Constancy Index per Lightness Under Red Illuminant')
@@ -197,8 +199,10 @@ avg_CIs = groupsummary(avgGreenData,{'ParticipantID','Lightness'},'mean','CI');
 T_wide = unstack(avg_CIs, 'mean_CI', 'Lightness');
 % Convert the table to a matrix for plotting
 data_matrix = T_wide{:, {'L40', 'L55', 'L70'}};
+cats = string(unique(avg_CIs.ParticipantID));
 figure;
 h = bar(data_matrix, 'grouped');
+xticklabels(cats)
 xlabel('Participant')
 ylabel('Constancy Index')
 title('[FLAT] Average Constancy Index per Lightness Under Green Illuminant')
@@ -233,8 +237,10 @@ avg_CIs = groupsummary(avgBlueData,{'ParticipantID','Lightness'},'mean','CI');
 T_wide = unstack(avg_CIs, 'mean_CI', 'Lightness');
 % Convert the table to a matrix for plotting
 data_matrix = T_wide{:, {'L40', 'L55', 'L70'}};
+cats = string(unique(avg_CIs.ParticipantID));
 figure;
 h = bar(data_matrix, 'grouped');
+xticklabels(cats)
 xlabel('Participant')
 ylabel('Constancy Index')
 title('Average Constancy Index per Lightness Under Blue Illuminant')
@@ -269,8 +275,10 @@ avg_CIs = groupsummary(avgYellowData,{'ParticipantID','Lightness'},'mean','CI');
 T_wide = unstack(avg_CIs, 'mean_CI', 'Lightness');
 % Convert the table to a matrix for plotting
 data_matrix = T_wide{:, {'L40', 'L55', 'L70'}};
+cats = string(unique(avg_CIs.ParticipantID));
 figure;
 h = bar(data_matrix, 'grouped');
+xticklabels(cats)
 xlabel('Participant')
 ylabel('Constancy Index')
 title('[FLAT] Average Constancy Index per Lightness Under Yellow Illuminant')

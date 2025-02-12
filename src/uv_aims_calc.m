@@ -1,10 +1,10 @@
 %calc uv aims for plot
-load Flat_LAB_grid_struct.mat 
-load Flat_model.mat  
-model = Flat_model;
-LAB_grid = Flat_LAB_grid;
+load LAB_grid_struct.mat LAB_grid
+load models_info.mat  model
+%model = Flat_model;
+%LAB_grid = Flat_LAB_grid;
 
-illuminants = {'r', 'g', 'b', 'y'};
+illuminants = {'w','r', 'g', 'b', 'y'};
 lightnessValues = {'L40', 'L55', 'L70'};
 uv_aims = struct(); % To store results for each illuminant and lightness
 
