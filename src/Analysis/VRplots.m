@@ -16,13 +16,13 @@ whiteData = finalTable(finalTable.Illuminant == 'w', :);
 
 %% All color illums plots
 figure;
-w = scatter(whiteData.uvY(:,1),whiteData.uvY(:,2),50,'black','filled','o','MarkerEdgeColor','k');
+w = scatter(whiteData.uvY(:,1),whiteData.uvY(:,2),50,'black','filled','o');
 alpha(w,0.1);
 hold on
 r = scatter(redData.uvY(:,1),redData.uvY(:,2),50,'red','filled','o','MarkerEdgeColor','k');
 alpha(r,0.1);
 g = scatter(greenData.uvY(:,1),greenData.uvY(:,2),50,'green','filled','o','MarkerEdgeColor','k');
-alpha(g,0.1);
+alpha(g,0.05);
 b = scatter(blueData.uvY(:,1),blueData.uvY(:,2),50,'blue','filled','o','MarkerEdgeColor','k');
 alpha(b,0.1);
 y = scatter(yellowData.uvY(:,1),yellowData.uvY(:,2),50,'yellow','filled','o','MarkerEdgeColor','k');

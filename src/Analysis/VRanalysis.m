@@ -5,7 +5,7 @@
 % average lightness level for all participants (aggregate)
 % should end up with one RGB value per lightness per illum
 addpath('C:\Users\Andrea\Documents\GitHub\ColorCharacterization\src\color_transformations\')
-addpath('C:\Users\Andrea\Documents\GitHub\ColorCharacterization\src\Analysis\')
+addpath('C:\Users\Andrea\Documents\GitHub\ColorCharacterization\src\')
 %% VR section
 %48 trials per participant
 

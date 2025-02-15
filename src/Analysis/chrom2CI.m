@@ -1,4 +1,4 @@
-function CI = chrom2CI(adjXYZ_white,adjXYZ_color,XYZ_white,chrom_uv)
+function [CI , eq_uv] = chrom2CI(adjXYZ_white,adjXYZ_color,XYZ_white,chrom_uv)
 %Uses Smith Pokorny XYZ to LMS
 M =   [ 0.15514,  0.54312, -0.03286;
        -0.15514,  0.45684,  0.03286;

@@ -20,13 +20,14 @@ end
 obsXYZ = uvY2XYZ(uvs);
 %calculate CIs for points
 for i = 1:length(obsXYZ)
-Cis(i) = chrom2CI(adjXYZ_white,obsXYZ(i,:), D65XYZ,chrom_test_uv);
+[Cis(i), eq_uvs(i,:)] = chrom2CI(adjXYZ_white,obsXYZ(i,:), D65XYZ,chrom_test_uv);
 end
 %convert to string for plot
 Cis = string(round(Cis',3));
 %get plot from before with grid
 hold on
 scatter(uvs(:,1),uvs(:,2),50,'filled','go')
+scatter(eq_uvs(:,1),eq_uvs(:,2),50,'bs')
 for i = 1:length(uvs)
     text(uvs(i,1), uvs(i,2), Cis{i}, 'VerticalAlignment', 'bottom', 'HorizontalAlignment', 'right', 'FontSize', 12);
 end
