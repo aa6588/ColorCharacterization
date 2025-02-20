@@ -33,6 +33,14 @@ gi = scatter(illum_uvY(3,1),illum_uvY(3,2),60,'filled','gs','MarkerEdgeColor','k
 bi = scatter(illum_uvY(4,1),illum_uvY(4,2),60,'filled','bs','MarkerEdgeColor','k');
 yi = scatter(illum_uvY(5,1),illum_uvY(5,2),60,'filled','ys','MarkerEdgeColor','k');
 wi = scatter(illum_uvY(1,1),illum_uvY(1,2),60,'ks');
+
+colors = {'k', 'r', 'g', 'b', 'y'}; % Colors for ellipses
+datasets = {whiteData.uvY(:,1), whiteData.uvY(:,2); redData.uvY(:,1), redData.uvY(:,2); greenData.uvY(:,1), greenData.uvY(:,2); blueData.uvY(:,1), blueData.uvY(:,2); yellowData.uvY(:,1), yellowData.uvY(:,2)}; % Store data pairs
+for i = 1:5
+    [mu, ellipse_translated] = compute_2std_ellipse(datasets{i,1}, datasets{i,2});
+    plot(ellipse_translated(1, :), ellipse_translated(2, :), colors{i}, 'LineWidth', 2);
+    plot(mu(1), mu(2), 'kx', 'MarkerSize', 10, 'LineWidth', 2); % Mean marker
+end
 hold off
 xlabel('u')
 ylabel('v')
@@ -41,7 +49,7 @@ ylim([.41 .52]);
 title('[FLAT] Illuminant Achromatic Chromaticity Selections')
 legend([wi,ri,gi,bi,yi],{'white illum','red illum','green illum','blue illum','yellow illum'})
 
-%CI plots average all illum, each illum CI
+%% CI plots average all illum, each illum CI
 avg_CIs = groupsummary(avgDataCI,{'Illuminant'},'mean','CI');
 %reshape table
 % Reshape from long to wide format
@@ -127,6 +135,7 @@ data_matrix = T_wide{:, {'L40', 'L55', 'L70'}};
 cats = string(unique(avg_CIs.ParticipantID));
 figure;
 h = bar(data_matrix, 'grouped');
+xticks(1:length(cats))
 xticklabels(cats)
 xlabel('Participant')
 ylabel('Constancy Index')
@@ -202,6 +211,7 @@ data_matrix = T_wide{:, {'L40', 'L55', 'L70'}};
 cats = string(unique(avg_CIs.ParticipantID));
 figure;
 h = bar(data_matrix, 'grouped');
+xticks(1:length(cats))
 xticklabels(cats)
 xlabel('Participant')
 ylabel('Constancy Index')
@@ -240,6 +250,7 @@ data_matrix = T_wide{:, {'L40', 'L55', 'L70'}};
 cats = string(unique(avg_CIs.ParticipantID));
 figure;
 h = bar(data_matrix, 'grouped');
+xticks(1:length(cats))
 xticklabels(cats)
 xlabel('Participant')
 ylabel('Constancy Index')
@@ -278,6 +289,7 @@ data_matrix = T_wide{:, {'L40', 'L55', 'L70'}};
 cats = string(unique(avg_CIs.ParticipantID));
 figure;
 h = bar(data_matrix, 'grouped');
+xticks(1:length(cats))
 xticklabels(cats)
 xlabel('Participant')
 ylabel('Constancy Index')
