@@ -44,7 +44,7 @@ end
 primary = [0.64, .33; .3, .6; .15, .06; .64, .33];
 display = [xs(end,1), ys(end,1);xs(end,2),ys(end,2);xs(end,3),ys(end,3);xs(end,1),ys(end,1)];
 k1 = plot(primary(:,1),primary(:,2),'--k'); %gamut
-k2 = plot(display(:,1),display(:,2),'-r'); %gamut
+k2 = plot(display(:,1),display(:,2),'-b'); %gamut
 legend([k1 k2],{'sRGB Gamut','display gamut'})
 title('Primary Ramp Chromaticity')
 
@@ -53,29 +53,29 @@ xticks([0 0.2 0.4 0.6 0.8])
 
 set(gca,  'FontSize', 12, 'fontname','Times New Roman', 'Color', 'none');
 
-figure;
-scatter(x,Ys(:,1),40,"red",'filled')
-xlabel('Reflectance RGBs')
-ylabel('Luminance (cd/m^2)')
-title('Red Ramp')
-
-figure;
-scatter(x,Ys(:,2),40,"green",'filled')
-xlabel('Reflectance RGBs')
-ylabel('Luminance (cd/m^2)')
-title('Green Ramp')
-
-figure;
-scatter(x,Ys(:,3),40,"blue",'filled')
-xlabel('Reflectance RGBs')
-ylabel('Luminance (cd/m^2)')
-title('Blue Ramp')
-
-figure;
-scatter(x,Ys(:,4),40,cols{4},'filled')
-xlabel('Reflectance RGBs')
-ylabel('Luminance (cd/m^2)')
-title('Gray Ramp')
+% figure;
+% scatter(x,Ys(:,1),40,"red",'filled')
+% xlabel('Reflectance RGBs')
+% ylabel('Luminance (cd/m^2)')
+% title('Red Ramp')
+% 
+% figure;
+% scatter(x,Ys(:,2),40,"green",'filled')
+% xlabel('Reflectance RGBs')
+% ylabel('Luminance (cd/m^2)')
+% title('Green Ramp')
+% 
+% figure;
+% scatter(x,Ys(:,3),40,"blue",'filled')
+% xlabel('Reflectance RGBs')
+% ylabel('Luminance (cd/m^2)')
+% title('Blue Ramp')
+% 
+% figure;
+% scatter(x,Ys(:,4),40,cols{4},'filled')
+% xlabel('Reflectance RGBs')
+% ylabel('Luminance (cd/m^2)')
+% title('Gray Ramp')
 %% spectra
 figure
 for i=1:size(primaries, 1)
@@ -274,8 +274,8 @@ axis([min([lab_est(:, 3); lab_meas(:, 3)]) max([lab_est(:, 3);...
 load  lab_meas.mat
 load whitepoints.mat
 level = {'L40','L55','L70'};
-illum = 'y';
-wp = Flat_model.y.wp;
+illum = 'r';
+wp = model.r.wp;
 XYZmeas = [rand_idx.(illum).(level{1}).XYZs;rand_idx.(illum).(level{2}).XYZs;rand_idx.(illum).(level{3}).XYZs];
 lab_values = [rand_idx.(illum).(level{1}).Labs;rand_idx.(illum).(level{2}).Labs;rand_idx.(illum).(level{3}).Labs];
  XYZ = Lab2XYZ(lab_values,wp);
@@ -284,10 +284,10 @@ lab_values = [rand_idx.(illum).(level{1}).Labs;rand_idx.(illum).(level{2}).Labs;
 
 %% Plot the results
 plotChrom();hold on
-plot(xyY(:, 1),xyY(:, 2),'yo','MarkerSize',10,'LineWidth',2);
-plot(xyYmeas(:,1),xyYmeas(:,2),'kx','markersize',12,'linewidth',2)
-k1 = plot(primary(:,1),primary(:,2),'--k'); %gamut
-k2 = plot(display(:,1),display(:,2),'-r'); %gamut
+h1 = plot(xyY(:, 1),xyY(:, 2),'ro','MarkerSize',10,'LineWidth',2);
+h2 = plot(xyYmeas(:,1),xyYmeas(:,2),'kx','markersize',12,'linewidth',2)
+%k1 = plot(primary(:,1),primary(:,2),'--k'); %gamut
+%k2 = plot(display(:,1),display(:,2),'-r'); %gamut
 set(gca,'FontSize',15,'LineWidth',2)
 box off
 xlabel('x','FontSize',15)
@@ -313,53 +313,53 @@ plot(1:length(dE), ones(1, length(dE)), 'k--');
 
 %ylim([0 5])
 set(gca, 'FontSize', 22)
-xlabel('Colours','FontSize',40)
-ylabel('DeltaE00','FontSize',40)
+xlabel('Verification Colors','FontSize',20)
+ylabel('DeltaE00','FontSize',20)
 
 
-msize=15;
-figure;
-subplot 131;
-for i = 1:size(lab_est, 1)
-    plot(lab_est(i, 2), lab_est(i, 3), 'o', 'color', rgb_viz(i, :), ...
-        'markerfacecolor', rgb_viz(i, :), 'markersize', msize);hold on
-
-    plot(lab_meas(i, 2), lab_meas(i, 3), 'kx', 'markersize', msize);hold on
-    xlabel('a*','FontSize',15)
-    ylabel('b*','FontSize',15)
-end
-axis equal
-axis([min([lab_est(:, 2); lab_meas(:, 2)]) max([lab_est(:, 2);...
-    lab_meas(:, 2)]) min([lab_est(:, 3); lab_meas(:, 3)]) ...
-    max([lab_meas(:, 3);lab_est(:, 3)])])
-
-subplot 132;
-for i = 1:size(lab_est, 1)
-    plot(lab_est(i, 2), lab_est(i, 1), 'o', 'color', rgb_viz(i, :), ...
-        'markerfacecolor', rgb_viz(i, :), 'markersize', msize);hold on
-
-    plot(lab_meas(i, 2), lab_meas(i, 1), 'kx', 'markersize', msize);hold on
-    xlabel('a*','FontSize',15)
-    ylabel('L*','FontSize',15)
-end
-axis equal
-axis([min([lab_est(:, 2); lab_meas(:, 2)]) max([lab_est(:, 2);...
-    lab_meas(:, 2)]) min([lab_est(:, 1); lab_meas(:, 1)]) ...
-    max([lab_meas(:, 1);lab_est(:, 1)])])
-
-subplot 133;
-for i = 1:size(lab_est, 1)
-    plot(lab_est(i, 3), lab_est(i, 1), 'o', 'color', rgb_viz(i, :), ...
-        'markerfacecolor', rgb_viz(i, :), 'markersize', msize);hold on
-
-    plot(lab_meas(i, 3), lab_meas(i, 1), 'kx', 'markersize', msize);hold on
-    xlabel('b*','FontSize',15)
-    ylabel('L*','FontSize',15)
-end
-axis equal
-axis([min([lab_est(:, 3); lab_meas(:, 3)]) max([lab_est(:, 3);...
-    lab_meas(:, 3)]) min([lab_est(:, 1); lab_meas(:, 1)]) ...
-    max([lab_meas(:, 1);lab_est(:, 1)])])
+% msize=15;
+% figure;
+% subplot 131;
+% for i = 1:size(lab_est, 1)
+%     plot(lab_est(i, 2), lab_est(i, 3), 'o', 'color', rgb_viz(i, :), ...
+%         'markerfacecolor', rgb_viz(i, :), 'markersize', msize);hold on
+% 
+%     plot(lab_meas(i, 2), lab_meas(i, 3), 'kx', 'markersize', msize);hold on
+%     xlabel('a*','FontSize',15)
+%     ylabel('b*','FontSize',15)
+% end
+% axis equal
+% axis([min([lab_est(:, 2); lab_meas(:, 2)]) max([lab_est(:, 2);...
+%     lab_meas(:, 2)]) min([lab_est(:, 3); lab_meas(:, 3)]) ...
+%     max([lab_meas(:, 3);lab_est(:, 3)])])
+% 
+% subplot 132;
+% for i = 1:size(lab_est, 1)
+%     plot(lab_est(i, 2), lab_est(i, 1), 'o', 'color', rgb_viz(i, :), ...
+%         'markerfacecolor', rgb_viz(i, :), 'markersize', msize);hold on
+% 
+%     plot(lab_meas(i, 2), lab_meas(i, 1), 'kx', 'markersize', msize);hold on
+%     xlabel('a*','FontSize',15)
+%     ylabel('L*','FontSize',15)
+% end
+% axis equal
+% axis([min([lab_est(:, 2); lab_meas(:, 2)]) max([lab_est(:, 2);...
+%     lab_meas(:, 2)]) min([lab_est(:, 1); lab_meas(:, 1)]) ...
+%     max([lab_meas(:, 1);lab_est(:, 1)])])
+% 
+% subplot 133;
+% for i = 1:size(lab_est, 1)
+%     plot(lab_est(i, 3), lab_est(i, 1), 'o', 'color', rgb_viz(i, :), ...
+%         'markerfacecolor', rgb_viz(i, :), 'markersize', msize);hold on
+% 
+%     plot(lab_meas(i, 3), lab_meas(i, 1), 'kx', 'markersize', msize);hold on
+%     xlabel('b*','FontSize',15)
+%     ylabel('L*','FontSize',15)
+% end
+% axis equal
+% axis([min([lab_est(:, 3); lab_meas(:, 3)]) max([lab_est(:, 3);...
+%     lab_meas(:, 3)]) min([lab_est(:, 1); lab_meas(:, 1)]) ...
+%     max([lab_meas(:, 1);lab_est(:, 1)])])
 %% optional optimization
 options = optimset('Display','iter');
 PM = double(PM);
@@ -420,6 +420,6 @@ disp(num2str([mean(dE_optim(126:end)) median(dE_optim(126:end)) std(dE_optim) mi
 % disp 'deltaE00 no calibration -> mean, median, std, min and max'
 % disp(num2str([mean(dE_nocalib) median(dE_nocalib) ...
 %     std(dE_nocalib) min(dE_nocalib) max(dE_nocalib)]))
-
+Flat_dEtable_labs = table(dE_w',dE_r',dE_b',dE_b',dE_y','RowNames',{'mean','min','max'},'VariableNames',{'White','Red','Green','Blue','Yellow'})
 %dEtable = table([dE_w;dE_r;dE_g;dE_b;dE_y],[dE_w_optim;dE_r_optim;dE_g_optim;dE_b_optim;dE_y_optim],'VariableNames',{'deltaE00 (mean,min,max)','optim deltaE (mean,min,max)'},'RowNames',{'White','Red','Green','Blue','Yellow'})
-dEtable_labs = table([dE_w;dE_r;dE_g;dE_b;dE_y],'VariableNames',{'Lab deltaE00 (mean,min,max)'},'RowNames',{'White','Red','Green','Blue','Yellow'})
+%dEtable_labs = table([dE_w;dE_r;dE_g;dE_b;dE_y],'VariableNames',{'Lab deltaE00 (mean,min,max)'},'RowNames',{'White','Red','Green','Blue','Yellow'})
