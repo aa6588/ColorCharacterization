@@ -1,6 +1,6 @@
 %made up data to test CI equations
 load models_info.mat
-load FinalSceneIllums.mat illum_xyY
+load FinalSceneIllums.mat illum_xy
 
 %chrom2CI(adjXYZ_white(part,:),obsXYZ(part,:), D65XYZ,chrom_test_uv);
 D65XYZ = whitepoint("d65").*model.w.wp(2);
@@ -8,7 +8,7 @@ chrom_test_uv = xyY2uvY(illum_xyY);
 chrom_test_uv = chrom_test_uv(2,:); %red
 
 %got this from real data in L55 condition
-adjXYZ_white = [9.14883947372437	9.72310352325440	11.2218025525411];
+adjXYZ_white = uvY2XYZ([.1997,.4656,11.22]);
 %get cursor_infos by selecting points on plot, save mat
 
 %get uv info from selected points
