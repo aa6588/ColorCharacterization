@@ -102,6 +102,7 @@ for i = 1:length(illuminants)
     end
 end
 avgDataCI = mergedTable;
+avgDataCI.uvY = XYZ2uvY(avgDataCI.mean_XYZ);
 save('FLATData_CI.mat','avgDataCI');
 
 

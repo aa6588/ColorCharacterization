@@ -29,8 +29,8 @@ XYZw_VRlens.w(1,:)=Gray.color.XYZ';
 beep
 
 %%
-VR_data = xyzObtain_gray;
-OG_data = xyzObtain_gray_noVR;
+VR_data = VR_w_rampXYZ;
+OG_data = white_rampXYZs;
 
 % Assuming you have your VR and OG data as 16x3 matrices: VR_data and OG_data
 
