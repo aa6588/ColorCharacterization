@@ -18,7 +18,7 @@ whiteData = finalTable(finalTable.Illuminant == 'w', :);
 figure;
 w = scatter(whiteData.uvY(:,1),whiteData.uvY(:,2),50,'black','filled','o');
 alpha(w,0.1);
-hold on
+hold on;
 r = scatter(redData.uvY(:,1),redData.uvY(:,2),50,'red','filled','o','MarkerEdgeColor','k');
 alpha(r,0.1);
 g = scatter(greenData.uvY(:,1),greenData.uvY(:,2),50,'green','filled','o','MarkerEdgeColor','k');
@@ -42,7 +42,7 @@ for i = 1:5
     plot(ellipse_translated(1, :), ellipse_translated(2, :), colors{i}, 'LineWidth', 2);
     plot(mu(1), mu(2), 'kx', 'MarkerSize', 10, 'LineWidth', 2); % Mean marker
 end
-hold off
+hold off;
 xlabel('u')
 ylabel('v')
 xlim([.16 .24]);

@@ -79,7 +79,8 @@ hold off
 xlabel('u')
 ylabel('v')
 title('White Illuminant Achromatic Chromaticity Selections')
-
+color = {'r','g','b'};
+figure;
 lightnessValues = {'L40', 'L55','L70'};
 for i = 1:length(lightnessValues)
         lightness = lightnessValues{i};
@@ -89,18 +90,26 @@ for i = 1:length(lightnessValues)
         y = currentData.uvY(:,2);
 %x = redData.uvY(:,1);
 %y = redData.uvY(:,2);
-figure;
+%figure;
+
+hold on
 s = scatter(x,y,50,'black','filled');
 alpha(s,0.1);
-hold on
+
 scatter(uv_aims.w.(lightness)(:,1),uv_aims.w.(lightness)(:,2),50,[.8 .8 .8],'o')
 %scatter(illum_uvY(2,1),illum_uvY(2,2),60,'filled','rs')
 scatter(illum_uvY(1,1),illum_uvY(1,2),60,'ks')
+
+    [mu, ellipse_translated] = compute_2std_ellipse(x ,y);
+    plot(ellipse_translated(1, :), ellipse_translated(2, :), color{i}, 'LineWidth', 2);
+    plot(mu(1), mu(2), 'kx', 'MarkerSize', 10, 'LineWidth', 2); % Mean marker
 hold off
 xlabel('u')
 ylabel('v')
 title('White Illuminant Achromatic Chromaticity Selections')
+
 end
+
 %% RED
 lightnessValues = {'L40', 'L55','L70'};
 for i = 1:length(lightnessValues)
