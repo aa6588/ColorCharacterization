@@ -15,7 +15,7 @@ prompt = "Participant ID? ";
 pID = input(prompt);
 participant.ID = pID;
 %VR or Flat 
-mode = input("VR or Flat? ", 's');
+mode = 'VR';
 participant.mode = mode;
 first = input("First experiment? "); %1 if yes 0 if no
 participant.first = first;
