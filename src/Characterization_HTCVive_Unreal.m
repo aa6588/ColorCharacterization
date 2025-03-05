@@ -53,29 +53,32 @@ xticks([0 0.2 0.4 0.6 0.8])
 
 set(gca,  'FontSize', 12, 'fontname','Times New Roman', 'Color', 'none');
 
-% figure;
-% scatter(x,Ys(:,1),40,"red",'filled')
-% xlabel('Reflectance RGBs')
-% ylabel('Luminance (cd/m^2)')
-% title('Red Ramp')
-% 
-% figure;
-% scatter(x,Ys(:,2),40,"green",'filled')
-% xlabel('Reflectance RGBs')
-% ylabel('Luminance (cd/m^2)')
-% title('Green Ramp')
-% 
-% figure;
-% scatter(x,Ys(:,3),40,"blue",'filled')
-% xlabel('Reflectance RGBs')
-% ylabel('Luminance (cd/m^2)')
-% title('Blue Ramp')
-% 
-% figure;
-% scatter(x,Ys(:,4),40,cols{4},'filled')
-% xlabel('Reflectance RGBs')
-% ylabel('Luminance (cd/m^2)')
-% title('Gray Ramp')
+figure;
+subplot(2,2,1);
+scatter(x, Ys(:,1) .* VR_corrFactor(2), 40, "red", 'filled');
+xlabel('Reflectance Rs');
+ylabel('Luminance (cd/m^2)');
+title('Red Ramp');
+
+subplot(2,2,2);
+scatter(x, Ys(:,2) .* VR_corrFactor(2), 40, "green", 'filled');
+xlabel('Reflectance Gs');
+ylabel('Luminance (cd/m^2)');
+title('Green Ramp');
+
+subplot(2,2,3);
+scatter(x, Ys(:,3) .* VR_corrFactor(2), 40, "blue", 'filled');
+xlabel('Reflectance Bs');
+ylabel('Luminance (cd/m^2)');
+title('Blue Ramp');
+
+subplot(2,2,4);
+scatter(x, Ys(:,4) .* VR_corrFactor(2), 40, cols{4}, 'filled');
+xlabel('Reflectance RGBs');
+ylabel('Luminance (cd/m^2)');
+title('Gray Ramp');
+
+sgtitle('[VR] White Illuminant - Measured Ramps');
 %% spectra
 figure
 for i=1:size(primaries, 1)
@@ -274,8 +277,8 @@ axis([min([lab_est(:, 3); lab_meas(:, 3)]) max([lab_est(:, 3);...
 load  lab_meas.mat
 load whitepoints.mat
 level = {'L40','L55','L70'};
-illum = 'r';
-wp = model.r.wp;
+illum = 'w';
+wp = model.w.wp;
 XYZmeas = [rand_idx.(illum).(level{1}).XYZs;rand_idx.(illum).(level{2}).XYZs;rand_idx.(illum).(level{3}).XYZs];
 lab_values = [rand_idx.(illum).(level{1}).Labs;rand_idx.(illum).(level{2}).Labs;rand_idx.(illum).(level{3}).Labs];
  XYZ = Lab2XYZ(lab_values,wp);

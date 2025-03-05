@@ -1,25 +1,19 @@
-function [mu, ellipse_translated] = compute_2std_error_ellipse(X, Y)
-    % Compute the mean of the data
-    mu = mean([X Y]); 
+function [mu, ellipse_transformed] = compute_2std_error_ellipse(X, Y)
+ 
+    % Compute mean of the data
+    mu = [mean(X); mean(Y)];  % 2x1 mean vector
     
-    % Compute standard error for X and Y
-    N = length(X);
-    SE_x = std(X) / sqrt(N);
-    SE_y = std(Y) / sqrt(N);
-    
-    % 2-standard-error scaling factor
-    scale_2se = 2;
+    % Compute standard deviations
+    std_dev = [std(X); std(Y)]; % 2x1 standard deviation vector
     
     % Generate unit circle points
     theta = linspace(0, 2*pi, 100);
-    ellipse_points = [cos(theta); sin(theta)];
+    unit_circle = [cos(theta); sin(theta)];
     
-    % Scale ellipse by standard errors
-    ellipse_scaled = [SE_x * ellipse_points(1, :); SE_y * ellipse_points(2, :)]; 
-    
-    % Scale further by 2-standard-error
-    ellipse_scaled = ellipse_scaled * scale_2se;
-    
-    % Translate to mean position
-    ellipse_translated = ellipse_scaled + mu';
+    % Scale unit circle by 2 standard deviations (axis-aligned ellipse)
+    ellipse_scaled = [2 * std_dev(1) * unit_circle(1, :); 
+                      2 * std_dev(2) * unit_circle(2, :)];
+
+    % Translate ellipse to mean position
+    ellipse_transformed = ellipse_scaled + mu;
 end

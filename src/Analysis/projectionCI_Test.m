@@ -4,13 +4,13 @@ b2 = [0.2336, 0.427]; % Test illuminant chromaticity
 
 % Define achromatic settings under the reference and test illuminants
 a1 = [0.20, 0.4638]; % Observer1s neutral point under reference illuminant
-a2 = [0.17, 0.426]; % Observer0s neutral point under test illuminant
+a2 = [0.23, 0.44]; % Observer0s neutral point under test illuminant
 
 % Compute vector differences
 delta_b = b2 - b1; % Change in illuminant chromaticity
 delta_a = a2 - a1; % Change in achromatic setting
 
-% Compute Chromaticity Index (CI)
+% Compute Constancy Index (CI)
 CI = dot(delta_b, delta_a) / norm(delta_b)^2;
 
 % Compute projection of delta_a onto delta_b

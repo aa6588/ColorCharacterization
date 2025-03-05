@@ -33,6 +33,7 @@ for i = 1:numel(files)
                     newRow = table( ...
                         participant.ID, ...
                         string(participant.mode), ...
+                        participant.first,...
                         string(strjoin(participant.illum_order)), ...
                         string(illuminant), ...  % Store as string array
                         string(lightness), ...  % Store as string array
@@ -40,7 +41,7 @@ for i = 1:numel(files)
                         RGB, ...  % RGB values for the current trial
                         Lab, ... 
                         Idx, ...
-                        'VariableNames', {'ParticipantID', 'Mode', 'illum_order','Illuminant', 'Lightness', 'Rep', 'RGB','Lab Grid','Idx'} ...
+                        'VariableNames', {'ParticipantID', 'Mode', 'First','illum_order','Illuminant', 'Lightness', 'Rep', 'RGB','Lab Grid','Idx'} ...
                     );
                     
                     % Append the new row to the final table
@@ -76,33 +77,65 @@ cd C:\Users\Andrea\Documents\GitHub\ColorCharacterization\src\Analysis\
 save('FLATData.mat','finalTable');
 %% calculate CIs
 cd C:\Users\Andrea\Documents\GitHub\ColorCharacterization\src\Analysis\
+
+%delete extra interjected trials 
+idx = (finalTable.Illuminant == 'w') & (finalTable.Lightness == 'L55') & (finalTable.Rep > 3); 
+% Remove those rows from the table
+finalTable(idx, :) = []; %index to interjected white trials
+
 %average repetition XYZs
 avgTable = groupsummary(finalTable,{'ParticipantID','Lightness','Illuminant'},'mean','XYZ');
 avgTable.GroupCount = [];
-mergedTable = innerjoin(avgTable, unique(finalTable(:, {'ParticipantID' ,'Lightness', 'Illuminant','illum_order'})), 'Keys', {'ParticipantID', 'Lightness', 'Illuminant'});
+mergedTable = innerjoin(avgTable, unique(finalTable(:, {'ParticipantID' ,'Lightness', 'Illuminant','illum_order','Mode'})), 'Keys', {'ParticipantID', 'Lightness', 'Illuminant'});
 mergedTable.CI = zeros(height(mergedTable),1);
 %white chrom XYZ
 D65XYZ = whitepoint("d65").*Flat_model.w.wp(2);
 % List of illuminants
 illuminants = {'r', 'g', 'b', 'y'};
 
+mergedTable.uvY = XYZ2uvY(mergedTable.mean_XYZ);
+
 % Loop through each illuminant
 for i = 1:length(illuminants)
     % Get the current illuminant
     current_illum = illuminants{i};
-    obsXYZ = mergedTable(mergedTable.Illuminant == current_illum, :).mean_XYZ;
-    adjXYZ_white = mergedTable(mergedTable.Illuminant == 'w', :).mean_XYZ;
-    %get chromatic illuminant uv (changes)
+
+    % Find the row indices where Illuminant matches current_illum
+    rows = find(mergedTable.Illuminant == current_illum);
+    rows_white = find(mergedTable.Illuminant == 'w'); 
+
+    % Extract necessary data once
+    obsXYZ = mergedTable.mean_XYZ(rows, :);
+    adj_uv = mergedTable.uvY(rows, :);
+    adjXYZ_white = mergedTable.mean_XYZ(rows_white, :);
+    adj_uv_white = mergedTable.uvY(rows_white, :);
+
+    % Get chromatic illuminant uv (changes)
     chrom_test_uv = illum_uvY(i+1, :);
 
-    % Calculate the Color Index (CI) for the current illuminant for all
-    % lightnesses and participants
+    % Ensure preallocation of recenter_uv and CI columns if not already done
+    if ~ismember('recenter_uv', mergedTable.Properties.VariableNames)
+        mergedTable.recenter_uv = nan(height(mergedTable), 2);
+    end
+    if ~ismember('CI', mergedTable.Properties.VariableNames)
+        mergedTable.CI = nan(height(mergedTable), 1);
+    end
+    if ~ismember('delta_uv', mergedTable.Properties.VariableNames)
+        mergedTable.delta_uv = nan(height(mergedTable), 1);
+    end
+    % Calculate recentered UV and CI for each participant
     for part = 1:length(obsXYZ)
-    mergedTable(mergedTable.Illuminant == current_illum, :).CI(part) = chrom2CI(adjXYZ_white(part,:),obsXYZ(part,:), D65XYZ,chrom_test_uv);
+        recentered_uv = recenter(adjXYZ_white(part,:), obsXYZ(part,:), D65XYZ);
+        [CI_value, delta_uv_value] = computeCIproj(w_uv(1:2), chrom_test_uv(1:2), adj_uv_white(part,1:2), adj_uv(part,1:2));
+        mergedTable.recenter_uv(rows(part), :) = recentered_uv; 
+        mergedTable.CI(rows(part)) = CI_value;
+        mergedTable.delta_uv(rows(part)) = delta_uv_value;
     end
 end
 avgDataCI = mergedTable;
-avgDataCI.uvY = XYZ2uvY(avgDataCI.mean_XYZ);
+avgDataCI = movevars(avgDataCI, "Mode", "Before", "Lightness");
+avgDataCI = movevars(avgDataCI, "illum_order", "Before", "Lightness");
+avgDataCI = movevars(avgDataCI, "CI", "Before", "delta_uv");
 save('FLATData_CI.mat','avgDataCI');
 
 
