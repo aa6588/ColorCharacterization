@@ -14,7 +14,7 @@ function [CI, delta_uv] = computeCIproj(b1, b2, a1, a2)
     delta_b = b2 - b1; % Change in illuminant chromaticity
     delta_a = a2 - a1; % Change in achromatic setting
 
-    % Compute Chromaticity Index (CI)
+    % Compute Constancy Index (CI)
     CI = dot(delta_b, delta_a) / norm(delta_b)^2;
 
     % Compute projection of delta_a onto delta_b

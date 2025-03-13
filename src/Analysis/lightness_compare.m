@@ -1,8 +1,7 @@
 %lightness comparison 
-load VRData.mat %doing VR data
-
 %CI white is everything in first block
 cd C:\Users\Andrea\Documents\GitHub\ColorCharacterization\src\Analysis\
+load VRData.mat %doing VR data
 
 %delete extra interjected trials 
 idx = (finalTable.Illuminant == 'w') & (finalTable.Lightness == 'L55') & (finalTable.Rep > 3); 
@@ -317,6 +316,7 @@ figure;
 h = bar(barplot, 'grouped');
 title('[Flat] Lightness Separated CI per Illuminant')
 xlabel('Illuminants')
+ylim([0 .8])
 xticklabels({'b','g','r','y'})
 legend({'L40','L55','L70','Average'})
 

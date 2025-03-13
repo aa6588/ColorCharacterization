@@ -126,17 +126,17 @@ for i = 1:length(illuminants)
     % Calculate recentered UV and CI for each participant
     for part = 1:length(obsXYZ)
         recentered_uv = recenter(adjXYZ_white(part,:), obsXYZ(part,:), D65XYZ);
-        [CI_value, delta_uv_value] = computeCIproj(w_uv(1:2), chrom_test_uv(1:2), adj_uv_white(part,1:2), adj_uv(part,1:2));
+        [CI_value, delta_uv_value] = computeCIproj(w_uv(1:2), chrom_test_uv(1:2), adj_uv_white(part,1:2), recentered_uv(1:2));
         mergedTable.recenter_uv(rows(part), :) = recentered_uv; 
         mergedTable.CI(rows(part)) = CI_value;
         mergedTable.delta_uv(rows(part)) = delta_uv_value;
     end
 end
-avgDataCI = mergedTable;
-avgDataCI = movevars(avgDataCI, "Mode", "Before", "Lightness");
-avgDataCI = movevars(avgDataCI, "illum_order", "Before", "Lightness");
-avgDataCI = movevars(avgDataCI, "CI", "Before", "delta_uv");
-save('FLATData_CI.mat','avgDataCI');
+ avgDataCI = mergedTable;
+% avgDataCI = movevars(avgDataCI, "Mode", "Before", "Lightness");
+% avgDataCI = movevars(avgDataCI, "illum_order", "Before", "Lightness");
+% avgDataCI = movevars(avgDataCI, "CI", "Before", "delta_uv");
+% save('FLATData_CI.mat','avgDataCI');
 
 
 
