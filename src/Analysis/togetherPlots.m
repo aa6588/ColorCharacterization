@@ -1,19 +1,19 @@
 %together plots VR and Flat
 
-load FLATData_CI.mat avgDataCI
-Flat_avgDataCI = avgDataCI;
-load VRData_CI.mat avgDataCI
-VR_avgDataCI = avgDataCI;
+load FLATData.mat finalTable
+Flat_DataCI = finalTable;
+load VRData.mat finalTable
+VR_DataCI = finalTable;
 
-VRavg_CIs = groupsummary(VR_avgDataCI,{'Illuminant'},'mean','CI');
-Flatavg_CIs = groupsummary(Flat_avgDataCI,{'Illuminant'},'mean','CI');
+VRavg_CIs = groupsummary(VR_DataCI,{'Illuminant'},'mean','CI_2_recenter');
+Flatavg_CIs = groupsummary(Flat_DataCI,{'Illuminant'},'mean','CI_2_recenter');
 %reshape table
 % Reshape from long to wide format
-VR_wide = unstack(VRavg_CIs, 'mean_CI', 'Illuminant');
-Flat_wide = unstack(Flatavg_CIs, 'mean_CI', 'Illuminant');
+VR_wide = unstack(VRavg_CIs, 'mean_CI_2_recenter', 'Illuminant');
+Flat_wide = unstack(Flatavg_CIs, 'mean_CI_2_recenter', 'Illuminant');
 % Convert the table to a matrix for plotting
-VR_matrix = VR_wide{:, {'r', 'g', 'b','y'}};
-Flat_matrix = Flat_wide{:, {'r', 'g', 'b','y'}};
+VR_matrix = VR_wide{1, {'r', 'g', 'b','y'}};
+Flat_matrix = Flat_wide{1, {'r', 'g', 'b','y'}};
 all_matrix = [VR_matrix;Flat_matrix]';
 newNames = {'Red';'Green';'Blue';'Yellow'};
 figure;

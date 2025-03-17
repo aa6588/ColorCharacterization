@@ -1,12 +1,9 @@
 %% Analysis of Raw data
 
-% organize VR vs Flat
-% average trials per lightness level for each participant
-% average lightness level for all participants (aggregate)
-% should end up with one RGB value per lightness per illum
 addpath('C:\Users\Andrea\Documents\GitHub\ColorCharacterization\src\color_transformations\')
 addpath('C:\Users\Andrea\Documents\GitHub\ColorCharacterization\src\')
-%% VR section
+
+% VR section
 %48 trials per participant
 
 cd C:\Users\Andrea\Documents\GitHub\ColorCharacterization\src\Participants\VR\
@@ -86,7 +83,8 @@ cd C:\Users\Andrea\Documents\GitHub\ColorCharacterization\src\Analysis\
 % timestamp = datestr(datetime('now'), 'yyyy-mm-dd_HH-MM-SS');
 % filename = ['obsData_' timestamp '.csv'];
 % writetable(finalTable, filename);
-save('VRData.mat','finalTable');
+rawTable = finalTable;
+
 %% calculate CIs
 cd C:\Users\Andrea\Documents\GitHub\ColorCharacterization\src\Analysis\
 
@@ -156,7 +154,7 @@ finalTable = movevars(finalTable, "WhiteXYZ_1", "Before", "CI_1");
 % avgDataCI = movevars(avgDataCI, "Mode", "Before", "Lightness");
 % avgDataCI = movevars(avgDataCI, "illum_order", "Before", "Lightness");
 % avgDataCI = movevars(avgDataCI, "CI", "Before", "delta_uv");
-% save('VRData_CI.mat','avgDataCI');
+ %save('VRData_CI.mat','avgDataCI');
 
 %% cI calc averaging ALL whites, (avg lightness avg reps)
 
@@ -215,3 +213,4 @@ for i = 1:length(illuminants)
     end
 end
 finalTable = movevars(finalTable, "WhiteXYZ_2", "Before", "CI_2");
+save('VRData.mat','rawTable','finalTable');
