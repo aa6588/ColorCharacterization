@@ -40,25 +40,12 @@ VR_matrix = VR_wide{1, {'r', 'g', 'b','y'}};
 Flat_matrix = Flat_wide{1, {'r', 'g', 'b','y'}};
 all_matrix = [VR_matrix;Flat_matrix]';
 newNames = {'Red';'Green';'Blue';'Yellow'};
-errors = [std(VR_matrix) std(Flat_matrix)];
 figure;
 h = bar(all_matrix,'grouped','FaceColor','flat');
-hold on
-[numGroups, numBars] = size(all_matrix);
-
-% X positions for error bars
-x = nan(numGroups, numBars);
-for i = 1:numBars
-    x(:,i) = h(i).XEndPoints;  % Get the X positions for each bar
-end
-
-% Add error bars
-for i = 1:numBars
-    errorbar(x(:,i), all_matrix(:,i), errors(:,i), 'k');
-end
 h(1).CData = [.8 0 0;0 .8 0;0 0 .9; .9 .9 0];
 h(2).CData =[.5 0 0;0 .5 0;0 0 .6; .6 .6 0];
 set(gca,'xticklabel',newNames);
+ylim([0 .8])
 xlabel('Illuminant')
 ylabel('Constancy Index')
 legend(h,{'VR','Flat'})
@@ -77,9 +64,10 @@ Flat_wide = unstack(Flatavg_CIs_box, 'mean_CI_2_recenter', 'Illuminant');
 Flat_matrix = Flat_wide{:, {'r', 'g', 'b','y'}};
 %boxplots
 x = {VR_matrix,Flat_matrix};
-colors = [1 0 0;0 .8 0;0 0 1;.8 .8 0];
-h = boxplotGroup(x,'primaryLabels',{'VR','Flat'},'secondaryLabels',{'r','g','b','y'},'boxstyle','filled'...
-    ,'Colors',colors,'GroupType','withinGroups');
-title('Average CI for all participants')
-ylabel('CI')
-
+colors = [1 0 0;0 1 0;0 0 1;1 1 0];
+h = boxplotGroup(x,'primaryLabels',{'VR','Flat'},'secondaryLabels',{'r','g','b','y'} ;
+% Loop through all the boxplot groups and set the 'FaceColor' property to fill the boxes with colors
+for i = 1:length(h)
+    % Assign the fill color based on the index
+    set(h(i), 'FaceColor', colors(i, :), 'EdgeColor', 'none'); % 'EdgeColor' 'none' removes the outline
+end

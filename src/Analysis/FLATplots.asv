@@ -273,10 +273,10 @@ end
 
 % CI plots
 avgRedData = finalTable(finalTable.Illuminant == 'r', :);
-avg_CIs = groupsummary(avgRedData,{'ParticipantID','Lightness'},'mean','CI_1_recenter');
+avg_CIs = groupsummary(avgRedData,{'ParticipantID','Lightness'},'mean','CI_2_recenter');
 %reshape table
 % Reshape from long to wide format
-T_wide = unstack(avg_CIs, 'mean_CI_1_recenter', 'Lightness');
+T_wide = unstack(avg_CIs, 'mean_CI_2_recenter', 'Lightness');
 % Convert the table to a matrix for plotting
 data_matrix = T_wide{:, {'L40', 'L55', 'L70'}};
 cats = string(unique(avg_CIs.ParticipantID));
@@ -295,8 +295,7 @@ xtic = {'L40', 'L55', 'L70'};
 for i = 1:size(data_matrix, 1)
     plot([1 2 3], data_matrix(i, :), 'o-');
 end
-avg_all = mean(data_matrix);
-plot([1 2 3], avg_all,'o-','Color','r','LineWidth',2)
+
 % Set categorical x-ticks
 xticks(1:3);
 xticklabels(xtic);
@@ -327,11 +326,11 @@ title('[FLAT] Green Illuminant Achromatic Chromaticity Selections')
 end
 
 % CI plots
-avgGreenData = finalTable(finalTable.Illuminant == 'g', :);
-avg_CIs = groupsummary(avgGreenData,{'ParticipantID','Lightness'},'mean','CI_1_recenter');
+avgGreenData = avgDataCI(avgDataCI.Illuminant == 'g', :);
+avg_CIs = groupsummary(avgGreenData,{'ParticipantID','Lightness'},'mean','CI');
 %reshape table
 % Reshape from long to wide format
-T_wide = unstack(avg_CIs, 'mean_CI_1_recenter', 'Lightness');
+T_wide = unstack(avg_CIs, 'mean_CI', 'Lightness');
 % Convert the table to a matrix for plotting
 data_matrix = T_wide{:, {'L40', 'L55', 'L70'}};
 cats = string(unique(avg_CIs.ParticipantID));
@@ -342,22 +341,6 @@ xticklabels(cats)
 xlabel('Participant')
 ylabel('Constancy Index')
 title('[FLAT] Average Constancy Index per Lightness Under Green Illuminant')
-
-%scatter 
-figure
-hold on;
-xtic = {'L40', 'L55', 'L70'};
-for i = 1:size(data_matrix, 1)
-    plot([1 2 3], data_matrix(i, :), 'o-');
-end
-avg_all = mean(data_matrix);
-plot([1 2 3], avg_all,'o-','Color','g','LineWidth',2)
-% Set categorical x-ticks
-xticks(1:3);
-xticklabels(xtic);
-xlabel('Lightness');
-ylabel('Constancy Index');
-title('[Flat] Green Illuminant Average CIs per Lightness');
 %% blue
 lightnessValues = {'L40', 'L55','L70'};
 for i = 1:length(lightnessValues)

@@ -1,7 +1,7 @@
 %VR plots
 addpath 'C:\Users\Andrea\Documents\GitHub\ColorCharacterization\src'
 load VRData.mat
-load VRData_CI.mat
+%load VRData_CI.mat
 load uv_aims_VR.mat
 load FinalSceneIllums.mat illum_xyY
 illum_uvY = xyY2uvY(illum_xyY);
@@ -50,23 +50,161 @@ ylim([.41 .52]);
 title('[VR] Illuminant Achromatic Chromaticity Selections')
 legend([wi,ri,gi,bi,yi],{'white illum','red illum','green illum','blue illum','yellow illum'})
 
+% recentered uv's for all trials (recenter uv 2, white is average of all
+% white block for each participant
+figure;
+r = scatter(redData.recenter_uv_2(:,1),redData.recenter_uv_2(:,2),50,'red','filled','o','MarkerEdgeColor','k');
+alpha(r,0.1);
+hold on;
+g = scatter(greenData.recenter_uv_2(:,1),greenData.recenter_uv_2(:,2),50,'green','filled','o','MarkerEdgeColor','k');
+alpha(g,0.05);
+b = scatter(blueData.recenter_uv_2(:,1),blueData.recenter_uv_2(:,2),50,'blue','filled','o','MarkerEdgeColor','k');
+alpha(b,0.1);
+y = scatter(yellowData.recenter_uv_2(:,1),yellowData.recenter_uv_2(:,2),50,'yellow','filled','o','MarkerEdgeColor','k');
+alpha(y,0.1);
+%scatter(uv_aims.r.(lightness)(:,1),uv_aims.r.(lightness)(:,2),50,[.8 .8 .8],'o')
+ri = scatter(illum_uvY(2,1),illum_uvY(2,2),60,'filled','rs','MarkerEdgeColor','k');
+gi = scatter(illum_uvY(3,1),illum_uvY(3,2),60,'filled','gs','MarkerEdgeColor','k');
+bi = scatter(illum_uvY(4,1),illum_uvY(4,2),60,'filled','bs','MarkerEdgeColor','k');
+yi = scatter(illum_uvY(5,1),illum_uvY(5,2),60,'filled','ys','MarkerEdgeColor','k');
+wi = scatter(illum_uvY(1,1),illum_uvY(1,2),60,'ks');
+
+%plot ellipses
+colors = {'r', 'g', 'b', 'y'}; % Colors for ellipses
+datasets = {redData.recenter_uv_2(:,1), redData.recenter_uv_2(:,2); greenData.recenter_uv_2(:,1), greenData.recenter_uv_2(:,2);...
+    blueData.recenter_uv_2(:,1), blueData.recenter_uv_2(:,2); yellowData.recenter_uv_2(:,1), yellowData.recenter_uv_2(:,2)}; % Store data pairs
+for i = 1:4
+    [mu, ellipse_translated] = compute_2std_ellipse(datasets{i,1}, datasets{i,2});
+    plot(ellipse_translated(1, :), ellipse_translated(2, :), colors{i}, 'LineWidth', 2);
+    plot(mu(1), mu(2), 'kx', 'MarkerSize', 10, 'LineWidth', 2); % Mean marker
+end
+hold off;
+xlabel('u')
+ylabel('v')
+xlim([.16 .24]);
+ylim([.41 .52]);
+title('[VR] Recentered Achromatic Chromaticity Selections')
+legend([wi,ri,gi,bi,yi],{'white illum','red illum','green illum','blue illum','yellow illum'})
+
+% average recenter (avg reps and lightness)
+avg_R = groupsummary(redData,{'ParticipantID'},'mean','recenter_uv_2');
+avg_G = groupsummary(greenData,{'ParticipantID'},'mean','recenter_uv_2');
+avg_B = groupsummary(blueData,{'ParticipantID'},'mean','recenter_uv_2');
+avg_Y = groupsummary(yellowData,{'ParticipantID'},'mean','recenter_uv_2');
+
+figure;
+r = scatter(avg_R.mean_recenter_uv_2(:,1),avg_R.mean_recenter_uv_2(:,2),50,'red','filled','o','MarkerEdgeColor','k');
+alpha(r,0.1);
+hold on;
+g = scatter(avg_G.mean_recenter_uv_2(:,1),avg_G.mean_recenter_uv_2(:,2),50,'green','filled','o','MarkerEdgeColor','k');
+alpha(g,0.05);
+b = scatter(avg_B.mean_recenter_uv_2(:,1),avg_B.mean_recenter_uv_2(:,2),50,'blue','filled','o','MarkerEdgeColor','k');
+alpha(b,0.1);
+y = scatter(avg_Y.mean_recenter_uv_2(:,1),avg_Y.mean_recenter_uv_2(:,2),50,'yellow','filled','o','MarkerEdgeColor','k');
+alpha(y,0.1);
+
+ri = scatter(illum_uvY(2,1),illum_uvY(2,2),60,'filled','rs','MarkerEdgeColor','k');
+gi = scatter(illum_uvY(3,1),illum_uvY(3,2),60,'filled','gs','MarkerEdgeColor','k');
+bi = scatter(illum_uvY(4,1),illum_uvY(4,2),60,'filled','bs','MarkerEdgeColor','k');
+yi = scatter(illum_uvY(5,1),illum_uvY(5,2),60,'filled','ys','MarkerEdgeColor','k');
+wi = scatter(illum_uvY(1,1),illum_uvY(1,2),60,'ks');
+
+%plot ellipses
+colors = {'r', 'g', 'b', 'y'}; % Colors for ellipses
+datasets = {avg_R.mean_recenter_uv_2(:,1), avg_R.mean_recenter_uv_2(:,2); avg_G.mean_recenter_uv_2(:,1), avg_G.mean_recenter_uv_2(:,2);...
+    avg_B.mean_recenter_uv_2(:,1), avg_B.mean_recenter_uv_2(:,2); avg_Y.mean_recenter_uv_2(:,1), avg_Y.mean_recenter_uv_2(:,2)}; % Store data pairs
+for i = 1:4
+    [mu, ellipse_translated] = compute_2std_ellipse(datasets{i,1}, datasets{i,2});
+    plot(ellipse_translated(1, :), ellipse_translated(2, :), colors{i}, 'LineWidth', 2);
+    plot(mu(1), mu(2), 'kx', 'MarkerSize', 10, 'LineWidth', 2); % Mean marker
+end
+hold off;
+xlabel('u')
+ylabel('v')
+xlim([.16 .24]);
+ylim([.41 .52]);
+title('[VR] Average (Reps and Lightness) Recentered Achromatic Chromaticity Selections')
+legend([wi,ri,gi,bi,yi],{'white illum','red illum','green illum','blue illum','yellow illum'})
+
+% average recenter (Reps only)
+avg_R = groupsummary(redData,{'ParticipantID','Lightness'},'mean','recenter_uv_2');
+avg_G = groupsummary(greenData,{'ParticipantID','Lightness'},'mean','recenter_uv_2');
+avg_B = groupsummary(blueData,{'ParticipantID','Lightness'},'mean','recenter_uv_2');
+avg_Y = groupsummary(yellowData,{'ParticipantID','Lightness'},'mean','recenter_uv_2');
+
+figure;
+r = scatter(avg_R.mean_recenter_uv_2(:,1),avg_R.mean_recenter_uv_2(:,2),50,'red','filled','o','MarkerEdgeColor','k');
+alpha(r,0.1);
+hold on;
+g = scatter(avg_G.mean_recenter_uv_2(:,1),avg_G.mean_recenter_uv_2(:,2),50,'green','filled','o','MarkerEdgeColor','k');
+alpha(g,0.05);
+b = scatter(avg_B.mean_recenter_uv_2(:,1),avg_B.mean_recenter_uv_2(:,2),50,'blue','filled','o','MarkerEdgeColor','k');
+alpha(b,0.1);
+y = scatter(avg_Y.mean_recenter_uv_2(:,1),avg_Y.mean_recenter_uv_2(:,2),50,'yellow','filled','o','MarkerEdgeColor','k');
+alpha(y,0.1);
+
+ri = scatter(illum_uvY(2,1),illum_uvY(2,2),60,'filled','rs','MarkerEdgeColor','k');
+gi = scatter(illum_uvY(3,1),illum_uvY(3,2),60,'filled','gs','MarkerEdgeColor','k');
+bi = scatter(illum_uvY(4,1),illum_uvY(4,2),60,'filled','bs','MarkerEdgeColor','k');
+yi = scatter(illum_uvY(5,1),illum_uvY(5,2),60,'filled','ys','MarkerEdgeColor','k');
+wi = scatter(illum_uvY(1,1),illum_uvY(1,2),60,'ks');
+
+%plot ellipses
+colors = {'r', 'g', 'b', 'y'}; % Colors for ellipses
+datasets = {avg_R.mean_recenter_uv_2(:,1), avg_R.mean_recenter_uv_2(:,2); avg_G.mean_recenter_uv_2(:,1), avg_G.mean_recenter_uv_2(:,2);...
+    avg_B.mean_recenter_uv_2(:,1), avg_B.mean_recenter_uv_2(:,2); avg_Y.mean_recenter_uv_2(:,1), avg_Y.mean_recenter_uv_2(:,2)}; % Store data pairs
+for i = 1:4
+    [mu, ellipse_translated] = compute_2std_ellipse(datasets{i,1}, datasets{i,2});
+    plot(ellipse_translated(1, :), ellipse_translated(2, :), colors{i}, 'LineWidth', 2);
+    plot(mu(1), mu(2), 'kx', 'MarkerSize', 10, 'LineWidth', 2); % Mean marker
+end
+hold off;
+xlabel('u')
+ylabel('v')
+xlim([.16 .24]);
+ylim([.41 .52]);
+title('[VR] Average (Reps) Recentered Achromatic Chromaticity Selections')
+legend([wi,ri,gi,bi,yi],{'white illum','red illum','green illum','blue illum','yellow illum'})
+
+
 %% CI plots average all illum, each illum CI
-avg_CIs = groupsummary(avgDataCI,{'Illuminant'},'mean','CI');
+avg_CIs = groupsummary(finalTable,{'Illuminant','Lightness'},'mean','CI_2_recenter');
 %reshape table
 % Reshape from long to wide format
-T_wide = unstack(avg_CIs, 'mean_CI', 'Illuminant');
+T_wide = unstack(avg_CIs, 'mean_CI_2_recenter', 'Illuminant');
 % Convert the table to a matrix for plotting
-data_matrix = T_wide{:, {'r', 'g', 'b','y'}};
-newNames = {'r', 'g', 'b','y'};
+data_matrix = T_wide{1:3, {'r', 'g', 'b','y'}};
+newNames = {'L40','L55','L70'};
 figure;
 h = bar(data_matrix, 'grouped');
-h.FaceColor = 'flat';
-h.CData = [.8 0 0; 0 .8 0; 0 0 .9; .9 .9 0];
+h(1).FaceColor = 'flat';
+h(2).FaceColor = 'flat';
+h(3).FaceColor = 'flat';
+h(4).FaceColor = 'flat';
+h(1).CData = [.4 0 0; .6 0 0; .8 0 0];
+h(2).CData = [0 .4 0; 0 .6 0; 0 .8 0];
+h(3).CData = [0 0 .4; 0 0 .6; 0 0 .8];
+h(4).CData = [.4 .4 0; .6 .6 0; .9 .9 0];
 set(gca, 'XTick',1:numel(newNames), 'XtickLabel',newNames)
-ylim([0 .8])
 xlabel('Illuminant')
 ylabel('Constancy Index')
-title('[VR] Average Constancy Index per Illuminant')
+ylim([0 .8])
+title('[VR] Average Constancy Index per Illuminant per Lightness')
+
+figure
+hold on;
+data_matrix = data_matrix';
+xtic = {'L40', 'L55', 'L70'};
+for i = 1:size(data_matrix, 1)
+    plot([1 2 3], data_matrix(i, :), 'o-');
+end
+
+% Set categorical x-ticks
+xticks(1:3);
+xticklabels(xtic);
+xlabel('Lightness');
+ylabel('Constancy Index');
+title('[VR] Illuminant Average CIs per Lightness');
 %% WHITE
 x = whiteData.uvY(:,1);
 y = whiteData.uvY(:,2);
@@ -126,11 +264,11 @@ title('[VR] Red Illuminant Achromatic Chromaticity Selections')
 end
 
 % CI plots
-avgRedData = avgDataCI(avgDataCI.Illuminant == 'r', :);
-avg_CIs = groupsummary(avgRedData,{'ParticipantID','Lightness'},'mean','CI');
+avgRedData = finalTable(finalTable.Illuminant == 'r', :);
+avg_CIs = groupsummary(avgRedData,{'ParticipantID','Lightness'},'mean','CI_1_recenter');
 %reshape table
 % Reshape from long to wide format
-T_wide = unstack(avg_CIs, 'mean_CI', 'Lightness');
+T_wide = unstack(avg_CIs, 'mean_CI_1_recenter', 'Lightness');
 % Convert the table to a matrix for plotting
 data_matrix = T_wide{:, {'L40', 'L55', 'L70'}};
 cats = string(unique(avg_CIs.ParticipantID));
@@ -142,42 +280,21 @@ xticklabels(cats)
 ylabel('Constancy Index')
 title('[VR] Average Constancy Index per Lightness Under Red Illuminant')
 
-%GRID LIGHTNESS CHROMATICITY PLOTS (HEATMAP)
-% lightnessValues = {'L40', 'L55','L70'};
-% for i = 1:length(lightnessValues)
-%         lightness = lightnessValues{i};
-%         % Extract the subset for the current lightness
-%         currentData = redData(redData.Lightness == lightness, :);
-% [unique_coords, ~, ind] = unique(currentData.uvY(:,1:2), 'rows');
-% counts = accumarray(ind, 1);
-% 
-% % Separate data for plotting
-% x = unique_coords(:, 1);
-% y = unique_coords(:, 2);
-% c = counts;
-% 
-% map = [.3 0 0; .5 0 0; .7 0 0];
-% % Create scatter plot
-% figure;
-% scatter_handle = scatter(x, y, 50, c, 'filled');
-% %num_steps = numel(unique(c));
-% %colormap(copper(num_steps))
-% colormap(map)
-% cb = colorbar;
-% cb.Ticks = min(c):max(c);
-% %clim([min(c), max(c)]);
-% 
-% hold on
-% scatter(uv_aims.r.(lightness)(:,1),uv_aims.r.(lightness)(:,2),50,[.8 .8 .8],'o')
-% scatter(illum_uvY(2,1),illum_uvY(2,2),60,'filled','rs')
-% scatter(illum_uvY(1,1),illum_uvY(1,2),60,'k*')
-% 
-% % Add labels and grid
-% xlabel('u');
-% ylabel('v');
-% title(['Participant responses Red Illuminant ', lightness]);
-% grid on;
-% end
+figure
+hold on;
+xtic = {'L40', 'L55', 'L70'};
+for i = 1:size(data_matrix, 1)
+    plot([1 2 3], data_matrix(i, :), 'o-');
+end
+avg_all = mean(data_matrix);
+plot([1 2 3], avg_all,'o-','Color','r','LineWidth',2)
+
+% Set categorical x-ticks
+xticks(1:3);
+xticklabels(xtic);
+xlabel('Lightness');
+ylabel('Constancy Index');
+title('[VR] Red Illuminant Average CIs per Lightness');
 %% GREEN
 lightnessValues = {'L40', 'L55','L70'};
 for i = 1:length(lightnessValues)
@@ -202,8 +319,8 @@ title('[VR] Green Illuminant Achromatic Chromaticity Selections')
 end
 
 % CI plots
-avgGreenData = avgDataCI(avgDataCI.Illuminant == 'g', :);
-avg_CIs = groupsummary(avgGreenData,{'ParticipantID','Lightness'},'mean','CI');
+avgGreenData = finalTable(finalTable.Illuminant == 'g', :);
+avg_CIs = groupsummary(avgGreenData,{'ParticipantID','Lightness'},'mean','CI_1_recenter');
 %reshape table
 % Reshape from long to wide format
 T_wide = unstack(avg_CIs, 'mean_CI', 'Lightness');
@@ -217,6 +334,22 @@ xticklabels(cats)
 xlabel('Participant')
 ylabel('Constancy Index')
 title('[VR] Average Constancy Index per Lightness Under Green Illuminant')
+
+%scatter 
+figure
+hold on;
+xtic = {'L40', 'L55', 'L70'};
+for i = 1:size(data_matrix, 1)
+    plot([1 2 3], data_matrix(i, :), 'o-');
+end
+avg_all = mean(data_matrix);
+plot([1 2 3], avg_all,'o-','Color','g','LineWidth',2)
+% Set categorical x-ticks
+xticks(1:3);
+xticklabels(xtic);
+xlabel('Lightness');
+ylabel('Constancy Index');
+title('[VR] Green Illuminant Average CIs per Lightness');
 %% blue
 lightnessValues = {'L40', 'L55','L70'};
 for i = 1:length(lightnessValues)
