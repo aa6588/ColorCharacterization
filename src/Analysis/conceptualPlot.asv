@@ -36,7 +36,7 @@ recentering = quiver(red_circle(1), red_circle(2), ...
 %lines for projections
 % Solid line
 wp = plot([white_square(1), red_star(1)], [white_square(2), red_star(2)], '-', ...
-    'Color', [0, .8, 0], 'LineWidth', 1.5);  % Green
+    'Color', [0, .5, 0], 'LineWidth', 1.5);  % Green
 wr = plot([white_square(1), red_square(1)], [white_square(2), red_square(2)], ':', ...
     'Color', [0, 0, 0, 0.5], 'LineWidth', 1.5);  % Semi-transparent black
 
@@ -46,8 +46,6 @@ wc = plot([white_square(1), red_filled_circle(1)], [white_square(2), red_filled_
 % Dashed line
 duv = plot([red_filled_circle(1), red_star(1)], [red_filled_circle(2), red_star(2)], '--', ...
     'Color', 'r', 'LineWidth', 1.5);
-%projection on top
-pc = scatter(0.2251,0.4368,80,'r*','LineWidth',1);
 
 % Add labels
 text(white_square(1) + 0.001, white_square(2) + 0.001, 'w', 'FontSize', 12, 'FontWeight', 'bold', 'Color', 'k');
@@ -58,7 +56,5 @@ text(red_square(1) + 0.001, red_square(2) - 0.001, 'c', 'FontSize', 12, 'FontWei
 ylim([.42,.48])
 xlabel('u′')
 ylabel('v′')
-title('Example Constancy Index Calculation from Observer Responses')
-%legend([wi,ri,ow,oc,rc,pc,recentering,wr,wc,wp],{'white illuminant','chromatic illuminant','w response','c response','recentered c resp', 'projected c resp','recentering','illuminant line','response line','projection wr onto wc'})
 legend([wi,ri,ow,oc,rc,pc,recentering, wr,wc,wp,duv],...
-    {'white illuminant','chromatic illuminant','w response','c response','recentered c resp','projected c resp','recentering','illuminant line','response line','projection wr onto wc','\delta_u_v'})
+    {'white illuminant','chromatic illuminant','w response','c response','recentered r resp','projected r resp','recentering','illuminant line','response line','projection wr onto wc','\delta_u_v'})

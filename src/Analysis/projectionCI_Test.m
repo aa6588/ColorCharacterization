@@ -3,8 +3,8 @@ b1 = [0.1978, 0.4683];  % Reference illuminant chromaticity
 b2 = [0.2336, 0.427]; % Test illuminant chromaticity
 
 % Define achromatic settings under the reference and test illuminants
-a1 = [0.20, 0.4638]; % Observer1s neutral point under reference illuminant
-a2 = [0.23, 0.44]; % Observer0s neutral point under test illuminant
+a1 = [0.1978, 0.4683]; % Observer1s neutral point under reference illuminant
+a2 = [0.2351    0.4455]; % Observer0s neutral point under test illuminant
 
 % Compute vector differences
 delta_b = b2 - b1; % Change in illuminant chromaticity

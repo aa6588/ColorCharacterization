@@ -1,6 +1,6 @@
 %made up data to test CI equations
-%load models_info.mat
-%load FinalSceneIllums.mat illum_xyY
+load models_info.mat
+load FinalSceneIllums.mat illum_xyY
 
 %chrom2CI(adjXYZ_white(part,:),obsXYZ(part,:), D65XYZ,chrom_test_uv);
 D65 = XYZ2uvY(whitepoint("d65").*model.w.wp(2));
