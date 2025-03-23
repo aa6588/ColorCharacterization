@@ -9,7 +9,7 @@ function [mu, ellipse_translated] = compute_2std_ellipse(X, Y)
     [eigvec, eigval] = eig(Sigma);
     
     % Scaling factor for 2-standard-deviation ellipse
-    scale_2std = 2;
+    scale_2std = 1;
     
     
     % Generate unit circle points

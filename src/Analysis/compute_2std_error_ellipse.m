@@ -1,19 +1,23 @@
-function [mu, ellipse_transformed] = compute_2std_error_ellipse(X, Y)
- 
-    % Compute mean of the data
-    mu = [mean(X); mean(Y)];  % 2x1 mean vector
-    
-    % Compute standard deviations
-    std_dev = [std(X); std(Y)]; % 2x1 standard deviation vector
-    
-    % Generate unit circle points
-    theta = linspace(0, 2*pi, 100);
-    unit_circle = [cos(theta); sin(theta)];
-    
-    % Scale unit circle by 2 standard deviations (axis-aligned ellipse)
-    ellipse_scaled = [2 * std_dev(1) * unit_circle(1, :); 
-                      2 * std_dev(2) * unit_circle(2, :)];
+function h = compute_2std_error_ellipse(cnt,rads,axh)
+% cnt is the [x,y] coordinate of the center (row or column index).
+% rads is the [horizontal, vertical] "radius" of the ellipses (row or column index).
+% axh is the axis handle (if missing or empty, gca will be used)
+% h is the object handle to the plotted rectangle.
+% The easiest approach IMO is to plot a rectangle with rounded edges. 
+% EXAMPLE
+%    center = [1, 2];         %[x,y] center (mean)
+%    stdev = [1.2, 0.5];      %[x,y] standard dev.
+%    h = plotEllipses(center, stdev)
+%    axis equal
 
-    % Translate ellipse to mean position
-    ellipse_transformed = ellipse_scaled + mu;
+% get axis handle if needed
+if nargin < 3 || isempty(axh)
+   axh = gca();  
+end
+% Compute the lower, left corner of the rectangle.
+llc = cnt(:)-rads(:);
+% Compute the width and height
+wh = rads(:)*2; 
+% Draw rectangle 
+h = rectangle(axh,'Position',[llc(:).',wh(:).'],'Curvature',[1,1]); 
 end
