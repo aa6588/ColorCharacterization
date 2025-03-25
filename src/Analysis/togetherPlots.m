@@ -28,7 +28,7 @@ scatter(abs(Flat_DataCI.delta_uv_2_recenter),Flat_DataCI.CI_2_recenter)
 xlabel('| \delta_u_v|')
 ylabel('Constancy Index')
 title('[Flat] Average CI vs \delta_u_v')
-%% bar
+%% bar VR vs Flat vs illums
 mat = readmatrix('em_df_results_ALLpairwise.csv');
 errors = [mat(1:2:end,4),mat(2:2:end,4)]; 
 means = [mat(1:2:end,3),mat(2:2:end,3)];
@@ -108,6 +108,7 @@ ylabel('Constancy Index');
 legend([violin1(1),violin1(2)], {'Flat', 'VR'});
 xticklabels(x)
 ylim([-.5, 1.5]);
+exportgraphics(gcf,'violinCIs_illum_mode.pdf','ContentType','vector')
 %% violin plot VR vs Flat (all illums)
 % Load the data
 mat = readtable('em_df_results.csv');
@@ -270,10 +271,10 @@ VR = mat{1:2:end,3};
 VR_err = mat{1:2:end,4};
 Flat = mat{2:2:end,3};
 Flat_err = mat{2:2:end,4};
-errs = [VR_err,Flat_err]';
-means = [VR,Flat]';
+errs = [VR_err,Flat_err];
+means = [VR,Flat];
 figure;
-b = bar([VR,Flat]','grouped');
+b = bar([VR,Flat],'grouped');
 % b(2).FaceColor= [0.8500, 0.3250, 0.0980];
 % b(1).FaceColor = [0, 0.4470, 0.7410];
 ylim([0,1])
@@ -290,9 +291,11 @@ end
 for i = 1:numBars
     errorbar(x(:,i), means(:,i), errs(:,i), 'k','LineStyle', 'none','LineWidth',1);
 end
-newNames = {'VR','Flat'};
+%newNames = {'VR','Flat'};
+newNames = {'L40','L55','L70'};
 % Aesthetics
 set(gca,'xticklabel',newNames);
-legend({'L40','L55','L70'})
-xlabel('Condition')
+%legend({'L40','L55','L70'})
+legend({'VR','Flat'})
+xlabel('Lightness')
 ylabel('Constancy Index')

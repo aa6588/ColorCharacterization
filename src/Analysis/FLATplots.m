@@ -175,8 +175,8 @@ legend([wi,ri,gi,bi,yi,h1,h2,m,h4,m1,h3],{'white illum','red illum','green illum
 mat = readtable('em_df_results_lightness.csv');
 errors = mat{1:2:end,5}; 
 means = mat{1:2:end,4};
-means = reshape(means,3,4)';
-errors =reshape(errors,3,4)'; 
+means = reshape(means,4,3);
+errors =reshape(errors,4,3); 
 %avg_CIs = groupsummary(finalTable,{'Illuminant','Lightness'},'mean','CI_2_recenter');
 %reshape table
 % Reshape from long to wide format
