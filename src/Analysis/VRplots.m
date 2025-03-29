@@ -124,6 +124,7 @@ for i = 1:4
     m = plot(mu(1), mu(2), 'kx', 'MarkerSize', 10, 'LineWidth', 2); % Mean marker
 end
 hold off;
+
 xlabel('u′')
 ylabel('v′')
 xlim([.16 .24]);

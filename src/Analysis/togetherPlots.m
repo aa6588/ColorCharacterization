@@ -2,17 +2,29 @@
 
 load FLATData.mat finalTable
 Flat_DataCI = finalTable;
+Flat_DataCI(Flat_DataCI.Illuminant == 'w', :) = [];
+
 load VRData.mat finalTable
 VR_DataCI = finalTable;
+VR_DataCI(VR_DataCI.Illuminant == 'w', :) = [];
 
+allDatas = [VR_DataCI;Flat_DataCI];
+allDatas.z = zscore(allDatas.CI_2_recenter);
+
+allDatas(allDatas.z < -3,:) = [];
+allDatas(allDatas.z > 3,:) = [];
+allDatas(allDatas.ParticipantID == 12,:) = []; %outlier from anova
+
+VR_DataCI = allDatas(allDatas.Mode == 'VR',:);
+Flat_DataCI = allDatas(allDatas.Mode == 'Flat',:);
 %% delta UV
 figure;
-h = histogram(Flat_DataCI.delta_uv_2_recenter,34)
+h = histogram(Flat_DataCI.delta_uv_2_recenter,28);
 xlabel('\delta_u_v')
 ylabel('frequency')
 title('[Flat] Frequency \delta_u_v')
 figure;
-h = histogram(VR_DataCI.delta_uv_2_recenter,34)
+h = histogram(VR_DataCI.delta_uv_2_recenter,28);
 xlabel('\delta_u_v')
 ylabel('frequency')
 title('[VR] Frequency \delta_u_v')
@@ -23,11 +35,13 @@ scatter(abs(VR_DataCI.delta_uv_2_recenter),VR_DataCI.CI_2_recenter)
 xlabel('| \delta_u_v|')
 ylabel('Constancy Index')
 title('[VR] Average CI vs \delta_u_v')
+xlim([0 .035])
 figure;
 scatter(abs(Flat_DataCI.delta_uv_2_recenter),Flat_DataCI.CI_2_recenter)
 xlabel('| \delta_u_v|')
 ylabel('Constancy Index')
 title('[Flat] Average CI vs \delta_u_v')
+xlim([0 .035])
 %% bar VR vs Flat vs illums
 mat = readmatrix('em_df_results_ALLpairwise.csv');
 errors = [mat(1:2:end,4),mat(2:2:end,4)]; 
@@ -61,8 +75,8 @@ VRavg_CIs_box = groupsummary(VR_DataCI, {'ParticipantID','Illuminant'}, 'mean', 
 Flatavg_CIs_box = groupsummary(Flat_DataCI, {'ParticipantID','Illuminant'}, 'mean', 'CI_2_recenter');
 
 % Remove 'w' illuminant data
-VRavg_CIs_box(VRavg_CIs_box.Illuminant == 'w', :) = [];
-Flatavg_CIs_box(Flatavg_CIs_box.Illuminant == 'w', :) = [];
+VRavg_CIs_box.GroupCount = [];
+Flatavg_CIs_box.GroupCount = [];
 
 % Convert the table to a matrix for plotting
 VR_wide = unstack(VRavg_CIs_box, 'mean_CI_2_recenter', 'Illuminant');
@@ -80,7 +94,7 @@ all_data = [VR_matrix; Flat_matrix];
 
 % Create a categorical grouping variable for the violins (1 for VR, 2 for Flat)
 cLabels = categorical([repmat({'VR'}, size(VR_matrix, 1), 1); repmat({'Flat'}, size(Flat_matrix, 1), 1)],'Ordinal',true);
-groupLabels = categorical([repelem(["A";"B";"C";"D"],[36;36;36;36]);repelem(["A";"B";"C";"D"],[36;36;36;36])],'Ordinal',true);
+groupLabels = categorical([repelem(["A";"B";"C";"D"],[35;35;35;35]);repelem(["A";"B";"C";"D"],[35;35;35;35])],'Ordinal',true);
 
 % Plot the violin plot
 violin1 = violinplot(groupLabels,all_data,GroupByColor=cLabels);
@@ -108,7 +122,7 @@ ylabel('Constancy Index');
 legend([violin1(1),violin1(2)], {'Flat', 'VR'});
 xticklabels(x)
 ylim([-.5, 1.5]);
-exportgraphics(gcf,'violinCIs_illum_mode.pdf','ContentType','vector')
+%exportgraphics(gcf,'violinCIs_illum_mode.pdf','ContentType','vector')
 %% violin plot VR vs Flat (all illums)
 % Load the data
 mat = readtable('em_df_results.csv');
@@ -116,7 +130,7 @@ errors = mat(:,3);
 means = mat(:,2);
 VRCIs = VR_DataCI.CI_2_recenter;
 FlatCIs = Flat_DataCI.CI_2_recenter;
-VRCIs = VRCIs(~isnan(VRCIs));
+VRCIs = VRCIs(~isnan(VRCIs(1:1254,:)));
 FlatCIs = FlatCIs(~isnan(FlatCIs));
 
 data = [VRCIs, FlatCIs];
@@ -147,9 +161,9 @@ legend({'VR', 'Flat', 'VR Mean ± STD', 'Flat Mean ± STD'}, 'Location', 'northe
 
 % Aesthetics
 xlim([-.5, 1.5])
-ylim([-.05 .6])
+ylim([0 .6])
 xlabel('Constancy Index');
-title('Average Constancy Index for all Illuminants');
+title('Average Constancy Index for per Condition');
 grid on;
 
 %% VR vs Flat across all illums (averaged illums)
@@ -163,6 +177,7 @@ ylabel('Constancy Index')
 b.CData = [0 0.4470 0.7410;0.8500 0.3250 0.0980];
 title('Average Constancy Index for all Illuminants')
 %% illums across modes
+newNames = {'Red';'Green';'Blue';'Yellow'};
 mat = readmatrix('em_df_results_illum.csv');
 b = bar(mat(:,2),'FaceColor','flat'); %emmeans from R
 hold on
@@ -171,7 +186,7 @@ b.CData = [.8 0 0;0 .8 0;0 0 .9; .9 .9 0];
 set(gca,'xticklabel',newNames);
 xlabel('Illuminant')
 ylabel('Constancy Index')
-title('Average Constancy Index Between Illuminants for both Conditions')
+title('Average Constancy Index per Illuminant')
 
 clrs = {'r','g','b','y'};
 means = mat(:,2);
@@ -201,7 +216,7 @@ end
 % Aesthetics
 set(gca,'xticklabel',newNames);
 ylabel('Constancy Index');
-title('Average Constancy Index for Each Illuminant for VR and Flat');
+title('Average Constancy Index per Illuminant');
 ylim([-.5, 1.5]);
 grid on; box on;
 %% boxplots 
@@ -209,8 +224,8 @@ grid on; box on;
 %average reps and lightness per participant
 VRavg_CIs_box = groupsummary(VR_DataCI,{'ParticipantID','Illuminant'},'mean','CI_2_recenter');
 Flatavg_CIs_box = groupsummary(Flat_DataCI,{'ParticipantID','Illuminant'},'mean','CI_2_recenter');
-VRavg_CIs_box(VRavg_CIs_box.Illuminant == 'w',:) = [];
-Flatavg_CIs_box(Flatavg_CIs_box.Illuminant == 'w',:) = [];
+%VRavg_CIs_box(VRavg_CIs_box.Illuminant == 'w',:) = [];
+%Flatavg_CIs_box(Flatavg_CIs_box.Illuminant == 'w',:) = [];
 % Convert the table to a matrix for plotting
 VR_wide = unstack(VRavg_CIs_box, 'mean_CI_2_recenter', 'Illuminant');
 VR_matrix = VR_wide{:, {'r', 'g', 'b','y'}};
@@ -233,11 +248,43 @@ set(gca,'xticklabel',{'L40','L55','L70'});
 ylabel('Constancy Index')
 xlabel('Lightness')
 b.CData = [0 0.4470 0.7410;0.8500 0.3250 0.0980;0.9290 0.6940 0.1250];
-title('Average Constancy Index for all Illuminants and Conditions')
+title('Average Constancy Index per Lightness')
+ylim([0 1])
 %% Lightness violin plot
 mat = readmatrix('em_df_avgLightness.csv');
-VR_DataCI(VR_DataCI.Illuminant == 'w', :) = [];
-Flat_DataCI(Flat_DataCI.Illuminant == 'w', :) = [];
+%VR_DataCI(VR_DataCI.Illuminant == 'w', :) = [];
+%Flat_DataCI(Flat_DataCI.Illuminant == 'w', :) = [];
+means = mat(:,2);
+errors = mat(:,3);
+avgLVR =groupsummary(VR_DataCI,{'ParticipantID','Lightness'},'mean','CI_2_recenter');
+avgLFlat =groupsummary(Flat_DataCI,{'ParticipantID','Lightness'},'mean','CI_2_recenter');
+data = [avgLVR;avgLFlat];
+
+L40_dat = data(data.Lightness == 'L40',:).mean_CI_2_recenter;
+L55_dat = data(data.Lightness == 'L55',:).mean_CI_2_recenter;
+L70_dat = data(data.Lightness == 'L70',:).mean_CI_2_recenter;
+datas = [L40_dat,L55_dat,L70_dat];
+groupLabels = [zeros(size(L40_dat)), zeros(size(L55_dat)),zeros(size(L70_dat))];
+
+figure;hold on;
+v1 = violinplot(groupLabels,datas,'DensityDirection','positive','Orientation','horizontal');
+v1(1).FaceColor =[0.4660 0.6740 0.1880];
+
+errorbar(means(1), .45, errors(1), 'horizontal','LineWidth',1,'Color',[0.4660 0.6740 0.1880]);
+errorbar(means(2), .45,errors(2),'horizontal','LineWidth',1,'Color',[0.8500 0.3250 0.0980]);
+errorbar(means(3), .45,errors(3),'horizontal','LineWidth',1,'Color',[0.9290 0.6940 0.1250]);
+
+xlabel('Constancy Index');
+title('Average Constancy Index per Lightness');
+legend({'L40','L55','L70'})
+ylim([0, .6]);
+xlim([0 1])
+grid on; box on;
+
+%% Lightness violin plot ver 2
+mat = readmatrix('em_df_avgLightness.csv');
+%VR_DataCI(VR_DataCI.Illuminant == 'w', :) = [];
+%Flat_DataCI(Flat_DataCI.Illuminant == 'w', :) = [];
 means = mat(:,2);
 errors = mat(:,3);
 avgLVR =groupsummary(VR_DataCI,{'ParticipantID','Lightness'},'mean','CI_2_recenter');
@@ -299,3 +346,4 @@ set(gca,'xticklabel',newNames);
 legend({'VR','Flat'})
 xlabel('Lightness')
 ylabel('Constancy Index')
+title('Average Constancy Index per Lightness for Each Condition')

@@ -34,7 +34,7 @@ bi = scatter(illum_uvY(4,1),illum_uvY(4,2),60,'filled','bs','MarkerEdgeColor','k
 yi = scatter(illum_uvY(5,1),illum_uvY(5,2),60,'filled','ys','MarkerEdgeColor','k');
 wi = scatter(illum_uvY(1,1),illum_uvY(1,2),60,'ks');
 
-colors = {[.9 0 0], [0 .9 0], [0 0 .9], [.9 .9 0]}; % Colors for ellipses
+colors = {'k',[.9 0 0], [0 .9 0], [0 0 .9], [.9 .9 0]}; % Colors for ellipses
 datasets = {whiteData.uvY(:,1), whiteData.uvY(:,2); redData.uvY(:,1), redData.uvY(:,2); greenData.uvY(:,1), greenData.uvY(:,2); blueData.uvY(:,1), blueData.uvY(:,2); yellowData.uvY(:,1), yellowData.uvY(:,2)}; % Store data pairs
 for i = 1:5
     [mu, ellipse_translated] = compute_2std_ellipse(datasets{i,1}, datasets{i,2});
@@ -52,14 +52,14 @@ legend([wi,ri,gi,bi,yi],{'white illum','red illum','green illum','blue illum','y
 % recentered uv's for all trials (recenter uv 2, white is average of all
 % white block for each participant
 figure;
-r = scatter(redData.recenter_uv_2(:,1),redData.recenter_uv_2(:,2),50,'red','filled','o','MarkerEdgeColor','k');
+r = scatter(redData.recenter_uv_2(:,1),redData.recenter_uv_2(:,2),50,'red','filled','^','MarkerEdgeColor','k');
 alpha(r,0.1);
 hold on;
-g = scatter(greenData.recenter_uv_2(:,1),greenData.recenter_uv_2(:,2),50,'green','filled','o','MarkerEdgeColor','k');
+g = scatter(greenData.recenter_uv_2(:,1),greenData.recenter_uv_2(:,2),50,'green','filled','^','MarkerEdgeColor','k');
 alpha(g,0.1);
-b = scatter(blueData.recenter_uv_2(:,1),blueData.recenter_uv_2(:,2),50,'blue','filled','o','MarkerEdgeColor','k');
+b = scatter(blueData.recenter_uv_2(:,1),blueData.recenter_uv_2(:,2),50,'blue','filled','^','MarkerEdgeColor','k');
 alpha(b,0.1);
-y = scatter(yellowData.recenter_uv_2(:,1),yellowData.recenter_uv_2(:,2),50,'yellow','filled','o','MarkerEdgeColor','k');
+y = scatter(yellowData.recenter_uv_2(:,1),yellowData.recenter_uv_2(:,2),50,'yellow','filled','^','MarkerEdgeColor','k');
 alpha(y,0.1);
 %scatter(uv_aims.r.(lightness)(:,1),uv_aims.r.(lightness)(:,2),50,[.8 .8 .8],'o')
 ri = scatter(illum_uvY(2,1),illum_uvY(2,2),60,'filled','rs','MarkerEdgeColor','k');
