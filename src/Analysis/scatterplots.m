@@ -12,7 +12,10 @@ load uv_aims_VR.mat
 load FinalSceneIllums.mat illum_xyY
 illum_uvY = xyY2uvY(illum_xyY);
 savepath = 'C:\Users\Andrea\Documents\GitHub\ColorCharacterization\Figs\Results\FinalFigs\';
+green = [0 0.6 0.2];
+yellow = [0.85, 0.75, 0.1];
 
+%% All scatter
 for mode = 1:2
     finalTable = allData{mode};
     %separate illums 
@@ -24,87 +27,99 @@ for mode = 1:2
 
     figure; %raw scatter plots
     w = scatter(whiteData.uvY(:,1),whiteData.uvY(:,2),50,'black','filled','o');
-    alpha(w,0.05);
+    alpha(w,0.1);
     hold on;
-       r = scatter(redData.uvY(:,1),redData.uvY(:,2),50,'red','filled','o','MarkerEdgeColor','k');
-    alpha(r,0.05);
-    g = scatter(greenData.uvY(:,1),greenData.uvY(:,2),50,'green','filled','o','MarkerEdgeColor','k');
-    alpha(g,0.05);
-    b = scatter(blueData.uvY(:,1),blueData.uvY(:,2),50,'blue','filled','o','MarkerEdgeColor','k');
-    alpha(b,0.05);
-    y = scatter(yellowData.uvY(:,1),yellowData.uvY(:,2),50,'yellow','filled','o','MarkerEdgeColor','k');
+    r = scatter(redData.uvY(:,1),redData.uvY(:,2),50,'red','filled','o');
+    alpha(r,0.1);
+    g = scatter(greenData.uvY(:,1),greenData.uvY(:,2),50,green,'filled','o');
+    alpha(g,0.1);
+    b = scatter(blueData.uvY(:,1),blueData.uvY(:,2),50,'blue','filled','o');
+    alpha(b,0.1);
+    y = scatter(yellowData.uvY(:,1),yellowData.uvY(:,2),50,yellow,'filled','o');
     alpha(y,0.1);
     %illums
-    ri = scatter(illum_uvY(2,1),illum_uvY(2,2),60,'filled','rs','MarkerEdgeColor','k','LineWidth',1);
-    gi = scatter(illum_uvY(3,1),illum_uvY(3,2),60,'filled','gs','MarkerEdgeColor','k','LineWidth',1);
-    bi = scatter(illum_uvY(4,1),illum_uvY(4,2),60,'filled','bs','MarkerEdgeColor','k','LineWidth',1);
-    yi = scatter(illum_uvY(5,1),illum_uvY(5,2),60,'filled','ys','MarkerEdgeColor','k','LineWidth',1);
-    wi = scatter(illum_uvY(1,1),illum_uvY(1,2),60,'filled','ws','MarkerEdgeColor','k','LineWidth',1);
+    scatter(illum_uvY(2,1),illum_uvY(2,2),60,'filled','rs','MarkerEdgeColor','k','LineWidth',1);
+    scatter(illum_uvY(3,1),illum_uvY(3,2),60,green,'filled','s','MarkerEdgeColor','k','LineWidth',1);
+    scatter(illum_uvY(4,1),illum_uvY(4,2),60,'filled','bs','MarkerEdgeColor','k','LineWidth',1);
+    scatter(illum_uvY(5,1),illum_uvY(5,2),60,yellow,'filled','s','MarkerEdgeColor','k','LineWidth',1);
+    scatter(illum_uvY(1,1),illum_uvY(1,2),60,'filled','ws','MarkerEdgeColor','k','LineWidth',1);
     %plot ellipses
-    colors = {'k',[.9 0 0], [0 .9 0], [0 0 .9], [.9 .9 0]};% Colors for ellipses
+    colors = {'k',[.9 0 0], green, [0 0 .9],yellow};% Colors for ellipses
     datasets = {whiteData.uvY(:,1), whiteData.uvY(:,2); redData.uvY(:,1), redData.uvY(:,2); greenData.uvY(:,1), greenData.uvY(:,2); blueData.uvY(:,1), blueData.uvY(:,2); yellowData.uvY(:,1), yellowData.uvY(:,2)}; % Store data pairs
 
     for i = 1:5
         [mu, ellipse_translated] = compute_2std_ellipse(datasets{i,1}, datasets{i,2});
-        plot(ellipse_translated(1, :), ellipse_translated(2, :),'Color', 'k', 'LineWidth', 2);
-        plot(mu(1), mu(2), 'kx', 'MarkerSize', 10, 'LineWidth', 2); % Mean marker
+        plot(ellipse_translated(1, :), ellipse_translated(2, :),'Color', colors{i}, 'LineWidth', 2);
+        plot(mu(1), mu(2), 'wx', 'MarkerSize', 10, 'LineWidth', 2); % Mean marker
+        plot(mu(1), mu(2), 'kx', 'MarkerSize', 8, 'LineWidth', 1); % Mean marker
     end
+    %dummy vars for legend
+    resp_marker = scatter(nan,nan,50,'ko','LineWidth',1);
+    illum_marker = scatter(nan,nan,80,'ks','LineWidth',1);
     hold off;
     xlabel('u''')
     ylabel('v''')
     axis equal
     ylim([.4 .52])
     xlim([.14 .26])
+    box on
     title(['[',titles{mode},']',' ', 'Achromatic Responses'])
-    legend([wi,ri,gi,bi,yi],{'white illum','red illum','green illum','blue illum','yellow illum'})
-    %fileName = fullfile(savepath, [titles{mode}, '_', 'allScatter']);
-    %exportgraphics(gcf, [fileName,'.tiff'], 'Resolution', 300);
-    %savefig(gcf, [fileName,'.fig']);
+    legend([illum_marker,resp_marker],{'Illuminant','Response'},'Location','northwest')
+    fileName = fullfile(savepath, [titles{mode}, '_', 'allScatter']);
+    exportgraphics(gcf, [fileName,'.tiff'], 'Resolution', 300);
+    savefig(gcf, [fileName,'.fig']);
     %exportgraphics(gcf, [fileName,'.pdf'],'ContentType','vector');
 
     % recentered uv's for all trials (recenter uv 2, white is average of all
     % white block for each participant
     figure;
-    r = scatter(redData.recenter_uv_2(:,1),redData.recenter_uv_2(:,2),50,'red','filled','o','MarkerEdgeColor','k');
+    r = scatter(redData.recenter_uv_2(:,1),redData.recenter_uv_2(:,2),50,'red','filled','o');
     alpha(r,0.1);
     hold on;
-    g = scatter(greenData.recenter_uv_2(:,1),greenData.recenter_uv_2(:,2),50,'green','filled','o','MarkerEdgeColor','k');
+    g = scatter(greenData.recenter_uv_2(:,1),greenData.recenter_uv_2(:,2),50,green,'filled','o');
     alpha(g,0.1);
-    b = scatter(blueData.recenter_uv_2(:,1),blueData.recenter_uv_2(:,2),50,'blue','filled','o','MarkerEdgeColor','k');
+    b = scatter(blueData.recenter_uv_2(:,1),blueData.recenter_uv_2(:,2),50,'blue','filled','o');
     alpha(b,0.1);
-    y = scatter(yellowData.recenter_uv_2(:,1),yellowData.recenter_uv_2(:,2),50,'yellow','filled','o','MarkerEdgeColor','k');
+    y = scatter(yellowData.recenter_uv_2(:,1),yellowData.recenter_uv_2(:,2),50,yellow,'filled','o');
     alpha(y,0.1);
     %illums
-    ri = scatter(illum_uvY(2,1),illum_uvY(2,2),60,'filled','rs','MarkerEdgeColor','k','LineWidth',1);
-    gi = scatter(illum_uvY(3,1),illum_uvY(3,2),60,'filled','gs','MarkerEdgeColor','k','LineWidth',1);
-    bi = scatter(illum_uvY(4,1),illum_uvY(4,2),60,'filled','bs','MarkerEdgeColor','k','LineWidth',1);
-    yi = scatter(illum_uvY(5,1),illum_uvY(5,2),60,'filled','ys','MarkerEdgeColor','k','LineWidth',1);
-    wi = scatter(illum_uvY(1,1),illum_uvY(1,2),60,'filled','ws','MarkerEdgeColor','k','LineWidth',1);
+    scatter(illum_uvY(2,1),illum_uvY(2,2),60,'filled','rs','MarkerEdgeColor','k','LineWidth',1);
+    scatter(illum_uvY(3,1),illum_uvY(3,2),60,green,'filled','s','MarkerEdgeColor','k','LineWidth',1);
+    scatter(illum_uvY(4,1),illum_uvY(4,2),60,'filled','bs','MarkerEdgeColor','k','LineWidth',1);
+    scatter(illum_uvY(5,1),illum_uvY(5,2),60,yellow,'filled','s','MarkerEdgeColor','k','LineWidth',1);
+    scatter(illum_uvY(1,1),illum_uvY(1,2),60,'filled','ws','MarkerEdgeColor','k','LineWidth',1);
 
     %plot ellipses
-    colors = {[.9 0 0], [0 .9 0], [0 0 .9], [.9 .9 0]};% Colors for ellipses
+    colors = {[.9 0 0], green, [0 0 .9], yellow};% Colors for ellipses
     datasets = {redData.recenter_uv_2(:,1), redData.recenter_uv_2(:,2); greenData.recenter_uv_2(:,1), greenData.recenter_uv_2(:,2);...
     blueData.recenter_uv_2(:,1), blueData.recenter_uv_2(:,2); yellowData.recenter_uv_2(:,1), yellowData.recenter_uv_2(:,2)}; % Store data pairs
     for i = 1:4
         [mu, ellipse_translated] = compute_2std_ellipse(datasets{i,1}, datasets{i,2});
         plot(ellipse_translated(1, :), ellipse_translated(2, :),'Color', colors{i}, 'LineWidth', 2);
-        plot(mu(1), mu(2), 'kx', 'MarkerSize', 10, 'LineWidth', 2); % Mean marker
+        plot(mu(1), mu(2), 'wx', 'MarkerSize', 10, 'LineWidth', 2); % Mean marker
+        plot(mu(1), mu(2), 'kx', 'MarkerSize', 8, 'LineWidth', 1); % Mean marker
     end
+    %dummy vars for legend
+    %plot(illum_uvY(1,1),illum_uvY(1,2), 'wx', 'MarkerSize', 10, 'LineWidth', 2); % Mean marker
+    plot(illum_uvY(1,1),illum_uvY(1,2), 'kx', 'MarkerSize', 8, 'LineWidth', 1); % Mean marker
+    resp_marker = scatter(nan,nan,50,'ko','LineWidth',1);
+    illum_marker = scatter(nan,nan,80,'ks','LineWidth',1);
     hold off;
     xlabel('u''')
     ylabel('v''')
     axis equal
+    box on
     ylim([.4 .52])
     xlim([.14 .26])
     title(['[',titles{mode},']',' ', 'Recentered Achromatic Responses'])
-    legend([wi,ri,gi,bi,yi],{'white illum','red illum','green illum','blue illum','yellow illum'})
-    %fileName = fullfile(savepath, [titles{mode}, '_', 'recenterScatter']);
-    %exportgraphics(gcf, [fileName,'.tiff'], 'Resolution', 300);
-    %savefig(gcf, [fileName,'.fig']);
+    legend([illum_marker,resp_marker],{'Illuminant','Recentered Response'},'Location','northwest')
+    fileName = fullfile(savepath, [titles{mode}, '_', 'recenterScatter']);
+    exportgraphics(gcf, [fileName,'.tiff'], 'Resolution', 300);
+    savefig(gcf, [fileName,'.fig']);
     %exportgraphics(gcf, [fileName,'.pdf'],'ContentType','vector');
 
     %white lightness scatter
-    color = {'r','g','b'};
+    color = {[.2 .2 .2],[.4 .4 .4],[.7 .7 .7]};
     figure;hold on
     lightnessValues = {'L40', 'L55','L70'};
     for i = 1:length(lightnessValues)
@@ -116,29 +131,35 @@ for mode = 1:2
 
         s = scatter(x,y,50,'black','filled');
         alpha(s,0.1);
-        scatter(illum_uvY(1,1),illum_uvY(1,2),60,'ks')
+        scatter(illum_uvY(1,1),illum_uvY(1,2),60,'filled','ws','MarkerEdgeColor','k','LineWidth',1);
 
         [mu, ellipse_translated] = compute_2std_ellipse(x ,y);
-        h(i) = plot(ellipse_translated(1, :), ellipse_translated(2, :), color{i}, 'LineWidth', 2);
-        plot(mu(1), mu(2), 'kx', 'MarkerSize', 10, 'LineWidth', 2); % Mean marker
+        h(i) = plot(ellipse_translated(1, :), ellipse_translated(2, :), 'Color',color{i}, 'LineWidth', 2);
+        plot(mu(1), mu(2), 'wx', 'MarkerSize', 12, 'LineWidth', 2); % Mean marker
+        plot(mu(1), mu(2), 'kx', 'MarkerSize', 10, 'LineWidth', 1.5); % Mean marker
     end
-        xlabel('u''')
-        ylabel('v''')
-        axis square
-        ylim([.43 .49])
-        xlim([.17 .23])
-        title(['[',titles{mode},']',' ','White Illuminant Achromatic Responses'])
-        legend([h(1), h(2), h(3)],lightnessValues) 
+    xlabel('u''')
+    ylabel('v''')
+    axis equal
+    box on
+    ylim([.43 .49])
+    xlim([.17 .23])
+    title(['[',titles{mode},']',' ','White Illuminant Achromatic Responses'])
+    legend([h(1), h(2), h(3)],lightnessValues,'Location','northwest') 
+    fileName = fullfile(savepath, [titles{mode}, '_', 'whiteScatter']);
+    exportgraphics(gcf, [fileName,'.tiff'], 'Resolution', 300);
+    savefig(gcf, [fileName,'.fig']);
+    %exportgraphics(gcf, [fileName,'.pdf'],'ContentType','vector');
 end
 
 %% together plot average scatter 
 
 figure; hold on;
-ri = scatter(illum_uvY(2,1),illum_uvY(2,2),60,'filled','rs','MarkerEdgeColor','k','LineWidth',1);
-gi = scatter(illum_uvY(3,1),illum_uvY(3,2),60,'filled','gs','MarkerEdgeColor','k','LineWidth',1);
-bi = scatter(illum_uvY(4,1),illum_uvY(4,2),60,'filled','bs','MarkerEdgeColor','k','LineWidth',1);
-yi = scatter(illum_uvY(5,1),illum_uvY(5,2),60,'filled','ys','MarkerEdgeColor','k','LineWidth',1);
-wi = scatter(illum_uvY(1,1),illum_uvY(1,2),60,'filled','ws','MarkerEdgeColor','k','LineWidth',1);
+scatter(illum_uvY(2,1),illum_uvY(2,2),60,'filled','rs','MarkerEdgeColor','k','LineWidth',1);
+scatter(illum_uvY(3,1),illum_uvY(3,2),60,green,'filled','s','MarkerEdgeColor','k','LineWidth',1);
+scatter(illum_uvY(4,1),illum_uvY(4,2),60,'filled','bs','MarkerEdgeColor','k','LineWidth',1);
+scatter(illum_uvY(5,1),illum_uvY(5,2),60,yellow,'filled','s','MarkerEdgeColor','k','LineWidth',1);
+scatter(illum_uvY(1,1),illum_uvY(1,2),60,'filled','ws','MarkerEdgeColor','k','LineWidth',1);
 
 finalTable = allData{1}; %VR
 %separate illums 
@@ -151,23 +172,23 @@ avg_G = groupsummary(greenData,{'ParticipantID'},'mean','recenter_uv_2');
 avg_B = groupsummary(blueData,{'ParticipantID'},'mean','recenter_uv_2');
 avg_Y = groupsummary(yellowData,{'ParticipantID'},'mean','recenter_uv_2');
 
-r = scatter(avg_R.mean_recenter_uv_2(:,1),avg_R.mean_recenter_uv_2(:,2),50,'red','filled','o','MarkerEdgeColor','k');
+r = scatter(avg_R.mean_recenter_uv_2(:,1),avg_R.mean_recenter_uv_2(:,2),50,'red','filled','o');
 alpha(r,0.1);
-g = scatter(avg_G.mean_recenter_uv_2(:,1),avg_G.mean_recenter_uv_2(:,2),50,'green','filled','o','MarkerEdgeColor','k');
+g = scatter(avg_G.mean_recenter_uv_2(:,1),avg_G.mean_recenter_uv_2(:,2),50,green,'filled','o');
 alpha(g,0.1);
-b = scatter(avg_B.mean_recenter_uv_2(:,1),avg_B.mean_recenter_uv_2(:,2),50,'blue','filled','o','MarkerEdgeColor','k');
+b = scatter(avg_B.mean_recenter_uv_2(:,1),avg_B.mean_recenter_uv_2(:,2),50,'blue','filled','o');
 alpha(b,0.1);
-y = scatter(avg_Y.mean_recenter_uv_2(:,1),avg_Y.mean_recenter_uv_2(:,2),50,'yellow','filled','o','MarkerEdgeColor','k');
+y = scatter(avg_Y.mean_recenter_uv_2(:,1),avg_Y.mean_recenter_uv_2(:,2),50,yellow,'filled','o');
 alpha(y,0.1);
 
 %plot ellipses
-colors = {[.9 0 0], [0 .9 0], [0 0 .9], [.9 .9 0]}; % Colors for ellipses
+colors = {[.9 0 0], green, [0 0 .9], yellow}; % Colors for ellipses
 datasets = {avg_R.mean_recenter_uv_2(:,1), avg_R.mean_recenter_uv_2(:,2); avg_G.mean_recenter_uv_2(:,1), avg_G.mean_recenter_uv_2(:,2);...
     avg_B.mean_recenter_uv_2(:,1), avg_B.mean_recenter_uv_2(:,2); avg_Y.mean_recenter_uv_2(:,1), avg_Y.mean_recenter_uv_2(:,2)}; % Store data pairs
 for i = 1:4
     [mu, ellipse_translated] = compute_2std_ellipse(datasets{i,1}, datasets{i,2});
     s = plot(ellipse_translated(1, :), ellipse_translated(2, :), 'Color',colors{i}, 'LineWidth', 2);
-    m = plot(mu(1), mu(2), 'kx', 'MarkerSize', 10, 'LineWidth', 2); % Mean marker
+    m = plot(mu(1), mu(2), 'kx', 'MarkerSize', 10, 'LineWidth', 1.5); % Mean marker
 end
 
 finalTable = allData{2}; %Flat
@@ -182,29 +203,41 @@ avg_B = groupsummary(blueData,{'ParticipantID'},'mean','recenter_uv_2');
 avg_Y = groupsummary(yellowData,{'ParticipantID'},'mean','recenter_uv_2');
 
 %figure;
-r1 = scatter(avg_R.mean_recenter_uv_2(:,1),avg_R.mean_recenter_uv_2(:,2),50,'red','filled','^','MarkerEdgeColor','k');
+r1 = scatter(avg_R.mean_recenter_uv_2(:,1),avg_R.mean_recenter_uv_2(:,2),50,'red','filled','^');
 alpha(r1,0.1);
-g1 = scatter(avg_G.mean_recenter_uv_2(:,1),avg_G.mean_recenter_uv_2(:,2),50,'green','filled','^','MarkerEdgeColor','k');
+g1 = scatter(avg_G.mean_recenter_uv_2(:,1),avg_G.mean_recenter_uv_2(:,2),50,green,'filled','^');
 alpha(g1,0.1);
-b1 = scatter(avg_B.mean_recenter_uv_2(:,1),avg_B.mean_recenter_uv_2(:,2),50,'blue','filled','^','MarkerEdgeColor','k');
+b1 = scatter(avg_B.mean_recenter_uv_2(:,1),avg_B.mean_recenter_uv_2(:,2),50,'blue','filled','^');
 alpha(b1,0.1);
-y1 = scatter(avg_Y.mean_recenter_uv_2(:,1),avg_Y.mean_recenter_uv_2(:,2),50,'yellow','filled','^','MarkerEdgeColor','k');
+y1 = scatter(avg_Y.mean_recenter_uv_2(:,1),avg_Y.mean_recenter_uv_2(:,2),50,yellow,'filled','^');
 alpha(y1,0.1);
 
 %plot ellipses
-colors = {[.9 0 0], [0 .9 0], [0 0 .9], [.9 .9 0]}; % Colors for ellipses
+colors = {[.9 0 0], green, [0 0 .9], yellow}; % Colors for ellipses
 datasets = {avg_R.mean_recenter_uv_2(:,1), avg_R.mean_recenter_uv_2(:,2); avg_G.mean_recenter_uv_2(:,1), avg_G.mean_recenter_uv_2(:,2);...
     avg_B.mean_recenter_uv_2(:,1), avg_B.mean_recenter_uv_2(:,2); avg_Y.mean_recenter_uv_2(:,1), avg_Y.mean_recenter_uv_2(:,2)}; % Store data pairs
 for i = 1:4
     [mu, ellipse_translated] = compute_2std_ellipse(datasets{i,1}, datasets{i,2});
     s1 = plot(ellipse_translated(1, :), ellipse_translated(2, :), 'Color',colors{i}, 'LineWidth', 2,'LineStyle','--');
-    m1 = plot(mu(1), mu(2), 'k*', 'MarkerSize', 10, 'LineWidth', 1.5); % Mean marker
+    m1 = plot(mu(1), mu(2), 'k*', 'MarkerSize', 10, 'LineWidth', 1); % Mean marker
 end
-
-xlabel('u′')
-ylabel('v′')
+plot(illum_uvY(1,1),illum_uvY(1,2), 'kx', 'MarkerSize', 8, 'LineWidth', 1); % Mean marker
+h0 = scatter(nan,nan,80,'ks','LineWidth',1);
+h1 = plot(nan, nan, 'o', 'MarkerEdgeColor', 'k', 'MarkerFaceColor', 'none'); % Square, no fill
+h2 = plot(nan, nan, '^', 'MarkerEdgeColor', 'k', 'MarkerFaceColor', 'none'); % Triangle, no fil
+h3 = plot(nan, nan,'Color', 'k','LineWidth', 2,'LineStyle','--'); % dashed, no fill
+h4 = plot(nan, nan, 'Color','k','LineWidth', 2,'LineStyle','-'); % line, no fil
+hold off
+%labels
+xlabel('u''')
+ylabel('v''')
 axis equal
 xlim([.14 .26]);
 ylim([.40 .52]);
 title('Average Recentered Achromatic Responses')
+legend([h0,h1,h2,m,h3,m1,h4],{'Illuminant','VR Response','Flat Response','VR mean','VR STD','Flat mean','Flat STD'},'Location','northeast')
 %legend([wi,ri,gi,bi,yi],{'white illum','red illum','green illum','blue illum','yellow illum'})
+
+fileName = fullfile(savepath, 'bothAverageScatter');
+exportgraphics(gcf, [fileName,'.tiff'], 'Resolution', 300);
+savefig(gcf, [fileName,'.fig']);

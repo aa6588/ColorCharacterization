@@ -60,7 +60,7 @@ ylim([-.2 1.2])
 xticklabels([]);   % Removes X-tick labels only
 ylabel('Constancy Index');
 title('Average Constancy Index per Condition');
-grid on; 
+grid on; box on;
 
 %save
 fileName = fullfile(savepath, 'CI_avgMode');
@@ -377,6 +377,7 @@ ylabel('Constancy Index')
 title('[VR] Average CI vs \delta_u_v')
 xlim([0 .035])
 ylim([-.2 1.2])
+box on;
 %save
 fileName = fullfile(savepath, 'VR_CI_vs_duv');
 exportgraphics(gcf, [fileName,'.tiff'], 'Resolution', 300);
@@ -390,6 +391,7 @@ ylabel('Constancy Index')
 title('[Flat] Average CI vs \delta_u_v')
 xlim([0 .035])
 ylim([-.2 1.2])
+box on;
 %save
 fileName = fullfile(savepath, 'Flat_CI_vs_duv');
 exportgraphics(gcf, [fileName,'.tiff'], 'Resolution', 300);
