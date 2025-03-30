@@ -27,6 +27,22 @@ red_circle = [0.228, 0.446];
 red_filled_circle = [recentered_uv(1), recentered_uv(2)];
 red_star = [0.2251,0.4368];
 
+%lines for projections
+% Solid line
+wp = plot([white_square(1), red_star(1)], [white_square(2), red_star(2)], '-', ...
+   'Color', [.8, 0, 0, .5], 'LineWidth', 1.5);  % Green
+wr = plot([white_square(1), red_square(1)], [white_square(2), red_square(2)], ':', ...
+    'Color', [0, 0, 0, 0.6], 'LineWidth', 1.5);  % Semi-transparent black
+
+wc = plot([white_square(1), red_filled_circle(1)], [white_square(2), red_filled_circle(2)], ':', ...
+    'Color', [0, 0, 0, 0.6], 'LineWidth', 1.5);  % Semi-transparent blue
+
+% Dashed line
+duv = plot([red_filled_circle(1), red_star(1)], [red_filled_circle(2), red_star(2)], '--', ...
+    'Color', 'r', 'LineWidth', 1);
+%projection on top
+pc = scatter(0.2251,0.4368,80,'r*','LineWidth',1);
+
 % arrows for recenter
 quiver(white_circle(1), white_circle(2), ...
        white_square(1) - white_circle(1), white_square(2) - white_circle(2), ...
@@ -36,39 +52,32 @@ recentering = quiver(red_circle(1), red_circle(2), ...
        red_filled_circle(1) - red_circle(1), red_filled_circle(2) - red_circle(2), ...
        0, 'Color', 'b', 'LineWidth', 1.5, 'MaxHeadSize', 0.5);
 
-%lines for projections
-% Solid line
-wp = plot([white_square(1), red_star(1)], [white_square(2), red_star(2)], '-', ...
-   'Color', [0, .8, 0], 'LineWidth', 1.5);  % Green
-wr = plot([white_square(1), red_square(1)], [white_square(2), red_square(2)], ':', ...
-    'Color', [0, 0, 0, 0.5], 'LineWidth', 1.5);  % Semi-transparent black
-
-wc = plot([white_square(1), red_filled_circle(1)], [white_square(2), red_filled_circle(2)], ':', ...
-    'Color', [0, 0.7, 1, 0.5], 'LineWidth', 1.5);  % Semi-transparent blue
-
-% Dashed line
-duv = plot([red_filled_circle(1), red_star(1)], [red_filled_circle(2), red_star(2)], '--', ...
-    'Color', 'r', 'LineWidth', 1.5);
-%projection on top
-pc = scatter(0.2251,0.4368,80,'r*','LineWidth',1);
-
 % Add labels
 text(white_square(1) + 0.001, white_square(2) + 0.001, 'w', 'FontSize', 12, 'FontWeight', 'bold', 'Color', 'k');
 text(red_filled_circle(1) + 0.002, red_filled_circle(2) + 0.001, 'r_c''', 'FontSize', 12, 'FontWeight', 'bold', 'Color', 'k');
 text(red_square(1) + 0.001, red_square(2) - 0.001, 'c', 'FontSize', 12, 'FontWeight', 'bold', 'Color', 'k');
-text(red_star(1) - 0.005, red_star(2) - 0.001, 'r_c''''', 'FontSize', 12, 'FontWeight', 'bold', 'Color', 'k');
+text(red_star(1) - 0.006, red_star(2) - 0.001, 'r_c''''', 'FontSize', 12, 'FontWeight', 'bold', 'Color', 'k');
 
 text(red_circle(1) - 0.003, red_circle(2) - 0.001, 'r_c', 'FontSize', 12, 'FontWeight', 'bold', 'Color', 'k');
 text(white_circle(1) - 0.003, white_circle(2) - 0.001, 'r_w', 'FontSize', 12, 'FontWeight', 'bold', 'Color', 'k');
+text(red_star(1) + .006, red_star(2)+.002, '\delta_u_v','FontSize',12,'FontWeight','bold','Color', 'k')
 %axes and titles
 ylim([.42,.48])
-xlabel('u′')
-ylabel('v′')
-title('Example Constancy Index Calculation from Observer Responses')
+xlabel('u''')
+ylabel('v''')
+title('Example CI Calculation from Observer Response')
 axis equal;
 xlim([.18,.25])
 %legend([wi,ri,rc,pc,wr,wc,wp,duv],{'white illuminant','chromatic illuminant','recentered c response','projected response','illuminant line','response line','projection wr_c'' onto wc','\delta_u_v'}...
     %,'Location','southwest')
-legend([wi,ri,ow,oc,rc,pc,recentering, wr,wc,wp,duv],...
-   {'white illuminant','chromatic illuminant','w response','c response','recentered c resp','projected c resp','recentering','illuminant line','response line','projection wr onto wc','\delta_u_v'}...
-   ,'Location','southwest')
+%legend([wi,ri,ow,oc,rc,pc,recentering, wr,wc,wp,duv],...
+ %  {'white illuminant','chromatic illuminant','w response','c response','recentered c resp','projected c resp','recentering','illuminant line','response line','projection wr onto wc','\delta_u_v'}...
+  % ,'Location','southwest')
+
+%save
+
+%savepath = 'C:\Users\Andrea\Documents\GitHub\ColorCharacterization\Figs\Results\FinalFigs\';
+%fileName = fullfile(savepath, 'conceptFig_recenter');
+%exportgraphics(gcf, [fileName,'.tiff'], 'Resolution', 300);
+%savefig(gcf, [fileName,'.fig']);
+%exportgraphics(gcf, [fileName,'.pdf'],'ContentType','vector');
