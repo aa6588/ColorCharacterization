@@ -320,38 +320,38 @@ ylabel('v')
 title('[VR] Red Illuminant Achromatic Chromaticity Selections')
 end
 
-% CI plots
-avgRedData = finalTable(finalTable.Illuminant == 'r', :);
-avg_CIs = groupsummary(avgRedData,{'ParticipantID','Lightness'},'mean','CI_1_recenter');
-%reshape table
-% Reshape from long to wide format
-T_wide = unstack(avg_CIs, 'mean_CI_1_recenter', 'Lightness');
-% Convert the table to a matrix for plotting
-data_matrix = T_wide{:, {'L40', 'L55', 'L70'}};
-cats = string(unique(avg_CIs.ParticipantID));
-figure;
-h = bar(data_matrix, 'grouped');
-xlabel('Participant')
-xticks(1:length(cats))
-xticklabels(cats)
-ylabel('Constancy Index')
-title('[VR] Average Constancy Index per Lightness Under Red Illuminant')
-
-figure
-hold on;
-xtic = {'L40', 'L55', 'L70'};
-for i = 1:size(data_matrix, 1)
-    plot([1 2 3], data_matrix(i, :), 'o-');
-end
-avg_all = mean(data_matrix);
-plot([1 2 3], avg_all,'o-','Color','r','LineWidth',2)
-
-% Set categorical x-ticks
-xticks(1:3);
-xticklabels(xtic);
-xlabel('Lightness');
-ylabel('Constancy Index');
-title('[VR] Red Illuminant Average CIs per Lightness');
+% % CI plots
+% avgRedData = finalTable(finalTable.Illuminant == 'r', :);
+% avg_CIs = groupsummary(avgRedData,{'ParticipantID','Lightness'},'mean','CI_1_recenter');
+% %reshape table
+% % Reshape from long to wide format
+% T_wide = unstack(avg_CIs, 'mean_CI_1_recenter', 'Lightness');
+% % Convert the table to a matrix for plotting
+% data_matrix = T_wide{:, {'L40', 'L55', 'L70'}};
+% cats = string(unique(avg_CIs.ParticipantID));
+% figure;
+% h = bar(data_matrix, 'grouped');
+% xlabel('Participant')
+% xticks(1:length(cats))
+% xticklabels(cats)
+% ylabel('Constancy Index')
+% title('[VR] Average Constancy Index per Lightness Under Red Illuminant')
+% 
+% figure
+% hold on;
+% xtic = {'L40', 'L55', 'L70'};
+% for i = 1:size(data_matrix, 1)
+%     plot([1 2 3], data_matrix(i, :), 'o-');
+% end
+% avg_all = mean(data_matrix);
+% plot([1 2 3], avg_all,'o-','Color','r','LineWidth',2)
+% 
+% % Set categorical x-ticks
+% xticks(1:3);
+% xticklabels(xtic);
+% xlabel('Lightness');
+% ylabel('Constancy Index');
+% title('[VR] Red Illuminant Average CIs per Lightness');
 %% GREEN
 lightnessValues = {'L40', 'L55','L70'};
 for i = 1:length(lightnessValues)

@@ -31,6 +31,7 @@ for i = 1:numel(files)
                     RGB = tbl{trial, 1};
                     Lab = tbl{trial, "Lab Select"};
                     Idx = tbl{trial, "Idx"};
+                    Starting = tbl{trial, 'Starting Lab'};
 
                     % lab_slice = reshape(Lab, 1, 1, []);
                     % logicalMask = all(LAB_grid.(illuminant).(lightness) == lab_slice, 3); % Check equality along the third dimension
@@ -47,10 +48,11 @@ for i = 1:numel(files)
                         string(illuminant), ...  % Store as string array
                         string(lightness), ...  % Store as string array
                         trial, ...  % Add the trial number
+                        Starting, ...
                         RGB, ...  % RGB values for the current trial
                         Lab, ...
                         Idx, ...
-                        'VariableNames', {'ParticipantID', 'Mode','First','illum_order', 'Illuminant', 'Lightness', 'Rep', 'RGB','Lab Grid','Idx'} ...
+                        'VariableNames', {'ParticipantID', 'Mode','First','illum_order', 'Illuminant', 'Lightness', 'Rep', 'Starting','RGB','Lab Grid','Idx'} ...
                     );
                     
                     % Append the new row to the final table

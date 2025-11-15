@@ -16,7 +16,7 @@ Cd = (M \ Cd_cone')';
 
 %convert to uvY
 eq_uv = XYZ2uvY(Cd);
-eq_uv = eq_uv(1:2);
+%eq_uv = eq_uv(1:2);
 % w_uv = XYZ2uvY(XYZ_white);
 % 
 % b = ...

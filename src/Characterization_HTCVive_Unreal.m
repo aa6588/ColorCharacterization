@@ -79,6 +79,32 @@ ylabel('Luminance (cd/m^2)');
 title('Gray Ramp');
 
 sgtitle('[VR] White Illuminant - Measured Ramps');
+
+figure;
+hold on;
+scatter(x, Ys(:,1) , 40, "red", 'filled');
+scatter(x, Ys(:,2) , 40,green, 'filled');
+scatter(x, Ys(:,3) , 40, "blue", 'filled');
+scatter(x, Ys(:,4) , 40, cols{4}, 'filled');
+xlabel('Reflectance RGBs');
+ylabel('Luminance (cd/m^2)');
+box on;
+grid on;
+title('[Flat] White Illuminant Measured Ramps');
+
+figure;
+hold on
+scatter(x,VR_w_rampXYZ(:,2),40, 'filled')
+scatter(x, Ys(:,4), 40,'filled');
+scatter(x, Ys(:,4) .* VR_corrFactor(2), 40,'o','LineWidth',1);
+xlabel('Reflectance RGBs');
+ylabel('Luminance (cd/m^2)');
+ylim([0 71])
+box on;
+grid on;
+legend({'VR Aperture','Without VR Aperture','Corrected (CorrFactor = 1.62)'})
+title('Measured Gray Ramp with and without VR Aperture');
+
 %% spectra
 figure
 for i=1:size(primaries, 1)

@@ -287,8 +287,11 @@ for i = 1:length(lightnessValues)
         lightness = lightnessValues{i};
         % Extract the subset for the current lightness
         currentData = redData(redData.Lightness == lightness, :);
-        x = currentData.uvY(:,1);
-        y = currentData.uvY(:,2);
+        temp = currentData.uvY;
+        xyzs = uvY2XYZ(temp);
+        labs = XYZ2Lab(xyzs,(xyY2XYZ(illum_xyY(2,:))./100).*xyzs(1,2));
+        x = labs(:,2);
+        y = labs(:,3);
 %x = redData.uvY(:,1);
 %y = redData.uvY(:,2);
 figure;
@@ -305,37 +308,37 @@ title('Red Illuminant Achromatic Chromaticity Selections')
 end
 
 % CI plots
-avgRedData = finalTable(finalTable.Illuminant == 'r', :);
-avg_CIs = groupsummary(avgRedData,{'ParticipantID','Lightness'},'mean','CI_1_recenter');
-%reshape table
-% Reshape from long to wide format
-T_wide = unstack(avg_CIs, 'mean_CI_1_recenter', 'Lightness');
-% Convert the table to a matrix for plotting
-data_matrix = T_wide{:, {'L40', 'L55', 'L70'}};
-cats = string(unique(avg_CIs.ParticipantID));
-figure;
-h = bar(data_matrix, 'grouped');
-xticks(1:length(cats))
-xticklabels(cats)
-xlabel('Participant')
-ylabel('Constancy Index')
-title('Average Constancy Index per Lightness Under Red Illuminant')
-
-%scatter 
-figure
-hold on;
-xtic = {'L40', 'L55', 'L70'};
-for i = 1:size(data_matrix, 1)
-    plot([1 2 3], data_matrix(i, :), 'o-');
-end
-avg_all = mean(data_matrix);
-plot([1 2 3], avg_all,'o-','Color','r','LineWidth',2)
-% Set categorical x-ticks
-xticks(1:3);
-xticklabels(xtic);
-xlabel('Lightness');
-ylabel('Constancy Index');
-title('[Flat] Red Illuminant Average CIs per Lightness');
+% avgRedData = finalTable(finalTable.Illuminant == 'r', :);
+% avg_CIs = groupsummary(avgRedData,{'ParticipantID','Lightness'},'mean','CI_1_recenter');
+% %reshape table
+% % Reshape from long to wide format
+% T_wide = unstack(avg_CIs, 'mean_CI_1_recenter', 'Lightness');
+% % Convert the table to a matrix for plotting
+% data_matrix = T_wide{:, {'L40', 'L55', 'L70'}};
+% cats = string(unique(avg_CIs.ParticipantID));
+% figure;
+% h = bar(data_matrix, 'grouped');
+% xticks(1:length(cats))
+% xticklabels(cats)
+% xlabel('Participant')
+% ylabel('Constancy Index')
+% title('Average Constancy Index per Lightness Under Red Illuminant')
+% 
+% %scatter 
+% figure
+% hold on;
+% xtic = {'L40', 'L55', 'L70'};
+% for i = 1:size(data_matrix, 1)
+%     plot([1 2 3], data_matrix(i, :), 'o-');
+% end
+% avg_all = mean(data_matrix);
+% plot([1 2 3], avg_all,'o-','Color','r','LineWidth',2)
+% % Set categorical x-ticks
+% xticks(1:3);
+% xticklabels(xtic);
+% xlabel('Lightness');
+% ylabel('Constancy Index');
+% title('[Flat] Red Illuminant Average CIs per Lightness');
 %% GREEN
 lightnessValues = {'L40', 'L55','L70'};
 for i = 1:length(lightnessValues)

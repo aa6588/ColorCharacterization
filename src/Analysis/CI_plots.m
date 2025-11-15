@@ -294,7 +294,11 @@ xlabel('Illuminant')
 ylabel('Constancy Index')
 ylim([0 1])
 title('[VR] Average Constancy Index per Illuminant per Lightness')
-legend([h(1) h(2) h(3)],{'L40','L55','L70'})
+legend([h(1) h(2) h(3)],{'L40','L55','L70'},'Location','northwest')
+%save
+fileName = fullfile(savepath, 'VR_three_way');
+exportgraphics(gcf, [fileName,'.tiff'], 'Resolution', 300);
+savefig(gcf, [fileName,'.fig']);
 
 % Flat
 mat = readtable('em_df_results_lightness.csv');
@@ -337,7 +341,12 @@ xlabel('Illuminant')
 ylabel('Constancy Index')
 ylim([0 1])
 title('[Flat] Average Constancy Index per Illuminant per Lightness')
-legend([h(1) h(2) h(3)],{'L40','L55','L70'})
+legend([h(1) h(2) h(3)],{'L40','L55','L70'},'Location','northwest')
+%save
+fileName = fullfile(savepath, 'Flat_three_way');
+exportgraphics(gcf, [fileName,'.tiff'], 'Resolution', 300);
+savefig(gcf, [fileName,'.fig']);
+%exportgraphics(gcf, [fileName,'.pdf'],'ContentType','vector');
 
 %% delta uv
 figure;
@@ -372,6 +381,7 @@ savefig(gcf, [fileName,'.fig']);
 %% correlation CI vs delta_uv
 figure;
 scatter(abs(VR_DataCI.delta_uv_2_recenter),VR_DataCI.CI_2_recenter)
+R_VR = (corrcoef(abs(VR_DataCI.delta_uv_2_recenter),VR_DataCI.CI_2_recenter))
 xlabel('| \delta_u_v|')
 ylabel('Constancy Index')
 title('[VR] Average CI vs \delta_u_v')
@@ -379,13 +389,14 @@ xlim([0 .035])
 ylim([-.2 1.2])
 box on;
 %save
-fileName = fullfile(savepath, 'VR_CI_vs_duv');
-exportgraphics(gcf, [fileName,'.tiff'], 'Resolution', 300);
-savefig(gcf, [fileName,'.fig']);
+% fileName = fullfile(savepath, 'VR_CI_vs_duv');
+% exportgraphics(gcf, [fileName,'.tiff'], 'Resolution', 300);
+% savefig(gcf, [fileName,'.fig']);
 %exportgraphics(gcf, [fileName,'.pdf'],'ContentType','vector');
 
 figure;
 scatter(abs(Flat_DataCI.delta_uv_2_recenter),Flat_DataCI.CI_2_recenter,[],[0.8500, 0.3250, 0.0980])
+R_Flat = (corrcoef(abs(Flat_DataCI.delta_uv_2_recenter),Flat_DataCI.CI_2_recenter))
 xlabel('| \delta_u_v|')
 ylabel('Constancy Index')
 title('[Flat] Average CI vs \delta_u_v')
@@ -393,7 +404,7 @@ xlim([0 .035])
 ylim([-.2 1.2])
 box on;
 %save
-fileName = fullfile(savepath, 'Flat_CI_vs_duv');
-exportgraphics(gcf, [fileName,'.tiff'], 'Resolution', 300);
-savefig(gcf, [fileName,'.fig']);
+% fileName = fullfile(savepath, 'Flat_CI_vs_duv');
+% exportgraphics(gcf, [fileName,'.tiff'], 'Resolution', 300);
+% savefig(gcf, [fileName,'.fig']);
 %exportgraphics(gcf, [fileName,'.pdf'],'ContentType','vector');
